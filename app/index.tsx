@@ -1,8 +1,9 @@
 import { open } from "@op-engineering/op-sqlite";
 import { drizzle } from "drizzle-orm/op-sqlite";
-import migrations from "../drizzle/migrations";
 import { useMigrations } from "drizzle-orm/op-sqlite/migrator";
 import { Text, View } from "react-native";
+
+import migrations from "../drizzle/migrations";
 
 const opsqliteDB = open({
   name: "weight-db",
@@ -36,7 +37,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
+      <Text>Hallo Welt</Text>
     </View>
   );
 }
