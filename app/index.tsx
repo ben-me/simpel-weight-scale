@@ -16,7 +16,7 @@ export default function Index() {
   if (error) {
     console.error(error);
     return (
-      <View style={styles.container}>
+      <View>
         <Text>Migration error: {error.message}</Text>
       </View>
     );
@@ -40,13 +40,3 @@ export default function Index() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 100,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
