@@ -1,11 +1,7 @@
-module.exports = {
-  presets: ["module:@react-native/babel-preset"],
-  plugins: [
-    [
-      "inline-import",
-      {
-        extensions: [".sql"],
-      },
-    ],
-  ],
+module.exports = function (api) {
+  api.cache(true);
+  return {
+    presets: ["babel-preset-expo"],
+    plugins: [["inline-import", { extensions: [".sql"] }]],
+  };
 };
