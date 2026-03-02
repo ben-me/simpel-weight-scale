@@ -16,7 +16,7 @@
         "light": "./assets/images/ios-light.png",
         "tinted": "./assets/images/ios-tinted.png"
       },
-      "bundleIdentifier": "com.simple.weightscale"
+      "bundleIdentifier": "com.simple.scale"
     },
     "android": {
       "adaptiveIcon": {
@@ -26,7 +26,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGesturEnabled": false,
-      "package": "com.anonymous.simpelweightscale"
+      "package": "com.simple.scale"
     },
     "web": {
       "output": "static",
