@@ -8,6 +8,7 @@
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "android:clean": "expo prebuild --clean && expo run:android",
+    "db:generate": "drizzle-kit generate",
     "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint"
