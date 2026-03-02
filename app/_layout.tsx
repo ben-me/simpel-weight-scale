@@ -1,22 +1,22 @@
 import { Stack } from "expo-router";
-import { useColorScheme } from "react-native";
+import { useColorScheme, Text } from "react-native";
 
+import IconOptions from "@/components/icons/IconOptions";
 import { Colors } from "@/constants/theme";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const { backgroundColor, text } = Colors[colorScheme as "light" | "dark"];
-  const today = new Date().toLocaleDateString();
+  const { headerBackground } = Colors[colorScheme as "light" | "dark"];
   return (
     <Stack
       screenOptions={{
         headerStyle: {
-          backgroundColor,
+          backgroundColor: headerBackground,
         },
-        headerTitle: today,
-        headerTitleStyle: {
-          color: text,
+        headerTitle: () => {
+          return <Text style={{ color: "white", fontSize: 20 }}>Simple Scale</Text>;
         },
+        headerRight: () => <IconOptions />,
       }}
     />
   );

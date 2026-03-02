@@ -16,7 +16,7 @@
         "light": "./assets/images/ios-light.png",
         "tinted": "./assets/images/ios-tinted.png"
       },
-      "bundleIdentifier": "com.anonymous.simpelweightscale"
+      "bundleIdentifier": "com.simple.weightscale"
     },
     "android": {
       "adaptiveIcon": {
