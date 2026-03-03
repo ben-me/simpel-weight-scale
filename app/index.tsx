@@ -40,6 +40,8 @@ export default function Index() {
         setData(weightResponse.rows);
       },
     });
+
+    return () => reactive_data();
   }, [success]);
 
   async function addTodaysWeight() {
