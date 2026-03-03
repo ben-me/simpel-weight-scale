@@ -99,7 +99,7 @@ export default function Index() {
           <WeightListItem weight={item.weight} unit={item.unit} date={item.date} />
         )}
         keyExtractor={(entry) => entry.date}
-        style={[{ backgroundColor }]}
+        style={[{ backgroundColor }, styles.weightList]}
       />
     </View>
   );
@@ -125,6 +125,5 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     width: 70,
   },
-  display: {},
   weightList: {},
 });
