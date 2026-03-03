@@ -1,4 +1,4 @@
-import { Text, TextProps, useColorScheme } from "react-native";
+import { StyleSheet, Text, TextProps, useColorScheme } from "react-native";
 
 import { Colors } from "@/constants/theme";
 
@@ -7,8 +7,15 @@ export default function ThemedText({ children, style, ...rest }: TextProps) {
   const { text } = Colors[colorScheme ?? "light"];
 
   return (
-    <Text style={[style, { color: text }]} {...rest}>
+    <Text style={[{ color: text }, styles.default, style]} {...rest}>
       {children}
     </Text>
   );
 }
+
+const styles = StyleSheet.create({
+  default: {
+    fontSize: 16,
+    lineHeight: 24,
+  },
+});
