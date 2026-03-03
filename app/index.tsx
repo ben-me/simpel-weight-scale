@@ -1,8 +1,9 @@
+import { FlashList } from "@shopify/flash-list";
 import { desc } from "drizzle-orm";
 import { useMigrations } from "drizzle-orm/op-sqlite/migrator";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { Button, FlatList, StyleSheet, useColorScheme, View } from "react-native";
+import { Button, StyleSheet, useColorScheme, View } from "react-native";
 
 import ThemedInput from "@/components/ThemedInput";
 import ThemedText from "@/components/ThemedText";
@@ -93,13 +94,13 @@ export default function Index() {
         />
         <Button title="Add weight" color="blue" onPress={addTodaysWeight} />
       </View>
-      <FlatList
+      <FlashList
         data={data}
         renderItem={({ item }) => (
           <WeightListItem weight={item.weight} unit={item.unit} date={item.date} />
         )}
         keyExtractor={(entry) => entry.date}
-        style={[{ backgroundColor }, styles.weightList]}
+        style={{ backgroundColor }}
       />
     </View>
   );
