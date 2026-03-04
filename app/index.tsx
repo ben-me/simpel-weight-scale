@@ -1,5 +1,5 @@
+import { Picker } from "@react-native-picker/picker";
 import { FlashList } from "@shopify/flash-list";
-import { desc } from "drizzle-orm";
 import { useMigrations } from "drizzle-orm/op-sqlite/migrator";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
@@ -8,33 +8,37 @@ import { Button, StyleSheet, useColorScheme, View } from "react-native";
 import ThemedInput from "@/components/ThemedInput";
 import ThemedText from "@/components/ThemedText";
 import { WeightListItem } from "@/components/WeightListItem";
-import { db, opsqliteDB } from "@/db";
-import { insertNewWeight } from "@/db/operations";
-import { DataEntry, weightTable } from "@/db/schema";
+import { ANCHOR_DAYS } from "@/constants/anchor_days";
+import { db, openOPSQLiteDB } from "@/db";
+import { getWeights, insertNewWeight, insertSetting } from "@/db/operations";
+import { DataEntry } from "@/db/schema";
 import convertWeight from "@/utilities/convert-weight";
 
 import { Colors } from "../constants/theme";
 import migrations from "../drizzle/migrations";
 
 export default function Index() {
+  const opsqliteDB = openOPSQLiteDB();
   const { success, error } = useMigrations(db, migrations);
   const colorScheme = useColorScheme();
   const { backgroundColor } = Colors[colorScheme ?? "light"];
   const [weight, setWeight] = useState("");
   const [data, setData] = useState<DataEntry[] | null>([]);
+  const [anchorDay, setAnchorDay] = useState(0);
 
   useEffect(() => {
     if (!success) return;
-    db.select()
-      .from(weightTable)
-      .orderBy(desc(weightTable.date))
-      .then((result) => {
-        setData(result);
-      });
+
+    const fetchData = async () => {
+      const weightEntries = await getWeights();
+      setData(weightEntries);
+    };
+
+    fetchData();
 
     // oxlint-disable-next-line no-unused-vars
     const reactive_data = opsqliteDB.reactiveExecute({
-      query: "SELECT * FROM weight ORDER BY date DESC",
+      query: "SELECT * FROM weight ORDER BY id DESC",
       fireOn: [{ table: "weight" }],
       arguments: [],
       callback: (weightResponse) => {
@@ -45,15 +49,23 @@ export default function Index() {
     return () => reactive_data();
   }, [success]);
 
-  async function addTodaysWeight() {
-    if (weight === "") {
-      return;
+  async function changeAnchorDay(day: number) {
+    if (anchorDay) return;
+    try {
+      await insertSetting({ key: "anchor_day", value: day });
+      setAnchorDay(day);
+    } catch (e) {
+      console.error(e as Error);
     }
+  }
+
+  async function addTodaysWeight() {
+    if (weight === "") return;
     const converted_weight = convertWeight(weight);
 
     try {
       await insertNewWeight({
-        date: new Date().toLocaleString(),
+        date: new Date().toLocaleDateString(),
         weight: converted_weight,
         unit: "KG",
       });
@@ -83,8 +95,26 @@ export default function Index() {
     <View style={[{ backgroundColor }, styles.container]}>
       <StatusBar style="light" />
       <View style={[{ backgroundColor }, styles.inputContainer]}>
-        <View style={{ flexDirection: "row" }}>
+        <View
+          style={{
+            justifyContent: "center",
+            borderColor: "red",
+            borderWidth: 2,
+            borderStyle: "solid",
+          }}
+        >
           <ThemedText>Aktueller Stichtag:</ThemedText>
+          <Picker
+            selectedValue={anchorDay}
+            style={{
+              alignSelf: "stretch",
+            }}
+            onValueChange={(itemValue) => changeAnchorDay(itemValue)}
+          >
+            {ANCHOR_DAYS.map((day, index) => {
+              return <Picker.Item key={day} label={day} value={index} />;
+            })}
+          </Picker>
         </View>
         <ThemedInput
           inputMode="decimal"
@@ -96,9 +126,7 @@ export default function Index() {
       </View>
       <FlashList
         data={data}
-        renderItem={({ item }) => (
-          <WeightListItem weight={item.weight} unit={item.unit} date={item.date} />
-        )}
+        renderItem={({ item }) => <WeightListItem {...item} />}
         keyExtractor={(entry) => entry.date}
         style={{ backgroundColor }}
       />

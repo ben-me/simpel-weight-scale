@@ -1,6 +1,6 @@
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 
-import { db, opsqliteDB } from ".";
+import { db, openOPSQLiteDB } from ".";
 import { DataEntry, settings, weightTable } from "./schema";
 
 type InsertWeightProps = {
@@ -14,10 +14,15 @@ type insertSetting = {
   value: number;
 };
 
+const opsqliteDB = openOPSQLiteDB();
+
 export async function getWeights() {
   let result: DataEntry[] = [];
   await opsqliteDB.transaction(async () => {
-    result = await db.select().from(weightTable).orderBy(desc(weightTable.date));
+    result = await db
+      .select()
+      .from(weightTable)
+      .orderBy(desc(sql`rowid`));
   });
   return result;
 }

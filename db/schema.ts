@@ -1,14 +1,16 @@
-import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { int, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const weightTable = sqliteTable("weight", {
-  date: text().primaryKey(),
+  id: int().primaryKey({ autoIncrement: true }),
+  date: text().unique().notNull(),
   weight: real(),
   unit: text().notNull().default("KG"),
 });
 
 export const settings = sqliteTable("settings", {
-  key: text().primaryKey(),
-  value: integer(),
+  id: int().primaryKey({ autoIncrement: true }),
+  key: text().unique().notNull(),
+  value: int().notNull(),
 });
 
 export type DataEntry = typeof weightTable.$inferSelect;

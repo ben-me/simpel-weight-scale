@@ -1,1 +1,0 @@
-ALTER TABLE `weight_table` RENAME TO `weight`;
