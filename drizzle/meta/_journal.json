@@ -15,6 +15,13 @@
       "when": 1772552051762,
       "tag": "0001_foamy_bushwacker",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1772619708923,
+      "tag": "0002_tiny_zuras",
+      "breakpoints": true
     }
   ]
 }
