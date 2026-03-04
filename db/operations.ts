@@ -1,7 +1,7 @@
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 import { db, opsqliteDB } from ".";
-import { settings, weightTable } from "./schema";
+import { DataEntry, settings, weightTable } from "./schema";
 
 type InsertWeightProps = {
   date: string;
@@ -11,8 +11,16 @@ type InsertWeightProps = {
 
 type insertSetting = {
   key: "anchor_day" | "unit";
-  value: string;
+  value: number;
 };
+
+export async function getWeights() {
+  let result: DataEntry[] = [];
+  await opsqliteDB.transaction(async () => {
+    result = await db.select().from(weightTable).orderBy(desc(weightTable.date));
+  });
+  return result;
+}
 
 export async function insertNewWeight({
   date = new Date().toLocaleString(),
