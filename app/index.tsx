@@ -47,7 +47,7 @@ export default function Index() {
     });
 
     return () => reactive_data();
-  }, [success]);
+  }, [success, opsqliteDB]);
 
   async function changeAnchorDay(day: number) {
     if (anchorDay) return;
