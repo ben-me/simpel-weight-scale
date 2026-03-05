@@ -1,43 +1,41 @@
-import { desc, eq, sql } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
-import { db, openOPSQLiteDB } from ".";
+import { db, opsqliteDB } from ".";
 import { DataEntry, settings, weightTable } from "./schema";
 
 type InsertWeightProps = {
-  date: string;
   weight?: number;
   unit: "KG" | "LB";
 };
+
+type UpdateWeightProps = {
+  date: string;
+} & InsertWeightProps;
 
 type insertSetting = {
   key: "anchor_day" | "unit";
   value: number;
 };
 
-const opsqliteDB = openOPSQLiteDB();
-
 export async function getWeights() {
   let result: DataEntry[] = [];
   await opsqliteDB.transaction(async () => {
-    result = await db
-      .select()
-      .from(weightTable)
-      .orderBy(desc(sql`rowid`));
+    result = await db.select().from(weightTable).orderBy(desc(weightTable.id));
   });
   return result;
 }
 
 export async function insertNewWeight({
-  date = new Date().toLocaleString(),
+  date = new Date().toISOString().slice(0, 10),
   weight = 0,
   unit = "KG",
-}: InsertWeightProps) {
+}: InsertWeightProps & { date?: string }) {
   await opsqliteDB.transaction(async () => {
     await db.insert(weightTable).values({ weight, unit, date }).onConflictDoNothing();
   });
 }
 
-export async function updateWeight({ date, weight, unit = "KG" }: InsertWeightProps) {
+export async function updateWeight({ date, weight, unit = "KG" }: UpdateWeightProps) {
   await opsqliteDB.transaction(async () => {
     await db.update(weightTable).set({ weight, unit }).where(eq(weightTable.date, date));
   });

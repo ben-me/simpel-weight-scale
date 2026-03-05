@@ -1,7 +1,6 @@
 import { Picker } from "@react-native-picker/picker";
 import { FlashList } from "@shopify/flash-list";
 import { useMigrations } from "drizzle-orm/op-sqlite/migrator";
-import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { Button, StyleSheet, useColorScheme, View } from "react-native";
 
@@ -9,7 +8,7 @@ import ThemedInput from "@/components/ThemedInput";
 import ThemedText from "@/components/ThemedText";
 import { WeightListItem } from "@/components/WeightListItem";
 import { ANCHOR_DAYS } from "@/constants/anchor_days";
-import { db, openOPSQLiteDB } from "@/db";
+import { db, opsqliteDB } from "@/db";
 import { getWeights, insertNewWeight, insertSetting } from "@/db/operations";
 import { DataEntry } from "@/db/schema";
 import convertWeight from "@/utilities/convert-weight";
@@ -18,7 +17,6 @@ import { Colors } from "../constants/theme";
 import migrations from "../drizzle/migrations";
 
 export default function Index() {
-  const opsqliteDB = openOPSQLiteDB();
   const { success, error } = useMigrations(db, migrations);
   const colorScheme = useColorScheme();
   const { backgroundColor } = Colors[colorScheme ?? "light"];
@@ -33,10 +31,8 @@ export default function Index() {
       const weightEntries = await getWeights();
       setData(weightEntries);
     };
-
     fetchData();
 
-    // oxlint-disable-next-line no-unused-vars
     const reactive_data = opsqliteDB.reactiveExecute({
       query: "SELECT * FROM weight ORDER BY id DESC",
       fireOn: [{ table: "weight" }],
@@ -47,7 +43,7 @@ export default function Index() {
     });
 
     return () => reactive_data();
-  }, [success, opsqliteDB]);
+  }, [success]);
 
   async function changeAnchorDay(day: number) {
     if (anchorDay) return;
@@ -93,7 +89,6 @@ export default function Index() {
   }
   return (
     <View style={[{ backgroundColor }, styles.container]}>
-      <StatusBar style="light" />
       <View style={[{ backgroundColor }, styles.inputContainer]}>
         <View
           style={{
