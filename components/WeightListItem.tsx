@@ -2,7 +2,7 @@ import { useState } from "react";
 import { StyleSheet, Pressable, Modal, View, KeyboardAvoidingView, Platform } from "react-native";
 
 import { updateWeight } from "@/db/operations";
-import { DataEntry } from "@/db/schema";
+import { WeightTableEntry } from "@/db/schema";
 import convertWeight from "@/utilities/convert-weight";
 
 import ThemedInput from "./ThemedInput";
@@ -12,7 +12,7 @@ export function WeightListItem({
   date = new Date().getDate().toLocaleString(),
   weight,
   unit = "KG",
-}: DataEntry) {
+}: WeightTableEntry) {
   const [modalVisible, setModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState(String(weight));
 

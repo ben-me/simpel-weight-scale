@@ -9,8 +9,8 @@ import ThemedText from "@/components/ThemedText";
 import { WeightListItem } from "@/components/WeightListItem";
 import { ANCHOR_DAYS } from "@/constants/anchor_days";
 import { db, opsqliteDB } from "@/db";
-import { getWeights, insertNewWeight, insertSetting } from "@/db/operations";
-import { DataEntry } from "@/db/schema";
+import { getSetting, getWeights, insertWeight, insertSetting } from "@/db/operations";
+import { WeightTableEntry } from "@/db/schema";
 import convertWeight from "@/utilities/convert-weight";
 
 import { Colors } from "../constants/theme";
@@ -21,20 +21,34 @@ export default function Index() {
   const colorScheme = useColorScheme();
   const { backgroundColor } = Colors[colorScheme ?? "light"];
   const [weight, setWeight] = useState("");
-  const [data, setData] = useState<DataEntry[] | null>([]);
-  const [anchorDay, setAnchorDay] = useState(0);
+  const [data, setData] = useState<WeightTableEntry[] | null>([]);
+  const [anchorDay, setAnchorDay] = useState<number>();
 
   useEffect(() => {
     if (!success) return;
 
     const fetchData = async () => {
-      const weightEntries = await getWeights();
-      setData(weightEntries);
+      try {
+        const [weightEntries, anchorDay] = await Promise.all([
+          getWeights(),
+          getSetting("anchor_day"),
+        ]);
+        setData(weightEntries);
+
+        if (anchorDay) {
+          setAnchorDay(anchorDay.value);
+        } else {
+          await insertSetting({ value: 0, key: "anchor_day" });
+          setAnchorDay(0);
+        }
+      } catch (error) {
+        console.error("Init failed", error);
+      }
     };
     fetchData();
 
     const reactive_data = opsqliteDB.reactiveExecute({
-      query: "SELECT * FROM weight ORDER BY id DESC",
+      query: "SELECT * FROM weight ORDER BY date DESC",
       fireOn: [{ table: "weight" }],
       arguments: [],
       callback: (weightResponse) => {
@@ -45,8 +59,8 @@ export default function Index() {
     return () => reactive_data();
   }, [success]);
 
-  async function changeAnchorDay(day: number) {
-    if (anchorDay) return;
+  async function handleAnchorDayChange(day: number) {
+    if (day === anchorDay) return;
     try {
       await insertSetting({ key: "anchor_day", value: day });
       setAnchorDay(day);
@@ -60,12 +74,11 @@ export default function Index() {
     const converted_weight = convertWeight(weight);
 
     try {
-      await insertNewWeight({
+      await insertWeight({
         date: new Date().toLocaleDateString(),
         weight: converted_weight,
         unit: "KG",
       });
-
       setWeight("");
     } catch (e) {
       console.error(e as Error);
@@ -100,11 +113,9 @@ export default function Index() {
         >
           <ThemedText>Aktueller Stichtag:</ThemedText>
           <Picker
+            prompt="Stichtag festlegen"
             selectedValue={anchorDay}
-            style={{
-              alignSelf: "stretch",
-            }}
-            onValueChange={(itemValue) => changeAnchorDay(itemValue)}
+            onValueChange={(itemValue) => handleAnchorDayChange(itemValue)}
           >
             {ANCHOR_DAYS.map((day, index) => {
               return <Picker.Item key={day} label={day} value={index} />;

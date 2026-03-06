@@ -1,54 +1,46 @@
 import { desc, eq } from "drizzle-orm";
 
 import { db, opsqliteDB } from ".";
-import { DataEntry, settings, weightTable } from "./schema";
-
-type InsertWeightProps = {
-  weight?: number;
-  unit: "KG" | "LB";
-};
-
-type UpdateWeightProps = {
-  date: string;
-} & InsertWeightProps;
-
-type insertSetting = {
-  key: "anchor_day" | "unit";
-  value: number;
-};
+import { WeightTableEntry, settings, weightTable, SettingTableEntry } from "./schema";
 
 export async function getWeights() {
-  let result: DataEntry[] = [];
+  let result: WeightTableEntry[] = [];
   await opsqliteDB.transaction(async () => {
-    result = await db.select().from(weightTable).orderBy(desc(weightTable.id));
+    result = await db.select().from(weightTable).orderBy(desc(weightTable.date));
   });
   return result;
 }
 
-export async function insertNewWeight({
+export async function insertWeight({
   date = new Date().toISOString().slice(0, 10),
   weight = 0,
   unit = "KG",
-}: InsertWeightProps & { date?: string }) {
+}: WeightTableEntry) {
   await opsqliteDB.transaction(async () => {
-    await db.insert(weightTable).values({ weight, unit, date }).onConflictDoNothing();
+    await db.insert(weightTable).values({ weight, unit, date }).onConflictDoUpdate({
+      target: weightTable.date,
+      set: {
+        weight,
+        unit,
+      },
+    });
   });
 }
 
-export async function updateWeight({ date, weight, unit = "KG" }: UpdateWeightProps) {
+export async function getSetting(key: string) {
+  let setting: SettingTableEntry[] = [];
   await opsqliteDB.transaction(async () => {
-    await db.update(weightTable).set({ weight, unit }).where(eq(weightTable.date, date));
+    setting = await db.select().from(settings).where(eq(settings.key, key));
   });
+
+  return setting[0];
 }
 
-export async function insertSetting(setting: insertSetting) {
+export async function insertSetting(setting: SettingTableEntry) {
   await opsqliteDB.transaction(async () => {
-    await db.insert(settings).values(setting).onConflictDoNothing();
-  });
-}
-
-export async function updateSetting({ key, value }: insertSetting) {
-  await opsqliteDB.transaction(async () => {
-    await db.update(settings).set({ value }).where(eq(settings.key, key));
+    await db
+      .insert(settings)
+      .values(setting)
+      .onConflictDoUpdate({ target: settings.key, set: { value: setting.value } });
   });
 }
