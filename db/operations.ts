@@ -11,11 +11,7 @@ export async function getWeights() {
   return result;
 }
 
-export async function insertWeight({
-  date = new Date().toISOString().slice(0, 10),
-  weight = 0,
-  unit = "KG",
-}: WeightTableEntry) {
+export async function insertWeight({ date, weight = 0, unit = "KG" }: WeightTableEntry) {
   await opsqliteDB.transaction(async () => {
     await db.insert(weightTable).values({ weight, unit, date }).onConflictDoUpdate({
       target: weightTable.date,
