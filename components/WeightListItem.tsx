@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { StyleSheet, Pressable, Modal, View, KeyboardAvoidingView, Platform } from "react-native";
 
-import { updateWeight } from "@/db/operations";
+import { insertWeight } from "@/db/operations";
 import { WeightTableEntry } from "@/db/schema";
 import convertWeight from "@/utilities/convert-weight";
 
@@ -19,7 +19,7 @@ export function WeightListItem({
   async function handleInputChange() {
     const convertedWeight = convertWeight(inputValue);
     if (!convertWeight) return;
-    await updateWeight({ date, weight: convertedWeight, unit: unit as "KG" | "LB" });
+    await insertWeight({ date, weight: convertedWeight, unit: unit as "KG" | "LB" });
     setModalVisible(false);
   }
 
