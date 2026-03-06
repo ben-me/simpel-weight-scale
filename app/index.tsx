@@ -1,16 +1,18 @@
-import { Picker } from "@react-native-picker/picker";
 import { FlashList } from "@shopify/flash-list";
 import { useMigrations } from "drizzle-orm/op-sqlite/migrator";
 import { useEffect, useState } from "react";
-import { Button, StyleSheet, useColorScheme, View } from "react-native";
+import { Pressable, StyleSheet, useColorScheme, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import ThemedInput from "@/components/ThemedInput";
+import { IconAdd } from "@/components/icons/IconPlus";
+import Select from "@/components/Select";
 import ThemedText from "@/components/ThemedText";
 import { WeightListItem } from "@/components/WeightListItem";
 import { ANCHOR_DAYS } from "@/constants/anchor_days";
 import { db, opsqliteDB } from "@/db";
 import { getSetting, getWeights, insertWeight, insertSetting } from "@/db/operations";
 import { WeightTableEntry } from "@/db/schema";
+import calculateAverageWeight from "@/utilities/caculate-average-weight";
 import convertWeight from "@/utilities/convert-weight";
 
 import { Colors } from "../constants/theme";
@@ -23,6 +25,7 @@ export default function Index() {
   const [weight, setWeight] = useState("");
   const [data, setData] = useState<WeightTableEntry[] | null>([]);
   const [anchorDay, setAnchorDay] = useState<number>();
+  let average_weight: number | undefined;
 
   useEffect(() => {
     if (!success) return;
@@ -38,8 +41,8 @@ export default function Index() {
         if (anchorDay) {
           setAnchorDay(anchorDay.value);
         } else {
-          await insertSetting({ value: 0, key: "anchor_day" });
-          setAnchorDay(0);
+          await insertSetting({ value: 1, key: "anchor_day" });
+          setAnchorDay(1);
         }
       } catch (error) {
         console.error("Init failed", error);
@@ -59,6 +62,10 @@ export default function Index() {
     return () => reactive_data();
   }, [success]);
 
+  if (data && data.length >= 7) {
+    average_weight = calculateAverageWeight(anchorDay!, data);
+  }
+
   async function handleAnchorDayChange(day: number) {
     if (day === anchorDay) return;
     try {
@@ -75,7 +82,7 @@ export default function Index() {
 
     try {
       await insertWeight({
-        date: new Date().toLocaleDateString(),
+        date: new Date().toISOString().slice(0, 10),
         weight: converted_weight,
         unit: "KG",
       });
@@ -101,42 +108,30 @@ export default function Index() {
     );
   }
   return (
-    <View style={[{ backgroundColor }, styles.container]}>
-      <View style={[{ backgroundColor }, styles.inputContainer]}>
-        <View
-          style={{
-            justifyContent: "center",
-            borderColor: "red",
-            borderWidth: 2,
-            borderStyle: "solid",
-          }}
-        >
-          <ThemedText>Aktueller Stichtag:</ThemedText>
-          <Picker
-            prompt="Stichtag festlegen"
-            selectedValue={anchorDay}
-            onValueChange={(itemValue) => handleAnchorDayChange(itemValue)}
-          >
-            {ANCHOR_DAYS.map((day, index) => {
-              return <Picker.Item key={day} label={day} value={index} />;
-            })}
-          </Picker>
+    <GestureHandlerRootView>
+      <View style={[{ backgroundColor }, styles.container]}>
+        <View style={[{ backgroundColor }, styles.inputContainer]}>
+          <View>
+            <ThemedText>Stichtag:</ThemedText>
+            <Select
+              options={ANCHOR_DAYS.map((day, index) => ({ label: day, value: index }))}
+              value={anchorDay!}
+              onChange={handleAnchorDayChange}
+            />
+          </View>
+          <ThemedText>{average_weight}</ThemedText>
+          <Pressable onPress={addTodaysWeight}>
+            <IconAdd />
+          </Pressable>
         </View>
-        <ThemedInput
-          inputMode="decimal"
-          style={styles.input}
-          value={weight}
-          onChangeText={setWeight}
+        <FlashList
+          data={data}
+          renderItem={({ item }) => <WeightListItem {...item} />}
+          keyExtractor={(entry) => entry.date}
+          style={{ backgroundColor }}
         />
-        <Button title="Add weight" color="blue" onPress={addTodaysWeight} />
       </View>
-      <FlashList
-        data={data}
-        renderItem={({ item }) => <WeightListItem {...item} />}
-        keyExtractor={(entry) => entry.date}
-        style={{ backgroundColor }}
-      />
-    </View>
+    </GestureHandlerRootView>
   );
 }
 
@@ -152,13 +147,6 @@ const styles = StyleSheet.create({
     padding: 16,
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-start",
+    alignItems: "center",
   },
-  input: {
-    borderStyle: "solid",
-    borderBottomColor: "white",
-    borderBottomWidth: 2,
-    width: 70,
-  },
-  weightList: {},
 });
