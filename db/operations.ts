@@ -23,6 +23,12 @@ export async function insertWeight({ date, weight = 0, unit = "KG" }: WeightTabl
   });
 }
 
+export async function insertMultipleWeights(list: WeightTableEntry[]) {
+  await opsqliteDB.transaction(async () => {
+    await db.insert(weightTable).values(list);
+  });
+}
+
 export async function getSetting(key: string) {
   let setting: SettingTableEntry[] = [];
   await opsqliteDB.transaction(async () => {
@@ -30,6 +36,12 @@ export async function getSetting(key: string) {
   });
 
   return setting[0];
+}
+
+export async function clearWeightTable() {
+  await opsqliteDB.transaction(async () => {
+    await db.delete(weightTable);
+  });
 }
 
 export async function insertSetting(setting: SettingTableEntry) {
