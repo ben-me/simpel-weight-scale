@@ -62,6 +62,7 @@ export default function Select({ value, onChange, options, placeholder }: Props)
         />
       </Pressable>
       <BottomSheetModal
+        animationConfigs={{ duration: 350 }}
         handleIndicatorStyle={{ backgroundColor: text }}
         backgroundStyle={{ backgroundColor: "black" }}
         backdropComponent={renderBackdrop}
@@ -97,7 +98,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     width: "auto",
   },
-  modalContainer: {},
   modalContent: {
     backgroundColor: "black",
   },
