@@ -1,3 +1,4 @@
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { FlashList } from "@shopify/flash-list";
 import { useMigrations } from "drizzle-orm/op-sqlite/migrator";
 import { useEffect, useState } from "react";
@@ -29,7 +30,6 @@ export default function Index() {
 
   useEffect(() => {
     if (!success) return;
-
     const fetchData = async () => {
       try {
         const [weightEntries, anchorDay] = await Promise.all([
@@ -109,28 +109,30 @@ export default function Index() {
   }
   return (
     <GestureHandlerRootView>
-      <View style={[{ backgroundColor }, styles.container]}>
-        <View style={[{ backgroundColor }, styles.inputContainer]}>
-          <View>
-            <ThemedText>Stichtag:</ThemedText>
-            <Select
-              options={ANCHOR_DAYS.map((day, index) => ({ label: day, value: index }))}
-              value={anchorDay!}
-              onChange={handleAnchorDayChange}
-            />
+      <BottomSheetModalProvider>
+        <View style={[{ backgroundColor }, styles.container]}>
+          <View style={[{ backgroundColor }, styles.inputContainer]}>
+            <View>
+              <ThemedText>Stichtag:</ThemedText>
+              <Select
+                options={ANCHOR_DAYS.map((day, index) => ({ label: day, value: index }))}
+                value={anchorDay!}
+                onChange={handleAnchorDayChange}
+              />
+            </View>
+            <ThemedText>{average_weight}</ThemedText>
+            <Pressable onPress={addTodaysWeight}>
+              <IconAdd />
+            </Pressable>
           </View>
-          <ThemedText>{average_weight}</ThemedText>
-          <Pressable onPress={addTodaysWeight}>
-            <IconAdd />
-          </Pressable>
+          <FlashList
+            data={data}
+            renderItem={({ item }) => <WeightListItem {...item} />}
+            keyExtractor={(entry) => entry.date}
+            style={{ backgroundColor }}
+          />
         </View>
-        <FlashList
-          data={data}
-          renderItem={({ item }) => <WeightListItem {...item} />}
-          keyExtractor={(entry) => entry.date}
-          style={{ backgroundColor }}
-        />
-      </View>
+      </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
 }
