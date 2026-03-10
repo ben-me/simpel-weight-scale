@@ -2,8 +2,8 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useColorScheme, Text } from "react-native";
 
-import IconOptions from "@/components/icons/IconOptions";
 import { Colors } from "@/constants/theme";
+import OptionsMenu from "@/components/OptionsMenu";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -19,7 +19,7 @@ export default function RootLayout() {
           headerTitle: () => {
             return <Text style={{ color: "white", fontSize: 20 }}>Simple Scale</Text>;
           },
-          headerRight: () => <IconOptions />,
+          headerRight: () => <OptionsMenu />,
         }}
       />
     </>
