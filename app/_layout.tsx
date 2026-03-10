@@ -4,6 +4,7 @@ import { useColorScheme, Text } from "react-native";
 
 import { Colors } from "@/constants/theme";
 import OptionsMenu from "@/components/OptionsMenu";
+import OptionWindow from "@/components/OptionWindow";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -22,6 +23,7 @@ export default function RootLayout() {
           headerRight: () => <OptionsMenu />,
         }}
       />
+      <OptionWindow />
     </>
   );
 }

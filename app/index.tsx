@@ -107,6 +107,7 @@ export default function Index() {
       </View>
     );
   }
+
   return (
     <GestureHandlerRootView>
       <BottomSheetModalProvider>
