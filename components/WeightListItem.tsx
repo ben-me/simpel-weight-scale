@@ -15,6 +15,13 @@ export function WeightListItem({
 }: WeightTableEntry) {
   const [modalVisible, setModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState(String(weight));
+  const [year, month, day] = date.split("-");
+  const formatted_display_date = new Date(year, month - 1, day).toLocaleDateString(undefined, {
+    weekday: "short",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
 
   async function handleInputChange() {
     const convertedWeight = convertWeight(inputValue);
@@ -56,7 +63,7 @@ export function WeightListItem({
         </KeyboardAvoidingView>
       </Modal>
       <Pressable style={styles.entry} onPress={() => setModalVisible(true)}>
-        <ThemedText>{date}:</ThemedText>
+        <ThemedText>{formatted_display_date}:</ThemedText>
         <ThemedText style={{ marginInlineStart: "auto" }}>{weight ? weight : "-"}</ThemedText>
         <ThemedText>{unit}</ThemedText>
       </Pressable>
