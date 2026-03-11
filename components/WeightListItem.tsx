@@ -16,7 +16,7 @@ export function WeightListItem({
   const [modalVisible, setModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState(String(weight));
   const [year, month, day] = date.split("-");
-  const formatted_display_date = new Date(year, month - 1, day).toLocaleDateString(undefined, {
+  const formatted_display_date = new Date(+year, +month - 1, +day).toLocaleDateString(undefined, {
     weekday: "short",
     day: "2-digit",
     month: "2-digit",
