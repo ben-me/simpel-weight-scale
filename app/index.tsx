@@ -41,8 +41,8 @@ export default function Index() {
         if (anchorDay) {
           setAnchorDay(anchorDay.value);
         } else {
-          await insertSetting({ value: 1, key: "anchor_day" });
-          setAnchorDay(1);
+          await insertSetting({ value: 0, key: "anchor_day" });
+          setAnchorDay(0);
         }
       } catch (error) {
         console.error("Init failed", error);

@@ -23,8 +23,8 @@ export default function OptionWindow() {
   }, [menuShown]);
 
   async function handleImport() {
-    const file = await importCSV();
     setShowConfirmModal(false);
+    await importCSV();
   }
 
   if (menuShown) {

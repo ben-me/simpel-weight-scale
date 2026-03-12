@@ -11,7 +11,7 @@ import ThemedText from "./ThemedText";
 export function WeightListItem({
   date = new Date().getDate().toLocaleString(),
   weight,
-  unit = "KG",
+  unit = 0,
 }: WeightTableEntry) {
   const [modalVisible, setModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState(String(weight));
@@ -65,7 +65,7 @@ export function WeightListItem({
       <Pressable style={styles.entry} onPress={() => setModalVisible(true)}>
         <ThemedText>{formatted_display_date}:</ThemedText>
         <ThemedText style={{ marginInlineStart: "auto" }}>{weight ? weight : "-"}</ThemedText>
-        <ThemedText>{unit}</ThemedText>
+        <ThemedText>{unit === 0 ? "Kg" : "lbs"}</ThemedText>
       </Pressable>
     </View>
   );
