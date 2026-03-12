@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   },
   default: {
     borderBottomWidth: 1,
-    width: 160,
+    minWidth: 50,
     textAlign: "center",
     paddingVertical: 0,
   },
