@@ -7,6 +7,7 @@ import convertWeight from "@/utilities/convert-weight";
 
 import ThemedInput from "./ThemedInput";
 import ThemedText from "./ThemedText";
+import { prettifyDate } from "@/utilities/prettify_date";
 
 export function WeightListItem({
   date = new Date().getDate().toLocaleString(),
@@ -15,13 +16,8 @@ export function WeightListItem({
 }: WeightTableEntry) {
   const [modalVisible, setModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState(String(weight));
-  const [year, month, day] = date.split("-");
-  const formatted_display_date = new Date(+year, +month - 1, +day).toLocaleDateString(undefined, {
-    weekday: "short",
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
+  const prettyDate = prettifyDate(date);
+  const weightUnit = unit === 0 ? "KG" : "lbs";
 
   async function handleInputChange() {
     const convertedWeight = convertWeight(inputValue);
@@ -45,7 +41,7 @@ export function WeightListItem({
         >
           <Pressable style={styles.modal} onPress={() => setModalVisible(false)}>
             <Pressable style={styles.modal_view}>
-              <ThemedText style={styles.modal_subheadline}>Gewicht anpassen</ThemedText>
+              <ThemedText style={styles.modal_headline}>{prettyDate}</ThemedText>
               <View style={styles.modal_input_wrapper}>
                 <ThemedInput
                   onBlur={handleInputChange}
@@ -55,17 +51,17 @@ export function WeightListItem({
                   maxLength={6}
                   onChangeText={setInputValue}
                 />
-                <ThemedText style={styles.modal_input}>{unit}</ThemedText>
+                <ThemedText style={styles.modal_input}>{weightUnit}</ThemedText>
               </View>
-              <ThemedText style={styles.modal_headline}>{date}</ThemedText>
+              <ThemedText style={styles.modal_subheadline}>Gewicht anpassen</ThemedText>
             </Pressable>
           </Pressable>
         </KeyboardAvoidingView>
       </Modal>
       <Pressable style={styles.entry} onPress={() => setModalVisible(true)}>
-        <ThemedText>{formatted_display_date}:</ThemedText>
+        <ThemedText>{prettyDate}:</ThemedText>
         <ThemedText style={{ marginInlineStart: "auto" }}>{weight ? weight : "-"}</ThemedText>
-        <ThemedText>{unit === 0 ? "Kg" : "lbs"}</ThemedText>
+        <ThemedText>{weightUnit}</ThemedText>
       </Pressable>
     </View>
   );
@@ -95,6 +91,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   modal_input_wrapper: {
+    flexDirection: "row",
     alignItems: "center",
     gap: 12,
   },
