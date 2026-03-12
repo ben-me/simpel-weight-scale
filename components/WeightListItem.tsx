@@ -26,7 +26,7 @@ export function WeightListItem({
   async function handleInputChange() {
     const convertedWeight = convertWeight(inputValue);
     if (!convertWeight) return;
-    await insertWeight({ date, weight: convertedWeight, unit: unit as "KG" | "LB" });
+    await insertWeight({ date, weight: convertedWeight, unit });
     setModalVisible(false);
   }
 

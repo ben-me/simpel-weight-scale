@@ -84,7 +84,7 @@ export default function Index() {
       await insertWeight({
         date: new Date().toISOString().slice(0, 10),
         weight: converted_weight,
-        unit: "KG",
+        unit: 0,
       });
       setWeight("");
     } catch (e) {
