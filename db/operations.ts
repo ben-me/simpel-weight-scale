@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 
 import { db, opsqliteDB } from ".";
 import { WeightTableEntry, settings, weightTable, SettingTableEntry } from "./schema";
@@ -11,21 +11,43 @@ export async function getWeights() {
   return result;
 }
 
-export async function insertWeight({ date, weight = 0, unit = 0 }: WeightTableEntry) {
+export async function getSingleWeight(date: string) {
+  let result: WeightTableEntry | undefined;
   await opsqliteDB.transaction(async () => {
-    await db.insert(weightTable).values({ weight, unit, date }).onConflictDoUpdate({
-      target: weightTable.date,
-      set: {
-        weight,
-        unit,
-      },
+    result = await db.query.weightTable.findFirst({
+      where: eq(weightTable.date, date),
     });
+  });
+  return result;
+}
+
+export async function insertWeight(value: WeightTableEntry) {
+  await opsqliteDB.transaction(async () => {
+    await db
+      .insert(weightTable)
+      .values(value)
+      .onConflictDoUpdate({
+        target: weightTable.date,
+        set: {
+          weight: value.weight,
+          unit: value.unit,
+        },
+      });
   });
 }
 
 export async function insertMultipleWeights(list: WeightTableEntry[]) {
   await opsqliteDB.transaction(async () => {
-    await db.insert(weightTable).values(list);
+    await db
+      .insert(weightTable)
+      .values(list)
+      .onConflictDoUpdate({
+        target: weightTable.date,
+        set: {
+          weight: sql.raw(`excluded.${weightTable.weight.name}`),
+          unit: sql.raw(`excluded.${weightTable.unit.name}`),
+        },
+      });
   });
 }
 
