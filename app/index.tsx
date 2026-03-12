@@ -2,7 +2,7 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { FlashList } from "@shopify/flash-list";
 import { useMigrations } from "drizzle-orm/op-sqlite/migrator";
 import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, useColorScheme, View } from "react-native";
+import { AppState, Pressable, StyleSheet, useColorScheme, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { IconAdd } from "@/components/icons/IconPlus";
@@ -11,20 +11,20 @@ import ThemedText from "@/components/ThemedText";
 import { WeightListItem } from "@/components/WeightListItem";
 import { ANCHOR_DAYS } from "@/constants/anchor_days";
 import { db, opsqliteDB } from "@/db";
-import { getSetting, getWeights, insertWeight, insertSetting } from "@/db/operations";
+import { getSetting, getWeights, insertSetting } from "@/db/operations";
 import { WeightTableEntry } from "@/db/schema";
 import calculateAverageWeight from "@/utilities/caculate-average-weight";
-import convertWeight from "@/utilities/convert-weight";
 
 import { Colors } from "../constants/theme";
 import migrations from "../drizzle/migrations";
+import { checkAndInsertToday } from "@/utilities/check_and_insert_today";
 
 export default function Index() {
   const { success, error } = useMigrations(db, migrations);
   const colorScheme = useColorScheme();
   const { backgroundColor } = Colors[colorScheme ?? "light"];
   const [weight, setWeight] = useState("");
-  const [data, setData] = useState<WeightTableEntry[] | null>([]);
+  const [data, setData] = useState<WeightTableEntry[]>([]);
   const [anchorDay, setAnchorDay] = useState<number>();
   let average_weight: number | undefined;
 
@@ -32,14 +32,15 @@ export default function Index() {
     if (!success) return;
     const fetchData = async () => {
       try {
-        const [weightEntries, anchorDay] = await Promise.all([
+        const [weightEntries, dbAnchorDay] = await Promise.all([
           getWeights(),
           getSetting("anchor_day"),
+          checkAndInsertToday(),
         ]);
         setData(weightEntries);
 
-        if (anchorDay) {
-          setAnchorDay(anchorDay.value);
+        if (dbAnchorDay) {
+          setAnchorDay(dbAnchorDay.value);
         } else {
           await insertSetting({ value: 0, key: "anchor_day" });
           setAnchorDay(0);
@@ -62,6 +63,15 @@ export default function Index() {
     return () => reactive_data();
   }, [success]);
 
+  useEffect(() => {
+    const subscribeToAppState = AppState.addEventListener("change", (state) => {
+      if (state === "active") {
+        checkAndInsertToday();
+      }
+    });
+    return () => subscribeToAppState.remove();
+  }, []);
+
   if (data && data.length >= 7) {
     average_weight = calculateAverageWeight(anchorDay!, data);
   }
@@ -71,22 +81,6 @@ export default function Index() {
     try {
       await insertSetting({ key: "anchor_day", value: day });
       setAnchorDay(day);
-    } catch (e) {
-      console.error(e as Error);
-    }
-  }
-
-  async function addTodaysWeight() {
-    if (weight === "") return;
-    const converted_weight = convertWeight(weight);
-
-    try {
-      await insertWeight({
-        date: new Date().toISOString().slice(0, 10),
-        weight: converted_weight,
-        unit: 0,
-      });
-      setWeight("");
     } catch (e) {
       console.error(e as Error);
     }
@@ -122,13 +116,13 @@ export default function Index() {
               />
             </View>
             <ThemedText>{average_weight}</ThemedText>
-            <Pressable onPress={addTodaysWeight}>
+            <Pressable>
               <IconAdd />
             </Pressable>
           </View>
           <FlashList
             data={data}
-            renderItem={({ item }) => <WeightListItem {...item} />}
+            renderItem={({ item }) => <WeightListItem key={item.date} {...item} />}
             keyExtractor={(entry) => entry.date}
             style={{ backgroundColor }}
           />
