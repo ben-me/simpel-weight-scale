@@ -1,7 +1,6 @@
 /**
- * @constructor
  * @param {string} date - Date String with format 'YYYY-MM-DD'
- * @returns
+ * @returns A date string looking like "Mo., 31.12.2025"
  */
 
 export function prettifyDate(date: string) {
