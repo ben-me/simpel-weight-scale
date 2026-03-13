@@ -4,10 +4,8 @@ import { useEffect, useState } from "react";
 import { AppState, Pressable, StyleSheet, useColorScheme, View } from "react-native";
 
 import { IconAdd } from "@/components/icons/IconPlus";
-import Select from "@/components/Select";
 import ThemedText from "@/components/ThemedText";
 import { WeightListItem } from "@/components/WeightListItem";
-import { ANCHOR_DAYS } from "@/constants/anchor_days";
 import { db, opsqliteDB } from "@/db";
 import { getSetting, getWeights, insertSetting } from "@/db/operations";
 import { WeightTableEntry } from "@/db/schema";
@@ -16,6 +14,7 @@ import calculateAverageWeight from "@/utilities/caculate-average-weight";
 import { Colors } from "../constants/theme";
 import migrations from "../drizzle/migrations";
 import { checkAndInsertToday } from "@/utilities/check_and_insert_today";
+import Overview from "@/components/Overview";
 
 export default function Index() {
   const { success, error } = useMigrations(db, migrations);
@@ -74,16 +73,6 @@ export default function Index() {
     average_weight = calculateAverageWeight(anchorDay!, data);
   }
 
-  async function handleAnchorDayChange(day: number) {
-    if (day === anchorDay) return;
-    try {
-      await insertSetting({ key: "anchor_day", value: day });
-      setAnchorDay(day);
-    } catch (e) {
-      console.error(e as Error);
-    }
-  }
-
   if (error) {
     console.error(error);
     return (
@@ -102,25 +91,22 @@ export default function Index() {
 
   return (
     <View style={[{ backgroundColor }, styles.container]}>
-      <View style={[{ backgroundColor }, styles.overviewContainer]}>
-        <View>
-          <ThemedText>Stichtag:</ThemedText>
-          <Select
-            options={ANCHOR_DAYS.map((day, index) => ({ label: day, value: index }))}
-            value={anchorDay!}
-            onChange={handleAnchorDayChange}
-          />
-        </View>
-        <ThemedText>{average_weight}</ThemedText>
-        <Pressable>
-          <IconAdd />
-        </Pressable>
-      </View>
+      <Overview
+        anchorDay={anchorDay}
+        setAnchorDay={setAnchorDay}
+        previousAverage={average_weight}
+      />
       <FlashList
         data={data}
         renderItem={({ item }) => <WeightListItem key={item.date} {...item} />}
         keyExtractor={(entry) => entry.date}
-        style={{ backgroundColor }}
+        style={{
+          backgroundColor,
+          borderColor: "grey",
+          borderStyle: "solid",
+          borderWidth: 1,
+          borderRadius: 6,
+        }}
       />
     </View>
   );
@@ -133,6 +119,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderStyle: "solid",
     borderColor: "gray",
+    gap: 12,
   },
   overviewContainer: {
     padding: 16,
