@@ -1,19 +1,24 @@
-import { ReactNode } from "react";
+import { ReactNode, Ref } from "react";
 import { StyleSheet, TextInput, TextInputProps, useColorScheme, View } from "react-native";
 
 import { Colors } from "@/constants/theme";
 
 type Props = {
   rightIcon?: ReactNode;
+  ref?: Ref<TextInput | undefined>;
 } & TextInputProps;
 
-export default function ThemedInput({ rightIcon, style, ...rest }: Props) {
+export default function ThemedInput({ rightIcon, ref, style, ...rest }: Props) {
   const colorScheme = useColorScheme();
   const { text } = Colors[colorScheme ?? "light"];
 
   return (
     <View style={styles.wrapper}>
-      <TextInput {...rest} style={[{ color: text, borderColor: text }, styles.default, style]} />
+      <TextInput
+        ref={ref}
+        {...rest}
+        style={[{ color: text, borderColor: text }, styles.default, style]}
+      />
       {rightIcon && <View>{rightIcon}</View>}
     </View>
   );
