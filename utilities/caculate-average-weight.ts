@@ -22,6 +22,5 @@ export default function calculateAverageWeight(anchor_day: number, entries: Weig
   const average_weight =
     non_zero_entries.reduce((sum, entry) => sum + entry.weight!, 0) / non_zero_entries.length;
 
-  // return non_zero_entries.reduce((sum, entry) => sum + entry.weight!, 0);
   return Number(average_weight.toFixed(2));
 }
