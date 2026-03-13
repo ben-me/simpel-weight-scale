@@ -10,6 +10,7 @@ import ThemedText from "./ThemedText";
 import { prettifyDate } from "@/utilities/prettify_date";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
+import convertUnit from "@/utilities/convert_unit";
 
 export function WeightListItem({
   date = new Date().getDate().toLocaleString(),
@@ -21,7 +22,6 @@ export function WeightListItem({
   const inputRef = useRef<TextInput>(undefined);
   const { height } = useReanimatedKeyboardAnimation();
   const prettyDate = prettifyDate(date);
-  const weightUnit = unit === 0 ? "KG" : "lbs";
 
   useEffect(() => {
     if (!modalVisible) {
@@ -74,7 +74,7 @@ export function WeightListItem({
                   maxLength={6}
                   onChangeText={setInputValue}
                 />
-                <ThemedText style={styles.modal_input}>{weightUnit}</ThemedText>
+                <ThemedText style={styles.modal_input}>{convertUnit(unit!)}</ThemedText>
               </View>
               <ThemedText style={styles.modal_subheadline}>Gewicht anpassen</ThemedText>
             </Pressable>
@@ -84,7 +84,7 @@ export function WeightListItem({
       <Pressable style={styles.entry} onPress={() => setModalVisible(true)}>
         <ThemedText>{prettyDate}:</ThemedText>
         <ThemedText style={{ marginInlineStart: "auto" }}>{weight ? weight : "-"}</ThemedText>
-        <ThemedText>{weightUnit}</ThemedText>
+        <ThemedText>{convertUnit(unit!)}</ThemedText>
       </Pressable>
     </View>
   );
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   entry: {
     flexDirection: "row",
     padding: 16,
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
     borderColor: "gray",
     gap: 6,
   },
