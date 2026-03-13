@@ -1,5 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { StyleSheet, Pressable, Modal, View, TextInput, Keyboard } from "react-native";
+import {
+  StyleSheet,
+  Pressable,
+  Modal,
+  View,
+  TextInput,
+  Keyboard,
+  useColorScheme,
+} from "react-native";
 
 import { insertWeight } from "@/db/operations";
 import { WeightTableEntry } from "@/db/schema";
@@ -8,15 +16,18 @@ import convertWeight from "@/utilities/convert-weight";
 import ThemedInput from "./ThemedInput";
 import ThemedText from "./ThemedText";
 import { prettifyDate } from "@/utilities/prettify_date";
-import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import Animated, { FadeOut, useAnimatedStyle } from "react-native-reanimated";
 import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
 import convertUnit from "@/utilities/convert_unit";
+import { Colors } from "@/constants/theme";
 
 export function WeightListItem({
   date = new Date().getDate().toLocaleString(),
   weight,
   unit = 0,
 }: WeightTableEntry) {
+  const colorScheme = useColorScheme();
+  const { backgroundLight, borderColor } = Colors[colorScheme ?? "light"];
   const [modalVisible, setModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState(String(weight));
   const inputRef = useRef<TextInput>(undefined);
@@ -29,7 +40,7 @@ export function WeightListItem({
     }
 
     const keyboardListener = Keyboard.addListener("keyboardDidHide", () => {
-      setModalVisible(false);
+      setTimeout(() => setModalVisible(false), 240);
     });
     setInputValue(String(weight));
     const keyboardFocus = setTimeout(() => inputRef.current?.focus(), 100);
@@ -60,9 +71,9 @@ export function WeightListItem({
         animationType="fade"
         allowSwipeDismissal={true}
       >
-        <Animated.View style={[translateY, { flex: 1 }]}>
+        <Animated.View exiting={FadeOut.duration(150)} style={[translateY, { flex: 1 }]}>
           <Pressable style={styles.modal} onPress={() => setModalVisible(false)}>
-            <Pressable style={styles.modal_view}>
+            <Pressable style={[styles.modal_view, { backgroundColor: backgroundLight }]}>
               <ThemedText style={styles.modal_headline}>{prettyDate}</ThemedText>
               <View style={styles.modal_input_wrapper}>
                 <ThemedInput
@@ -81,7 +92,7 @@ export function WeightListItem({
           </Pressable>
         </Animated.View>
       </Modal>
-      <Pressable style={styles.entry} onPress={() => setModalVisible(true)}>
+      <Pressable style={[styles.entry, { borderColor }]} onPress={() => setModalVisible(true)}>
         <ThemedText>{prettyDate}:</ThemedText>
         <ThemedText style={{ marginInlineStart: "auto" }}>{weight ? weight : "-"}</ThemedText>
         <ThemedText>{convertUnit(unit!)}</ThemedText>
@@ -95,7 +106,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     padding: 16,
     borderBottomWidth: 1,
-    borderColor: "gray",
     gap: 6,
   },
   modal: {
@@ -104,7 +114,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modal_view: {
-    backgroundColor: "gray",
     padding: 24,
     alignItems: "center",
     borderRadius: 6,

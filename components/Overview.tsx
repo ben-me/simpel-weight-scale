@@ -1,10 +1,11 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, useColorScheme, View } from "react-native";
 import ThemedText from "./ThemedText";
 import Select from "./Select";
 import { ANCHOR_DAYS } from "@/constants/anchor_days";
 import { getSetting, insertSetting } from "@/db/operations";
 import { useEffect, useState } from "react";
 import convertUnit from "@/utilities/convert_unit";
+import { Colors } from "@/constants/theme";
 
 type Props = {
   anchorDay: number | undefined;
@@ -13,6 +14,8 @@ type Props = {
 };
 
 export default function Overview({ anchorDay, setAnchorDay, previousAverage }: Props) {
+  const colorScheme = useColorScheme();
+  const { backgroundLight } = Colors[colorScheme ?? "light"];
   const [unit, setUnit] = useState(0);
 
   useEffect(() => {
@@ -38,20 +41,26 @@ export default function Overview({ anchorDay, setAnchorDay, previousAverage }: P
 
   return (
     <View style={styles.container}>
-      <View style={[styles.info, styles.infoDay]}>
+      <View style={[styles.info, styles.infoDay, { backgroundColor: backgroundLight }]}>
         <Select
           options={ANCHOR_DAYS.map((day, index) => ({ label: day, value: index }))}
           value={anchorDay ?? 0}
           onChange={handleAnchorDayChange}
           style={styles.highlight}
         />
-        <ThemedText style={{ opacity: 0.8, fontSize: 15 }}>Stichtag</ThemedText>
+        <ThemedText style={styles.subtitle}>Stichtag</ThemedText>
       </View>
-      <View style={[styles.info, styles.infoUnit, { alignItems: "flex-end" }]}>
+      <View
+        style={[
+          styles.info,
+          styles.infoUnit,
+          { alignItems: "flex-end", backgroundColor: backgroundLight },
+        ]}
+      >
         <ThemedText style={styles.highlight}>{convertUnit(unit)}</ThemedText>
-        <ThemedText style={{ opacity: 0.8, fontSize: 15 }}>Einheit</ThemedText>
+        <ThemedText style={styles.subtitle}>Einheit</ThemedText>
       </View>
-      <View style={[styles.info, styles.infoPreviousAverage]}>
+      <View style={[styles.info, styles.infoPreviousAverage, { backgroundColor: backgroundLight }]}>
         <View
           style={{
             flexDirection: "row",
@@ -60,12 +69,18 @@ export default function Overview({ anchorDay, setAnchorDay, previousAverage }: P
           }}
         >
           <ThemedText style={styles.highlight}>{previousAverage}</ThemedText>
-          <ThemedText style={{ lineHeight: 19 }}>{convertUnit(unit)}</ThemedText>
+          <ThemedText>{convertUnit(unit)}</ThemedText>
         </View>
-        <ThemedText style={{ opacity: 0.8, fontSize: 15 }}>Letzter Durchschnitt</ThemedText>
+        <ThemedText style={styles.subtitle}>Letzter Durchschnitt</ThemedText>
       </View>
-      <View style={[styles.info, styles.infoDifference, { alignItems: "flex-end" }]}>
-        <ThemedText>Unterschied</ThemedText>
+      <View
+        style={[
+          styles.info,
+          styles.infoDifference,
+          { alignItems: "flex-end", backgroundColor: backgroundLight },
+        ]}
+      >
+        <ThemedText style={styles.subtitle}>Unterschied</ThemedText>
       </View>
     </View>
   );
@@ -80,16 +95,19 @@ const styles = StyleSheet.create({
   info: {
     minWidth: "48%",
     flexGrow: 1,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: "red",
-    borderStyle: "solid",
+    paddingBlock: 20,
+    paddingInline: 16,
     justifyContent: "flex-end",
     borderRadius: 6,
+    gap: 6,
   },
   highlight: {
     lineHeight: 27,
     fontSize: 25,
+  },
+  subtitle: {
+    opacity: 0.7,
+    fontSize: 14,
   },
   infoDay: {},
   infoUnit: {},

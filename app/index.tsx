@@ -1,9 +1,8 @@
 import { FlashList } from "@shopify/flash-list";
 import { useMigrations } from "drizzle-orm/op-sqlite/migrator";
 import { useEffect, useState } from "react";
-import { AppState, Pressable, StyleSheet, useColorScheme, View } from "react-native";
+import { AppState, StyleSheet, useColorScheme, View } from "react-native";
 
-import { IconAdd } from "@/components/icons/IconPlus";
 import ThemedText from "@/components/ThemedText";
 import { WeightListItem } from "@/components/WeightListItem";
 import { db, opsqliteDB } from "@/db";
@@ -19,7 +18,7 @@ import Overview from "@/components/Overview";
 export default function Index() {
   const { success, error } = useMigrations(db, migrations);
   const colorScheme = useColorScheme();
-  const { backgroundColor } = Colors[colorScheme ?? "light"];
+  const { backgroundColor, backgroundLight } = Colors[colorScheme ?? "light"];
   const [weight, setWeight] = useState("");
   const [data, setData] = useState<WeightTableEntry[]>([]);
   const [anchorDay, setAnchorDay] = useState<number>();
@@ -101,10 +100,7 @@ export default function Index() {
         renderItem={({ item }) => <WeightListItem key={item.date} {...item} />}
         keyExtractor={(entry) => entry.date}
         style={{
-          backgroundColor,
-          borderColor: "grey",
-          borderStyle: "solid",
-          borderWidth: 1,
+          backgroundColor: backgroundLight,
           borderRadius: 6,
         }}
       />
@@ -116,6 +112,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingBlock: 16,
+    paddingInline: 8,
     borderTopWidth: 1,
     borderStyle: "solid",
     borderColor: "gray",
