@@ -6,7 +6,7 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { useRef } from "react";
-import { Pressable, StyleSheet, useColorScheme, View } from "react-native";
+import { Pressable, StyleProp, StyleSheet, TextStyle, useColorScheme } from "react-native";
 
 import { Colors } from "@/constants/theme";
 
@@ -18,14 +18,14 @@ type SelectOption = {
 };
 
 type Props = {
-  label?: string;
   options: SelectOption[];
   value: number;
   placeholder?: string;
   onChange: (value: number) => void;
+  style: StyleProp<TextStyle>;
 };
 
-export default function Select({ value, onChange, options, placeholder }: Props) {
+export default function Select({ value, onChange, options, placeholder, style }: Props) {
   const colorScheme = useColorScheme();
   const { text } = Colors[colorScheme ?? "light"];
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -51,14 +51,13 @@ export default function Select({ value, onChange, options, placeholder }: Props)
   }
 
   return (
-    <View>
+    <>
       <Pressable onPress={handlePresentModal}>
         <ThemedInput
-          style={styles.input}
+          style={[styles.input, style]}
           value={selected?.label ?? ""}
           placeholder={placeholder}
           editable={false}
-          rightIcon={<ThemedText style={{ fontSize: 20 }}>▼</ThemedText>}
         />
       </Pressable>
       <BottomSheetModal
@@ -86,7 +85,7 @@ export default function Select({ value, onChange, options, placeholder }: Props)
           />
         </BottomSheetView>
       </BottomSheetModal>
-    </View>
+    </>
   );
 }
 
@@ -95,7 +94,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
     padding: 0,
     textAlign: "left",
-    fontSize: 24,
+    fontSize: 22,
     width: "auto",
   },
   modalContent: {
