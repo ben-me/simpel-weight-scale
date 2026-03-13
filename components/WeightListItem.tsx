@@ -1,13 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  StyleSheet,
-  Pressable,
-  Modal,
-  View,
-  TextInput,
-  Keyboard,
-  useColorScheme,
-} from "react-native";
+import { StyleSheet, Pressable, Modal, View, TextInput, Keyboard } from "react-native";
 
 import { insertWeight } from "@/db/operations";
 import { WeightTableEntry } from "@/db/schema";
@@ -19,15 +11,14 @@ import { prettifyDate } from "@/utilities/prettify_date";
 import Animated, { FadeOut, useAnimatedStyle } from "react-native-reanimated";
 import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
 import convertUnit from "@/utilities/convert_unit";
-import { Colors } from "@/constants/theme";
+import { useThemeColors } from "@/hooks/useTheme";
 
 export function WeightListItem({
   date = new Date().getDate().toLocaleString(),
   weight,
   unit = 0,
 }: WeightTableEntry) {
-  const colorScheme = useColorScheme();
-  const { backgroundLight, borderColor } = Colors[colorScheme ?? "light"];
+  const { backgroundLight, borderColor } = useThemeColors();
   const [modalVisible, setModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState(String(weight));
   const inputRef = useRef<TextInput>(undefined);

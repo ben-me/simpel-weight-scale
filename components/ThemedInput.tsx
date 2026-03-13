@@ -1,16 +1,14 @@
+import { useThemeColors } from "@/hooks/useTheme";
 import { ReactNode, Ref } from "react";
-import { StyleSheet, TextInput, TextInputProps, useColorScheme, View } from "react-native";
-
-import { Colors } from "@/constants/theme";
+import { StyleSheet, TextInput, TextInputProps, View } from "react-native";
 
 type Props = {
   rightIcon?: ReactNode;
-  ref?: Ref<TextInput | undefined>;
+  ref?: Ref<TextInput>;
 } & TextInputProps;
 
 export default function ThemedInput({ rightIcon, ref, style, ...rest }: Props) {
-  const colorScheme = useColorScheme();
-  const { text } = Colors[colorScheme ?? "light"];
+  const { text } = useThemeColors();
 
   return (
     <View style={styles.wrapper}>

@@ -1,13 +1,11 @@
-import { Pressable, StyleSheet, useColorScheme } from "react-native";
-
+import { Pressable, StyleSheet } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { Colors } from "@/constants/theme";
 import IconOptions from "./icons/IconOptions";
 import { useMenuStore } from "@/store/menu";
+import { useThemeColors } from "@/hooks/useTheme";
 
 export default function OptionsMenu() {
-  const colorScheme = useColorScheme();
-  const { headerBackground } = Colors[colorScheme ?? "light"];
+  const { headerBackground } = useThemeColors();
   const backgroundColor = useSharedValue<string>(headerBackground);
   const { openMenu } = useMenuStore();
 

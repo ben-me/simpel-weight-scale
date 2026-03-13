@@ -1,17 +1,16 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useColorScheme, Text } from "react-native";
+import { Text } from "react-native";
 
-import { Colors } from "@/constants/theme";
 import OptionsMenu from "@/components/OptionsMenu";
 import OptionWindow from "@/components/OptionWindow";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { useThemeColors } from "@/hooks/useTheme";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const { headerBackground } = Colors[colorScheme as "light" | "dark"];
+  const { headerBackground } = useThemeColors();
   return (
     <GestureHandlerRootView>
       <BottomSheetModalProvider>

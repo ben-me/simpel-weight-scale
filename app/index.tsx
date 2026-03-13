@@ -1,7 +1,7 @@
 import { FlashList } from "@shopify/flash-list";
 import { useMigrations } from "drizzle-orm/op-sqlite/migrator";
 import { useEffect, useState } from "react";
-import { AppState, StyleSheet, useColorScheme, View } from "react-native";
+import { AppState, StyleSheet, View } from "react-native";
 
 import ThemedText from "@/components/ThemedText";
 import { WeightListItem } from "@/components/WeightListItem";
@@ -10,19 +10,19 @@ import { getSetting, getWeights, insertSetting } from "@/db/operations";
 import { WeightTableEntry } from "@/db/schema";
 import calculateAverageWeight from "@/utilities/caculate-average-weight";
 
-import { Colors } from "../constants/theme";
 import migrations from "../drizzle/migrations";
 import { checkAndInsertToday } from "@/utilities/check_and_insert_today";
 import Overview from "@/components/Overview";
+import { useThemeColors } from "@/hooks/useTheme";
 
 export default function Index() {
   const { success, error } = useMigrations(db, migrations);
-  const colorScheme = useColorScheme();
-  const { backgroundColor, backgroundLight } = Colors[colorScheme ?? "light"];
+  const { backgroundColor, backgroundLight } = useThemeColors();
   const [weight, setWeight] = useState("");
   const [data, setData] = useState<WeightTableEntry[]>([]);
   const [anchorDay, setAnchorDay] = useState<number>();
-  let average_weight: number | undefined;
+  let currentAverageWeight: number | undefined;
+  let previousAverageWeight: number | undefined;
 
   useEffect(() => {
     if (!success) return;
@@ -69,7 +69,11 @@ export default function Index() {
   }, []);
 
   if (data && data.length >= 7) {
-    average_weight = calculateAverageWeight(anchorDay!, data);
+    currentAverageWeight = calculateAverageWeight(anchorDay!, data);
+  }
+
+  if (data && data.length >= 14) {
+    previousAverageWeight = calculateAverageWeight(anchorDay, data.slice());
   }
 
   if (error) {
@@ -93,11 +97,11 @@ export default function Index() {
       <Overview
         anchorDay={anchorDay}
         setAnchorDay={setAnchorDay}
-        previousAverage={average_weight}
+        previousAverage={currentAverageWeight}
       />
       <FlashList
         data={data}
-        renderItem={({ item }) => <WeightListItem key={item.date} {...item} />}
+        renderItem={({ item }) => <WeightListItem {...item} />}
         keyExtractor={(entry) => entry.date}
         style={{
           backgroundColor: backgroundLight,

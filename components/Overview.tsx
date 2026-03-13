@@ -1,11 +1,11 @@
-import { StyleSheet, useColorScheme, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import ThemedText from "./ThemedText";
 import Select from "./Select";
 import { ANCHOR_DAYS } from "@/constants/anchor_days";
 import { getSetting, insertSetting } from "@/db/operations";
 import { useEffect, useState } from "react";
 import convertUnit from "@/utilities/convert_unit";
-import { Colors } from "@/constants/theme";
+import { useThemeColors } from "@/hooks/useTheme";
 
 type Props = {
   anchorDay: number | undefined;
@@ -14,8 +14,7 @@ type Props = {
 };
 
 export default function Overview({ anchorDay, setAnchorDay, previousAverage }: Props) {
-  const colorScheme = useColorScheme();
-  const { backgroundLight } = Colors[colorScheme ?? "light"];
+  const { backgroundLight } = useThemeColors();
   const [unit, setUnit] = useState(0);
 
   useEffect(() => {

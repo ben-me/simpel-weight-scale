@@ -6,12 +6,11 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { useRef } from "react";
-import { Pressable, StyleProp, StyleSheet, TextStyle, useColorScheme } from "react-native";
-
-import { Colors } from "@/constants/theme";
+import { Pressable, StyleProp, StyleSheet, TextStyle } from "react-native";
 
 import ThemedInput from "./ThemedInput";
 import ThemedText from "./ThemedText";
+import { useThemeColors } from "@/hooks/useTheme";
 type SelectOption = {
   label: string;
   value: number;
@@ -26,8 +25,7 @@ type Props = {
 };
 
 export default function Select({ value, onChange, options, placeholder, style }: Props) {
-  const colorScheme = useColorScheme();
-  const { text } = Colors[colorScheme ?? "light"];
+  const { text, backgroundLight, backgroundColor } = useThemeColors();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const selected = options.find((option) => option.value === value);
 
@@ -63,11 +61,11 @@ export default function Select({ value, onChange, options, placeholder, style }:
       <BottomSheetModal
         animationConfigs={{ duration: 350 }}
         handleIndicatorStyle={{ backgroundColor: text }}
-        backgroundStyle={{ backgroundColor: "black" }}
+        backgroundStyle={{ backgroundColor }}
         backdropComponent={renderBackdrop}
         ref={bottomSheetModalRef}
       >
-        <BottomSheetView style={[styles.modalContent]}>
+        <BottomSheetView style={{ backgroundColor }}>
           <BottomSheetFlatList
             data={options}
             keyExtractor={(item: SelectOption) => item.label}
@@ -102,10 +100,11 @@ const styles = StyleSheet.create({
   },
   option: {
     fontSize: 24,
+    lineHeight: 25,
     textAlign: "center",
     width: "100%",
     paddingVertical: 24,
-    borderBottomWidth: 1,
-    borderBottomColor: "silver",
+    borderTopWidth: 1,
+    borderTopColor: "silver",
   },
 });
