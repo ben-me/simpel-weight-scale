@@ -1,9 +1,7 @@
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { FlashList } from "@shopify/flash-list";
 import { useMigrations } from "drizzle-orm/op-sqlite/migrator";
 import { useEffect, useState } from "react";
 import { AppState, Pressable, StyleSheet, useColorScheme, View } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { IconAdd } from "@/components/icons/IconPlus";
 import Select from "@/components/Select";
@@ -103,32 +101,28 @@ export default function Index() {
   }
 
   return (
-    <GestureHandlerRootView>
-      <BottomSheetModalProvider>
-        <View style={[{ backgroundColor }, styles.container]}>
-          <View style={[{ backgroundColor }, styles.inputContainer]}>
-            <View>
-              <ThemedText>Stichtag:</ThemedText>
-              <Select
-                options={ANCHOR_DAYS.map((day, index) => ({ label: day, value: index }))}
-                value={anchorDay!}
-                onChange={handleAnchorDayChange}
-              />
-            </View>
-            <ThemedText>{average_weight}</ThemedText>
-            <Pressable>
-              <IconAdd />
-            </Pressable>
-          </View>
-          <FlashList
-            data={data}
-            renderItem={({ item }) => <WeightListItem key={item.date} {...item} />}
-            keyExtractor={(entry) => entry.date}
-            style={{ backgroundColor }}
+    <View style={[{ backgroundColor }, styles.container]}>
+      <View style={[{ backgroundColor }, styles.overviewContainer]}>
+        <View>
+          <ThemedText>Stichtag:</ThemedText>
+          <Select
+            options={ANCHOR_DAYS.map((day, index) => ({ label: day, value: index }))}
+            value={anchorDay!}
+            onChange={handleAnchorDayChange}
           />
         </View>
-      </BottomSheetModalProvider>
-    </GestureHandlerRootView>
+        <ThemedText>{average_weight}</ThemedText>
+        <Pressable>
+          <IconAdd />
+        </Pressable>
+      </View>
+      <FlashList
+        data={data}
+        renderItem={({ item }) => <WeightListItem key={item.date} {...item} />}
+        keyExtractor={(entry) => entry.date}
+        style={{ backgroundColor }}
+      />
+    </View>
   );
 }
 
@@ -140,7 +134,7 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     borderColor: "gray",
   },
-  inputContainer: {
+  overviewContainer: {
     padding: 16,
     flexDirection: "row",
     justifyContent: "space-between",
