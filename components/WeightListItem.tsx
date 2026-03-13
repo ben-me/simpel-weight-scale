@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { StyleSheet, Pressable, Modal, View, KeyboardAvoidingView, Platform } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { StyleSheet, Pressable, Modal, View, TextInput } from "react-native";
 
 import { insertWeight } from "@/db/operations";
 import { WeightTableEntry } from "@/db/schema";
@@ -8,6 +8,8 @@ import convertWeight from "@/utilities/convert-weight";
 import ThemedInput from "./ThemedInput";
 import ThemedText from "./ThemedText";
 import { prettifyDate } from "@/utilities/prettify_date";
+import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
 
 export function WeightListItem({
   date = new Date().getDate().toLocaleString(),
@@ -16,8 +18,23 @@ export function WeightListItem({
 }: WeightTableEntry) {
   const [modalVisible, setModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState(String(weight));
+  const inputRef = useRef<TextInput>(undefined);
+  const { height } = useReanimatedKeyboardAnimation();
   const prettyDate = prettifyDate(date);
   const weightUnit = unit === 0 ? "KG" : "lbs";
+
+  useEffect(() => {
+    if (!modalVisible) {
+      return;
+    }
+
+    setInputValue(String(weight));
+    const keyboardFocus = setTimeout(() => inputRef.current?.focus(), 100);
+
+    return () => {
+      clearTimeout(keyboardFocus);
+    };
+  }, [modalVisible, weight]);
 
   async function handleInputChange() {
     const convertedWeight = convertWeight(inputValue);
@@ -25,6 +42,10 @@ export function WeightListItem({
     await insertWeight({ date, weight: convertedWeight, unit });
     setModalVisible(false);
   }
+
+  const translateY = useAnimatedStyle(() => ({
+    transform: [{ translateY: height.get() / 3 }],
+  }));
 
   return (
     <View>
@@ -35,16 +56,14 @@ export function WeightListItem({
         animationType="fade"
         allowSwipeDismissal={true}
       >
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-        >
+        <Animated.View style={[translateY, { flex: 1 }]}>
           <Pressable style={styles.modal} onPress={() => setModalVisible(false)}>
             <Pressable style={styles.modal_view}>
               <ThemedText style={styles.modal_headline}>{prettyDate}</ThemedText>
               <View style={styles.modal_input_wrapper}>
                 <ThemedInput
-                  onBlur={handleInputChange}
+                  ref={inputRef}
+                  onSubmitEditing={handleInputChange}
                   keyboardType="number-pad"
                   style={styles.modal_input}
                   value={inputValue}
@@ -56,7 +75,7 @@ export function WeightListItem({
               <ThemedText style={styles.modal_subheadline}>Gewicht anpassen</ThemedText>
             </Pressable>
           </Pressable>
-        </KeyboardAvoidingView>
+        </Animated.View>
       </Modal>
       <Pressable style={styles.entry} onPress={() => setModalVisible(true)}>
         <ThemedText>{prettyDate}:</ThemedText>
