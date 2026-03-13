@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { StyleSheet, Pressable, Modal, View, TextInput } from "react-native";
+import { StyleSheet, Pressable, Modal, View, TextInput, Keyboard } from "react-native";
 
 import { insertWeight } from "@/db/operations";
 import { WeightTableEntry } from "@/db/schema";
@@ -28,11 +28,15 @@ export function WeightListItem({
       return;
     }
 
+    const keyboardListener = Keyboard.addListener("keyboardDidHide", () => {
+      setModalVisible(false);
+    });
     setInputValue(String(weight));
     const keyboardFocus = setTimeout(() => inputRef.current?.focus(), 100);
 
     return () => {
       clearTimeout(keyboardFocus);
+      keyboardListener.remove();
     };
   }, [modalVisible, weight]);
 
