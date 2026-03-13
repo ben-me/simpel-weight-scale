@@ -4,21 +4,15 @@ import { db, opsqliteDB } from ".";
 import { WeightTableEntry, settings, weightTable, SettingTableEntry } from "./schema";
 
 export async function getWeights() {
-  let result: WeightTableEntry[] = [];
-  await opsqliteDB.transaction(async () => {
-    result = await db.select().from(weightTable).orderBy(desc(weightTable.date));
+  return await db.query.weightTable.findMany({
+    orderBy: desc(weightTable.date),
   });
-  return result;
 }
 
 export async function getSingleWeight(date: string) {
-  let result: WeightTableEntry | undefined;
-  await opsqliteDB.transaction(async () => {
-    result = await db.query.weightTable.findFirst({
-      where: eq(weightTable.date, date),
-    });
+  return await db.query.weightTable.findFirst({
+    where: eq(weightTable.date, date),
   });
-  return result;
 }
 
 export async function insertWeight(value: WeightTableEntry) {
@@ -52,12 +46,9 @@ export async function insertMultipleWeights(list: WeightTableEntry[]) {
 }
 
 export async function getSetting(key: string) {
-  let setting: SettingTableEntry[] = [];
-  await opsqliteDB.transaction(async () => {
-    setting = await db.select().from(settings).where(eq(settings.key, key));
+  return await db.query.settings.findFirst({
+    where: eq(settings.key, key),
   });
-
-  return setting[0];
 }
 
 export async function clearWeightTable() {
