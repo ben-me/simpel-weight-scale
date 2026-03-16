@@ -1,7 +1,6 @@
-import { FlashList } from "@shopify/flash-list";
 import { useMigrations } from "drizzle-orm/op-sqlite/migrator";
 import { useEffect, useState } from "react";
-import { AppState, StyleSheet, View } from "react-native";
+import { AppState, FlatList, StyleSheet, View } from "react-native";
 
 import ThemedText from "@/components/ThemedText";
 import { WeightListItem } from "@/components/WeightListItem";
@@ -14,6 +13,7 @@ import migrations from "../drizzle/migrations";
 import { checkAndInsertToday } from "@/utilities/check_and_insert_today";
 import Overview from "@/components/Overview";
 import { useThemeColors } from "@/hooks/useTheme";
+import { MainDisplay } from "@/components/MainDisplay";
 
 export default function Index() {
   const { success, error } = useMigrations(db, migrations);
@@ -92,13 +92,14 @@ export default function Index() {
 
   return (
     <View style={[{ backgroundColor }, styles.container]}>
+      <MainDisplay currentWeight={current_average_weight} />
       <Overview
         anchorDay={anchorDay}
         setAnchorDay={setAnchorDay}
         previousAverage={previous_average_weight}
         difference={weightDifference}
       />
-      <FlashList
+      <FlatList
         data={data}
         renderItem={({ item }) => <WeightListItem {...item} />}
         keyExtractor={(entry) => entry.date}
