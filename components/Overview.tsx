@@ -6,6 +6,7 @@ import { getSetting, insertSetting } from "@/db/operations";
 import { useEffect, useState } from "react";
 import convertUnit from "@/utilities/convert_unit";
 import { useThemeColors } from "@/hooks/useTheme";
+import AnimatedRollingNumber from "react-native-animated-rolling-numbers";
 
 type Props = {
   anchorDay: number | undefined;
@@ -15,7 +16,7 @@ type Props = {
 };
 
 export default function Overview({ anchorDay, setAnchorDay, previousAverage, difference }: Props) {
-  const { backgroundLight } = useThemeColors();
+  const { backgroundLight, text } = useThemeColors();
   const [unit, setUnit] = useState(0);
 
   useEffect(() => {
@@ -80,7 +81,11 @@ export default function Overview({ anchorDay, setAnchorDay, previousAverage, dif
           { alignItems: "flex-end", backgroundColor: backgroundLight },
         ]}
       >
-        <ThemedText style={styles.highlight}>{difference ? difference : "-"}</ThemedText>
+        <AnimatedRollingNumber
+          showPlusSign={true}
+          value={difference ? difference : 0}
+          textStyle={[styles.highlight, { color: text }]}
+        />
         <ThemedText style={styles.subtitle}>Unterschied</ThemedText>
       </View>
     </View>
