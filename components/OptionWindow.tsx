@@ -1,4 +1,4 @@
-import { BackHandler, Pressable, StyleSheet, Text, View } from "react-native";
+import { BackHandler, Pressable, StyleSheet, View } from "react-native";
 import Animated, { FadeIn, FadeOut, Keyframe } from "react-native-reanimated";
 import ThemedText from "./ThemedText";
 import { useMenuStore } from "@/store/menu";
@@ -6,9 +6,11 @@ import { useEffect, useState } from "react";
 import CustomModal from "./CustomModal";
 import Button from "./Button";
 import { importCSV } from "@/utilities/import_csv";
+import { useThemeColors } from "@/hooks/useTheme";
 
 export default function OptionWindow() {
   const { menuShown, closeMenu } = useMenuStore();
+  const { backgroundLight, borderColor } = useThemeColors();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   useEffect(() => {
@@ -39,10 +41,10 @@ export default function OptionWindow() {
         <Animated.View
           entering={customFadeIn.duration(100)}
           exiting={customFadeOut.duration(100)}
-          style={styles.settingsMenu}
+          style={[styles.settingsMenu, { backgroundColor: backgroundLight, borderColor }]}
         >
           <ThemedText
-            style={{ fontSize: 17 }}
+            style={{ fontSize: 19, lineHeight: 20 }}
             onPress={() => {
               closeMenu();
               setShowConfirmModal(true);
@@ -50,7 +52,7 @@ export default function OptionWindow() {
           >
             Importieren
           </ThemedText>
-          <ThemedText style={{ fontSize: 17 }}>Exportieren</ThemedText>
+          <ThemedText style={{ fontSize: 19, lineHeight: 20 }}>Exportieren</ThemedText>
         </Animated.View>
       </Pressable>
     );
@@ -67,12 +69,14 @@ export default function OptionWindow() {
           entering={FadeIn.duration(150)}
           exiting={FadeOut.duration(150)}
         >
-          <View style={styles.modalText}>
-            <ThemedText style={{ fontSize: 24, fontWeight: "bold", marginBottom: 4 }}>
+          <View style={[styles.modalText, { backgroundColor: backgroundLight }]}>
+            <ThemedText
+              style={{ fontSize: 24, lineHeight: 25, fontWeight: "bold", marginBottom: 4 }}
+            >
               Import bestätigen
             </ThemedText>
             <ThemedText>Daten können nur über eine CSV-Datei (Excel) importiert werden.</ThemedText>
-            <ThemedText style={{ fontSize: 18, marginTop: 12, fontWeight: "bold" }}>
+            <ThemedText style={{ fontSize: 18, lineHeight: 19, marginTop: 12, fontWeight: "bold" }}>
               Beispiel:
             </ThemedText>
 
@@ -81,6 +85,7 @@ export default function OptionWindow() {
             <ThemedText
               style={{
                 fontSize: 20,
+                lineHeight: 21,
                 fontWeight: "bold",
                 marginTop: 12,
                 textDecorationLine: "underline",
@@ -120,20 +125,20 @@ const styles = StyleSheet.create({
     right: 24,
     backgroundColor: "grey",
     zIndex: 2,
-    paddingVertical: 16,
-    paddingHorizontal: 12,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
     borderRadius: 5,
-    gap: 24,
+    borderWidth: 2,
+    gap: 32,
   },
   modalText: {
     padding: 18,
-    backgroundColor: "grey",
     marginInline: 40,
     borderRadius: 6,
   },
   button: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     borderRadius: 6,
   },
   continue: {
