@@ -11,9 +11,10 @@ type Props = {
   anchorDay: number | undefined;
   setAnchorDay: React.Dispatch<React.SetStateAction<number>>;
   previousAverage: number | undefined;
+  difference: number | undefined;
 };
 
-export default function Overview({ anchorDay, setAnchorDay, previousAverage }: Props) {
+export default function Overview({ anchorDay, setAnchorDay, previousAverage, difference }: Props) {
   const { backgroundLight } = useThemeColors();
   const [unit, setUnit] = useState(0);
 
@@ -79,6 +80,7 @@ export default function Overview({ anchorDay, setAnchorDay, previousAverage }: P
           { alignItems: "flex-end", backgroundColor: backgroundLight },
         ]}
       >
+        <ThemedText style={styles.highlight}>{difference ? difference : "-"}</ThemedText>
         <ThemedText style={styles.subtitle}>Unterschied</ThemedText>
       </View>
     </View>

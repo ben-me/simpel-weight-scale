@@ -25,6 +25,7 @@ export default function Index() {
     anchorDay,
     data,
   );
+  let weightDifference: number | undefined;
 
   useEffect(() => {
     if (!success) return;
@@ -69,6 +70,10 @@ export default function Index() {
     return () => subscribeToAppState.remove();
   }, []);
 
+  if (previous_average_weight && current_average_weight) {
+    weightDifference = Number((current_average_weight - previous_average_weight).toFixed(2));
+  }
+
   if (error) {
     console.error(error);
     return (
@@ -91,6 +96,7 @@ export default function Index() {
         anchorDay={anchorDay}
         setAnchorDay={setAnchorDay}
         previousAverage={previous_average_weight}
+        difference={weightDifference}
       />
       <FlashList
         data={data}
