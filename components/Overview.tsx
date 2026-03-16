@@ -9,7 +9,7 @@ import { useThemeColors } from "@/hooks/useTheme";
 
 type Props = {
   anchorDay: number | undefined;
-  setAnchorDay: React.Dispatch<React.SetStateAction<number | undefined>>;
+  setAnchorDay: React.Dispatch<React.SetStateAction<number>>;
   previousAverage: number | undefined;
 };
 

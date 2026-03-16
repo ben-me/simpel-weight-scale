@@ -20,9 +20,11 @@ export default function Index() {
   const { backgroundColor, backgroundLight } = useThemeColors();
   const [weight, setWeight] = useState("");
   const [data, setData] = useState<WeightTableEntry[]>([]);
-  const [anchorDay, setAnchorDay] = useState<number>();
-  let currentAverageWeight: number | undefined;
-  let previousAverageWeight: number | undefined;
+  const [anchorDay, setAnchorDay] = useState<number>(0);
+  const { current_average_weight, previous_average_weight } = calculateAverageWeight(
+    anchorDay,
+    data,
+  );
 
   useEffect(() => {
     if (!success) return;
@@ -39,7 +41,6 @@ export default function Index() {
           setAnchorDay(dbAnchorDay.value);
         } else {
           await insertSetting({ value: 0, key: "anchor_day" });
-          setAnchorDay(0);
         }
       } catch (error) {
         console.error("Init failed", error);
@@ -68,14 +69,6 @@ export default function Index() {
     return () => subscribeToAppState.remove();
   }, []);
 
-  if (data && data.length >= 7) {
-    currentAverageWeight = calculateAverageWeight(anchorDay!, data);
-  }
-
-  if (data && data.length >= 14) {
-    previousAverageWeight = calculateAverageWeight(anchorDay, data.slice());
-  }
-
   if (error) {
     console.error(error);
     return (
@@ -97,7 +90,7 @@ export default function Index() {
       <Overview
         anchorDay={anchorDay}
         setAnchorDay={setAnchorDay}
-        previousAverage={currentAverageWeight}
+        previousAverage={previous_average_weight}
       />
       <FlashList
         data={data}
