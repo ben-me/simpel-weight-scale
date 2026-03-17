@@ -21,7 +21,7 @@ export function WeightListItem({
   const { backgroundLight, borderColor } = useThemeColors();
   const [modalVisible, setModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState(String(weight));
-  const inputRef = useRef<TextInput>(undefined);
+  const inputRef = useRef<TextInput>(null);
   const { height } = useReanimatedKeyboardAnimation();
   const prettyDate = prettifyDate(date);
 

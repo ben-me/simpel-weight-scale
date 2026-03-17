@@ -1,10 +1,10 @@
 import { useThemeColors } from "@/hooks/useTheme";
-import { ReactNode, Ref } from "react";
+import { ReactNode, RefObject } from "react";
 import { StyleSheet, TextInput, TextInputProps, View } from "react-native";
 
 type Props = {
   rightIcon?: ReactNode;
-  ref?: Ref<TextInput>;
+  ref: RefObject<TextInput | null>;
 } & TextInputProps;
 
 export default function ThemedInput({ rightIcon, ref, style, ...rest }: Props) {
