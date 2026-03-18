@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 20,
     borderRadius: 5,
-    borderWidth: 2,
+    borderWidth: 1,
     gap: 32,
   },
   modalText: {
