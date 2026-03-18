@@ -7,6 +7,7 @@ import CustomModal from "./CustomModal";
 import Button from "./Button";
 import { importCSV } from "@/utilities/import_csv";
 import { useThemeColors } from "@/hooks/useTheme";
+import exportCSV from "@/utilities/export";
 
 export default function OptionWindow() {
   const { menuShown, closeMenu } = useMenuStore();
@@ -44,7 +45,14 @@ export default function OptionWindow() {
           style={[styles.settingsMenu, { backgroundColor: backgroundLight, borderColor }]}
         >
           <ThemedText
-            style={{ fontSize: 19, lineHeight: 20 }}
+            style={{
+              padding: 16,
+              borderBottomWidth: 1,
+              borderBottomColor: borderColor,
+              borderStyle: "solid",
+              fontSize: 19,
+              lineHeight: 20,
+            }}
             onPress={() => {
               closeMenu();
               setShowConfirmModal(true);
@@ -52,7 +60,16 @@ export default function OptionWindow() {
           >
             Importieren
           </ThemedText>
-          <ThemedText style={{ fontSize: 19, lineHeight: 20 }}>Exportieren</ThemedText>
+          <ThemedText
+            style={{
+              padding: 16,
+              fontSize: 19,
+              lineHeight: 20,
+            }}
+            onPress={exportCSV}
+          >
+            Exportieren
+          </ThemedText>
         </Animated.View>
       </Pressable>
     );
@@ -125,11 +142,8 @@ const styles = StyleSheet.create({
     right: 24,
     backgroundColor: "grey",
     zIndex: 2,
-    paddingVertical: 20,
-    paddingHorizontal: 20,
     borderRadius: 5,
     borderWidth: 1,
-    gap: 32,
   },
   modalText: {
     padding: 18,
