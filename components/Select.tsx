@@ -5,8 +5,8 @@ import {
   BottomSheetModal,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import { useRef } from "react";
-import { Pressable, StyleProp, StyleSheet, TextStyle } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { BackHandler, Pressable, StyleProp, StyleSheet, TextStyle } from "react-native";
 
 import ThemedInput from "./ThemedInput";
 import ThemedText from "./ThemedText";
@@ -28,6 +28,21 @@ export default function Select({ value, onChange, options, placeholder, style }:
   const { text, backgroundColor } = useThemeColors();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const selected = options.find((option) => option.value === value);
+  const [bottomSheetIndex, setBottomSheetIndex] = useState(-1);
+
+  useEffect(() => {
+    if (bottomSheetIndex === -1) return;
+    const listener = BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+    return () => listener.remove();
+  }, [bottomSheetIndex]);
+
+  const onBackPress = () => {
+    if (bottomSheetModalRef) {
+      bottomSheetModalRef.current?.close();
+      return true;
+    }
+  };
 
   function handlePresentModal() {
     bottomSheetModalRef.current?.present();
@@ -64,6 +79,9 @@ export default function Select({ value, onChange, options, placeholder, style }:
         backgroundStyle={{ backgroundColor }}
         backdropComponent={renderBackdrop}
         ref={bottomSheetModalRef}
+        onChange={(index) => {
+          setBottomSheetIndex(index);
+        }}
       >
         <BottomSheetView style={{ backgroundColor }}>
           <BottomSheetFlatList
