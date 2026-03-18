@@ -7,7 +7,7 @@ import { WeightTableEntry } from "@/db/schema";
 export async function importCSV() {
   const picker = await DocumentPicker.getDocumentAsync({
     copyToCacheDirectory: false,
-    type: "text/csv",
+    type: ["text/csv", "text/comma-separated-values"],
   });
   if (picker.canceled) {
     return;
