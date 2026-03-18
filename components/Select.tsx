@@ -25,7 +25,7 @@ type Props = {
 };
 
 export default function Select({ value, onChange, options, placeholder, style }: Props) {
-  const { text, backgroundLight, backgroundColor } = useThemeColors();
+  const { text, backgroundColor } = useThemeColors();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const selected = options.find((option) => option.value === value);
 

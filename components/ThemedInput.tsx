@@ -4,7 +4,7 @@ import { StyleSheet, TextInput, TextInputProps, View } from "react-native";
 
 type Props = {
   rightIcon?: ReactNode;
-  ref: RefObject<TextInput | null>;
+  ref?: RefObject<TextInput | null>;
 } & TextInputProps;
 
 export default function ThemedInput({ rightIcon, ref, style, ...rest }: Props) {
