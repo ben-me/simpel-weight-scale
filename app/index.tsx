@@ -7,7 +7,7 @@ import { WeightListItem } from "@/components/WeightListItem";
 import { db, opsqliteDB } from "@/db";
 import { getSetting, getWeights, insertSetting } from "@/db/operations";
 import { WeightTableEntry } from "@/db/schema";
-import calculateAverageWeight from "@/utilities/caculate-average-weight";
+import { calculateAverageWeight, getLoggedDays } from "@/utilities/caculate-average-weight";
 
 import migrations from "../drizzle/migrations";
 import { checkAndInsertToday } from "@/utilities/check_and_insert_today";
@@ -26,6 +26,8 @@ export default function Index() {
     data,
   );
   let weightDifference: number | undefined;
+
+  const { daysLogged } = getLoggedDays(anchorDay, data);
 
   useEffect(() => {
     if (!success) return;
@@ -92,7 +94,8 @@ export default function Index() {
 
   return (
     <View style={[{ backgroundColor }, styles.container]}>
-      <MainDisplay currentWeight={current_average_weight} />
+      <MainDisplay daysLogged={daysLogged} daysTotal={7} currentWeight={current_average_weight} />
+
       <Overview
         anchorDay={anchorDay}
         setAnchorDay={setAnchorDay}

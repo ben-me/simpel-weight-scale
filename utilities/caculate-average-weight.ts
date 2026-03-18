@@ -30,7 +30,7 @@ function averageWeight(entries: WeightTableEntry[]) {
   return Number((sum / valid_entries.length).toFixed(2));
 }
 
-export default function calculateAverageWeight(anchor_day: number, entries: WeightTableEntry[]) {
+export function calculateAverageWeight(anchor_day: number, entries: WeightTableEntry[]) {
   const sorted_entries = [...entries].sort((a, b) => b.date.localeCompare(a.date));
   const [anchor1, anchor2, anchor3] = findAnchorDays(anchor_day, sorted_entries);
 
@@ -49,4 +49,18 @@ export default function calculateAverageWeight(anchor_day: number, entries: Weig
   const previous_average_weight = averageWeight(previous_data);
 
   return { current_average_weight, previous_average_weight };
+}
+
+export function getLoggedDays(anchor_day: number, entries: WeightTableEntry[]) {
+  const [anchor1, anchor2] = findAnchorDays(anchor_day, entries);
+  const isTodayAnchorDay = toAppDayIndex(new Date().getDay()) === anchor_day;
+
+  let relevant_entries: WeightTableEntry[];
+  if (isTodayAnchorDay && anchor2) {
+    relevant_entries = dataBetweenAnchorDays(entries, anchor1, anchor2);
+  } else {
+    relevant_entries = dataBetweenAnchorDays(entries, entries[0], anchor1);
+  }
+
+  return { daysLogged: relevant_entries.filter((e) => e.weight !== 0).length };
 }
