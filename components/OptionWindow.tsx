@@ -110,7 +110,7 @@ export default function OptionWindow() {
             >
               Wichtig:
             </ThemedText>
-            <ThemedText>Bestehende Daten werden beim Import gelöscht.</ThemedText>
+            <ThemedText>Bestehende Daten werden beim Import überschrieben.</ThemedText>
             <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 20 }}>
               <Button
                 style={[styles.button, styles.cancel]}
@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
     padding: 18,
     marginInline: 40,
     borderRadius: 6,
+    gap: 8,
   },
   button: {
     paddingVertical: 12,
