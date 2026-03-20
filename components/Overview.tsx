@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import convertUnit from "@/utilities/convert_unit";
 import { useThemeColors } from "@/hooks/useTheme";
 import AnimatedRollingNumber from "react-native-animated-rolling-numbers";
+import OverviewField from "./OverviewField";
 
 type Props = {
   anchorDay: number | undefined;
@@ -42,38 +43,22 @@ export default function Overview({ anchorDay, setAnchorDay, previousAverage, dif
 
   return (
     <View style={styles.container}>
-      <View style={[styles.info, styles.infoDay, { backgroundColor: backgroundLight }]}>
-        <Select
-          options={ANCHOR_DAYS.map((day, index) => ({ label: day, value: index }))}
-          value={anchorDay ?? 0}
-          onChange={handleAnchorDayChange}
-          style={styles.highlight}
-        />
-        <ThemedText style={styles.subtitle}>Stichtag</ThemedText>
-      </View>
-      <View
-        style={[
-          styles.info,
-          styles.infoUnit,
-          { alignItems: "flex-end", backgroundColor: backgroundLight },
-        ]}
-      >
-        <ThemedText style={styles.highlight}>{convertUnit(unit)}</ThemedText>
-        <ThemedText style={styles.subtitle}>Einheit</ThemedText>
-      </View>
-      <View style={[styles.info, styles.infoPreviousAverage, { backgroundColor: backgroundLight }]}>
-        <View
-          style={{
-            flexDirection: "row",
-            gap: 8,
-            alignItems: "flex-end",
-          }}
-        >
-          <ThemedText style={styles.highlight}>{previousAverage}</ThemedText>
-          <ThemedText>{convertUnit(unit)}</ThemedText>
-        </View>
-        <ThemedText style={styles.subtitle}>Letzter Durchschnitt</ThemedText>
-      </View>
+      <Select
+        options={ANCHOR_DAYS.map((day, index) => ({ label: day, value: index }))}
+        value={anchorDay ?? 0}
+        onChange={handleAnchorDayChange}
+        style={styles.info}
+      />
+      <OverviewField
+        highlightedText={convertUnit(unit)}
+        subtitleText="Einheit"
+        style={[styles.info, { backgroundColor: backgroundLight, alignItems: "flex-end" }]}
+      />
+      <OverviewField
+        highlightedText={previousAverage ? previousAverage : "-"}
+        subtitleText="Letzter Durchschnitt"
+        style={[styles.info, { backgroundColor: backgroundLight }]}
+      />
       <View
         style={[
           styles.info,

@@ -6,7 +6,7 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { useEffect, useRef, useState } from "react";
-import { BackHandler, Pressable, StyleProp, StyleSheet, TextStyle } from "react-native";
+import { BackHandler, Pressable, StyleProp, StyleSheet, ViewStyle } from "react-native";
 
 import ThemedInput from "./ThemedInput";
 import ThemedText from "./ThemedText";
@@ -21,11 +21,11 @@ type Props = {
   value: number;
   placeholder?: string;
   onChange: (value: number) => void;
-  style: StyleProp<TextStyle>;
+  style: StyleProp<ViewStyle>;
 };
 
 export default function Select({ value, onChange, options, placeholder, style }: Props) {
-  const { text, backgroundColor } = useThemeColors();
+  const { text, backgroundLight } = useThemeColors();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const selected = options.find((option) => option.value === value);
   const [bottomSheetIndex, setBottomSheetIndex] = useState(-1);
@@ -65,25 +65,26 @@ export default function Select({ value, onChange, options, placeholder, style }:
 
   return (
     <>
-      <Pressable onPress={handlePresentModal}>
+      <Pressable onPress={handlePresentModal} style={[style, { backgroundColor: backgroundLight }]}>
         <ThemedInput
-          style={[styles.input, style]}
+          style={[styles.input]}
           value={selected?.label ?? ""}
           placeholder={placeholder}
           editable={false}
         />
+        <ThemedText style={styles.subtitle}>Stichtag</ThemedText>
       </Pressable>
       <BottomSheetModal
         animationConfigs={{ duration: 350 }}
         handleIndicatorStyle={{ backgroundColor: text }}
-        backgroundStyle={{ backgroundColor }}
+        backgroundStyle={{ backgroundColor: backgroundLight }}
         backdropComponent={renderBackdrop}
         ref={bottomSheetModalRef}
         onChange={(index) => {
           setBottomSheetIndex(index);
         }}
       >
-        <BottomSheetView style={{ backgroundColor }}>
+        <BottomSheetView style={{ backgroundColor: backgroundLight }}>
           <BottomSheetFlatList
             data={options}
             keyExtractor={(item: SelectOption) => item.label}
@@ -124,5 +125,9 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
     borderTopWidth: 1,
     borderTopColor: "silver",
+  },
+  subtitle: {
+    opacity: 0.7,
+    fontSize: 14,
   },
 });
