@@ -18,7 +18,6 @@ import { MainDisplay } from "@/components/MainDisplay";
 export default function Index() {
   const { success, error } = useMigrations(db, migrations);
   const { backgroundColor, backgroundLight } = useThemeColors();
-  const [weight, setWeight] = useState("");
   const [data, setData] = useState<WeightTableEntry[]>([]);
   const [anchorDay, setAnchorDay] = useState<number>(0);
   const { current_average_weight, previous_average_weight } = calculateAverageWeight(

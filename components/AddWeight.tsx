@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   },
   headline: {
     fontSize: 18,
-    lineHeight: 19,
+    lineHeight: 20,
     opacity: 0.7,
   },
   overline: {
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   weight: {
     lineHeight: 33,
     fontSize: 32,
-    maxHeight: 42,
+    maxHeight: 33,
     fontWeight: "bold",
     marginBlock: 8,
     width: 120,
