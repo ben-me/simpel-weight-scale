@@ -68,7 +68,7 @@ export default function Select({ value, onChange, options, placeholder, style }:
       <Pressable onPress={handlePresentModal} style={[style, { backgroundColor: backgroundLight }]}>
         <ThemedInput
           style={[styles.input]}
-          value={selected?.label ?? ""}
+          value={selected?.label ?? "-"}
           placeholder={placeholder}
           editable={false}
         />
