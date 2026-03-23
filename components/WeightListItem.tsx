@@ -12,18 +12,22 @@ import Animated, { FadeOut, useAnimatedStyle } from "react-native-reanimated";
 import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
 import convertUnit from "@/utilities/convert_unit";
 import { useThemeColors } from "@/hooks/useTheme";
+import { toAppDayIndex } from "@/utilities/convert_days";
 
 export function WeightListItem({
   date = new Date().getDate().toLocaleString(),
   weight,
   unit = 0,
-}: WeightTableEntry) {
+  anchorDay = 0,
+}: WeightTableEntry & { anchorDay: number }) {
   const { backgroundLight, borderColor } = useThemeColors();
   const [modalVisible, setModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState(String(weight));
   const inputRef = useRef<TextInput>(null);
   const { height } = useReanimatedKeyboardAnimation();
   const prettyDate = prettifyDate(date);
+  const [year, month, day] = date.split("-");
+  const isAnchorEntry = toAppDayIndex(new Date(+year, +month - 1, +day).getDay()) === anchorDay;
 
   useEffect(() => {
     if (!modalVisible) {
@@ -83,7 +87,10 @@ export function WeightListItem({
           </Pressable>
         </Animated.View>
       </Modal>
-      <Pressable style={[styles.entry, { borderColor }]} onPress={() => setModalVisible(true)}>
+      <Pressable
+        style={[styles.entry, isAnchorEntry && styles.highlight, { borderColor }]}
+        onPress={() => setModalVisible(true)}
+      >
         <ThemedText>{prettyDate}:</ThemedText>
         <ThemedText style={{ marginInlineStart: "auto" }}>{weight ? weight : "-"}</ThemedText>
         <ThemedText>{convertUnit(unit!)}</ThemedText>
@@ -98,6 +105,9 @@ const styles = StyleSheet.create({
     padding: 16,
     borderBottomWidth: 1,
     gap: 6,
+  },
+  highlight: {
+    backgroundColor: "#CDFBFF",
   },
   modal: {
     flex: 1,
