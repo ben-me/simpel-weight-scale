@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   highlight: {
-    backgroundColor: "#CDFBFF",
+    backgroundColor: "hsla(185 100% 90% / 0.4)",
   },
   modal: {
     flex: 1,
