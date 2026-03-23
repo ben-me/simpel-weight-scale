@@ -5,7 +5,6 @@ export default defineConfig({
   jsPlugins: ["eslint-plugin-unused-imports"],
   rules: {
     "unused-imports/no-unused-imports": "error",
-    "perfectionist/sort-imports": "error",
   },
   settings: {},
   env: {

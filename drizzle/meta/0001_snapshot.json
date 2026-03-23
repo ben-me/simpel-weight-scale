@@ -32,9 +32,7 @@
       "indexes": {
         "settings_key_unique": {
           "name": "settings_key_unique",
-          "columns": [
-            "key"
-          ],
+          "columns": ["key"],
           "isUnique": true
         }
       },
@@ -79,9 +77,7 @@
       "indexes": {
         "weight_date_unique": {
           "name": "weight_date_unique",
-          "columns": [
-            "date"
-          ],
+          "columns": ["date"],
           "isUnique": true
         }
       },

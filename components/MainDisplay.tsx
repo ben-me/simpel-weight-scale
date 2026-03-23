@@ -64,7 +64,7 @@ function TrackingProgressSlice({ index, progress }: TrackingSliceProps) {
   );
 }
 
-export function MainDisplay({ currentWeight, daysLogged = 0, daysTotal = 7 }: Props) {
+export function MainDisplay({ currentWeight, daysLogged = 0 }: Props) {
   const { text, gray } = useThemeColors();
   const progress = useSharedValue(0);
 
@@ -75,7 +75,7 @@ export function MainDisplay({ currentWeight, daysLogged = 0, daysTotal = 7 }: Pr
         easing: Easing.out(Easing.cubic),
       }),
     );
-  }, [daysLogged]);
+  }, [daysLogged, progress]);
 
   return (
     <View

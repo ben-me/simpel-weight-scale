@@ -23,7 +23,7 @@ export default function OptionWindow() {
 
       return () => backhandler.remove();
     }
-  }, [menuShown]);
+  }, [menuShown, closeMenu]);
 
   async function handleImport() {
     setShowConfirmModal(false);
