@@ -117,7 +117,7 @@ export function MainDisplay({ currentWeight, daysLogged = 0 }: Props) {
       {currentWeight ? (
         <AnimatedRollingNumber value={currentWeight} textStyle={[styles.weight, { color: text }]} />
       ) : (
-        <ThemedText>-</ThemedText>
+        <ThemedText style={styles.weight}>-</ThemedText>
       )}
       <ThemedText style={styles.subtitle}>Aktueller Durchschnitt</ThemedText>
     </View>
