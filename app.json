@@ -24,7 +24,6 @@
         "monochromeImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
       "package": "com.simple.scale"
     },
     "web": {
