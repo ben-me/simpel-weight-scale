@@ -27,7 +27,7 @@ export default function RootLayout() {
               },
               headerRight: () => {
                 return (
-                  <View style={{ gap: 12, flexDirection: "row", alignItems: "center" }}>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <AddWeight />
                     <OptionsMenu />
                   </View>

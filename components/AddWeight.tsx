@@ -8,8 +8,16 @@ import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import ThemedInput from "./ThemedInput";
 import { insertWeight } from "@/db/operations";
 import convertWeight from "@/utilities/convert-weight";
-import Animated, { FadeOut, useAnimatedStyle } from "react-native-reanimated";
+import Animated, {
+  FadeOut,
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withTiming,
+} from "react-native-reanimated";
 import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export default function AddWeight() {
   const { backgroundLight } = useThemeColors();
@@ -17,6 +25,7 @@ export default function AddWeight() {
   const [date, setDate] = useState(new Date());
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const { height } = useReanimatedKeyboardAnimation();
+  const iconScale = useSharedValue(1);
 
   async function handleSubmit() {
     const convertedWeight = convertWeight(weight);
@@ -41,11 +50,25 @@ export default function AddWeight() {
     transform: [{ translateY: height.get() / 3 }],
   }));
 
+  const scale = useAnimatedStyle(() => ({
+    transform: [{ scale: iconScale.get() }],
+  }));
+
+  function handlePress() {
+    iconScale.set(() =>
+      withSequence(withTiming(0.7, { duration: 175 }), withTiming(1, { duration: 175 })),
+    );
+    setModalIsOpen(true);
+  }
+
   return (
     <>
-      <Pressable style={{ paddingBlock: 14 }} onPress={() => setModalIsOpen(true)}>
-        <IconPlus />
-      </Pressable>
+      <AnimatedPressable
+        style={[scale, { padding: 8, borderRadius: "100%" }]}
+        onPressIn={handlePress}
+      >
+        <IconPlus height="24" width="24" fill="white" />
+      </AnimatedPressable>
       <CustomModal
         onRequestClose={() => setModalIsOpen(false)}
         visible={modalIsOpen}
@@ -69,7 +92,7 @@ export default function AddWeight() {
                 maxLength={6}
                 onChangeText={setWeight}
                 style={styles.weight}
-              ></ThemedInput>
+              />
             </Pressable>
             <View style={styles.controls}>
               <Pressable>
@@ -125,7 +148,7 @@ const styles = StyleSheet.create({
     maxHeight: 33,
     fontWeight: "bold",
     marginBlock: 8,
-    width: 120,
+    width: 100,
   },
   controls: {
     flexDirection: "row",
