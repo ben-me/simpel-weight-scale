@@ -14,12 +14,13 @@ import { checkAndInsertToday } from "@/utilities/check_and_insert_today";
 import Overview from "@/components/Overview";
 import { useThemeColors } from "@/hooks/useTheme";
 import { MainDisplay } from "@/components/MainDisplay";
+import { AnchorDay } from "@/constants/anchor_days";
 
 export default function Index() {
   const { success, error } = useMigrations(db, migrations);
   const { backgroundColor, backgroundLight } = useThemeColors();
   const [data, setData] = useState<WeightTableEntry[]>([]);
-  const [anchorDay, setAnchorDay] = useState<number>(0);
+  const [anchorDay, setAnchorDay] = useState<AnchorDay>("Montag");
   const { current_average_weight, previous_average_weight } = calculateAverageWeight(
     anchorDay,
     data,
@@ -40,9 +41,9 @@ export default function Index() {
         setData(weightEntries);
 
         if (dbAnchorDay) {
-          setAnchorDay(dbAnchorDay.value);
+          setAnchorDay(dbAnchorDay.value as AnchorDay);
         } else {
-          await insertSetting({ value: 0, key: "anchor_day" });
+          await insertSetting({ value: "Montag", key: "anchor_day" });
         }
       } catch (error) {
         console.error("Init failed", error);

@@ -11,16 +11,17 @@ import { BackHandler, Pressable, StyleProp, StyleSheet, ViewStyle } from "react-
 import ThemedInput from "./ThemedInput";
 import ThemedText from "./ThemedText";
 import { useThemeColors } from "@/hooks/useTheme";
+import { AnchorDay } from "@/constants/anchor_days";
 type SelectOption = {
   label: string;
-  value: number;
+  value: string | AnchorDay;
 };
 
 type Props = {
   options: SelectOption[];
-  value: number;
+  value: SelectOption["value"];
   placeholder?: string;
-  onChange: (value: number) => void;
+  onChange: (value: AnchorDay) => void;
   style: StyleProp<ViewStyle>;
 };
 

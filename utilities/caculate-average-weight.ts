@@ -1,6 +1,7 @@
 import { WeightTableEntry } from "@/db/schema";
 
 import { toAppDayIndex } from "./convert_days";
+import { AnchorDay, getAnchorDayNumber } from "@/constants/anchor_days";
 
 function isAnchorDay(anchor_day: number, entry: WeightTableEntry) {
   return toAppDayIndex(new Date(entry.date).getDay()) === anchor_day;
@@ -30,9 +31,10 @@ function averageWeight(entries: WeightTableEntry[]) {
   return Number((sum / valid_entries.length).toFixed(2));
 }
 
-export function calculateAverageWeight(anchor_day: number, entries: WeightTableEntry[]) {
+export function calculateAverageWeight(anchor_day: AnchorDay, entries: WeightTableEntry[]) {
   const sorted_entries = [...entries].sort((a, b) => b.date.localeCompare(a.date));
-  const [anchor1, anchor2, anchor3] = findAnchorDays(anchor_day, sorted_entries);
+  const anchor_day_number = getAnchorDayNumber(anchor_day);
+  const [anchor1, anchor2, anchor3] = findAnchorDays(anchor_day_number, sorted_entries);
 
   if (!anchor1) {
     return { current_average_weight: undefined, previous_average_weight: undefined };
@@ -51,9 +53,10 @@ export function calculateAverageWeight(anchor_day: number, entries: WeightTableE
   return { current_average_weight, previous_average_weight };
 }
 
-export function getLoggedDays(anchor_day: number, entries: WeightTableEntry[]) {
-  const [anchor1, anchor2] = findAnchorDays(anchor_day, entries);
-  const isTodayAnchorDay = toAppDayIndex(new Date().getDay()) === anchor_day;
+export function getLoggedDays(anchor_day: AnchorDay, entries: WeightTableEntry[]) {
+  const anchor_day_number = getAnchorDayNumber(anchor_day);
+  const [anchor1, anchor2] = findAnchorDays(anchor_day_number, entries);
+  const isTodayAnchorDay = toAppDayIndex(new Date().getDay()) === anchor_day_number;
 
   let relevant_entries: WeightTableEntry[];
   if (isTodayAnchorDay && anchor2) {

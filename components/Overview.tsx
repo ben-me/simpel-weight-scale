@@ -1,24 +1,23 @@
 import { StyleSheet, View } from "react-native";
 import ThemedText from "./ThemedText";
 import Select from "./Select";
-import { ANCHOR_DAYS } from "@/constants/anchor_days";
+import { ANCHOR_DAYS, AnchorDay } from "@/constants/anchor_days";
 import { getSetting, insertSetting } from "@/db/operations";
 import { useEffect, useState } from "react";
-import convertUnit from "@/utilities/convert_unit";
 import { useThemeColors } from "@/hooks/useTheme";
 import AnimatedRollingNumber from "react-native-animated-rolling-numbers";
 import OverviewField from "./OverviewField";
 
 type Props = {
-  anchorDay: number | undefined;
-  setAnchorDay: React.Dispatch<React.SetStateAction<number>>;
+  anchorDay: AnchorDay | undefined;
+  setAnchorDay: React.Dispatch<React.SetStateAction<AnchorDay>>;
   previousAverage: number | undefined;
   difference: number | undefined;
 };
 
 export default function Overview({ anchorDay, setAnchorDay, previousAverage, difference }: Props) {
   const { backgroundLight, text } = useThemeColors();
-  const [unit, setUnit] = useState(0);
+  const [unit, setUnit] = useState("KG");
 
   useEffect(() => {
     async function fetchUnit() {
@@ -31,7 +30,7 @@ export default function Overview({ anchorDay, setAnchorDay, previousAverage, dif
     fetchUnit();
   }, [unit]);
 
-  async function handleAnchorDayChange(day: number) {
+  async function handleAnchorDayChange(day: AnchorDay) {
     if (day === anchorDay) return;
     try {
       await insertSetting({ key: "anchor_day", value: day });
@@ -44,13 +43,13 @@ export default function Overview({ anchorDay, setAnchorDay, previousAverage, dif
   return (
     <View style={styles.container}>
       <Select
-        options={ANCHOR_DAYS.map((day, index) => ({ label: day, value: index }))}
-        value={anchorDay ?? 0}
+        options={ANCHOR_DAYS.map((day) => ({ label: day, value: day }))}
+        value={anchorDay ?? "Montag"}
         onChange={handleAnchorDayChange}
         style={styles.info}
       />
       <OverviewField
-        highlightedText={convertUnit(unit)}
+        highlightedText={unit}
         subtitleText="Einheit"
         style={[styles.info, { backgroundColor: backgroundLight, alignItems: "flex-end" }]}
       />

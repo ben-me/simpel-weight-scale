@@ -10,16 +10,16 @@ import ThemedText from "./ThemedText";
 import { prettifyDate } from "@/utilities/prettify_date";
 import Animated, { FadeOut, useAnimatedStyle } from "react-native-reanimated";
 import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
-import convertUnit from "@/utilities/convert_unit";
 import { useThemeColors } from "@/hooks/useTheme";
 import { toAppDayIndex } from "@/utilities/convert_days";
+import { AnchorDay, getAnchorDayNumber } from "@/constants/anchor_days";
 
 export function WeightListItem({
   date = new Date().getDate().toLocaleString(),
   weight,
-  unit = 0,
-  anchorDay = 0,
-}: WeightTableEntry & { anchorDay: number }) {
+  unit = "KG",
+  anchorDay = "Montag",
+}: WeightTableEntry & { anchorDay: AnchorDay }) {
   const { backgroundLight, borderColor } = useThemeColors();
   const [modalVisible, setModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState(String(weight));
@@ -27,7 +27,8 @@ export function WeightListItem({
   const { height } = useReanimatedKeyboardAnimation();
   const prettyDate = prettifyDate(date);
   const [year, month, day] = date.split("-");
-  const isAnchorEntry = toAppDayIndex(new Date(+year, +month - 1, +day).getDay()) === anchorDay;
+  const isAnchorEntry =
+    toAppDayIndex(new Date(+year, +month - 1, +day).getDay()) === getAnchorDayNumber(anchorDay);
 
   useEffect(() => {
     if (!modalVisible) {
@@ -80,7 +81,7 @@ export function WeightListItem({
                   maxLength={6}
                   onChangeText={setInputValue}
                 />
-                <ThemedText style={styles.modal_input}>{convertUnit(unit!)}</ThemedText>
+                <ThemedText style={styles.modal_input}>{unit}</ThemedText>
               </View>
               <ThemedText style={styles.modal_subheadline}>Gewicht anpassen</ThemedText>
             </Pressable>
@@ -93,7 +94,7 @@ export function WeightListItem({
       >
         <ThemedText>{prettyDate}:</ThemedText>
         <ThemedText style={{ marginInlineStart: "auto" }}>{weight ? weight : "-"}</ThemedText>
-        <ThemedText>{convertUnit(unit!)}</ThemedText>
+        <ThemedText>{unit}</ThemedText>
       </Pressable>
     </View>
   );

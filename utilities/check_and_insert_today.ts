@@ -7,7 +7,7 @@ export async function checkAndInsertToday() {
     await insertWeight({
       date: new Date().toISOString().slice(0, 10),
       weight: 0,
-      unit: 0,
+      unit: "KG",
     });
   }
 }
