@@ -12,6 +12,7 @@ import ThemedInput from "./ThemedInput";
 import ThemedText from "./ThemedText";
 import { useThemeColors } from "@/hooks/useTheme";
 import { AnchorDay } from "@/constants/anchor_days";
+import { useTranslation } from "react-i18next";
 type SelectOption = {
   label: string;
   value: string | AnchorDay;
@@ -26,6 +27,7 @@ type Props = {
 };
 
 export default function Select({ value, onChange, options, placeholder, style }: Props) {
+  const { t } = useTranslation();
   const { text, backgroundLight } = useThemeColors();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const selected = options.find((option) => option.value === value);
@@ -73,7 +75,7 @@ export default function Select({ value, onChange, options, placeholder, style }:
           placeholder={placeholder}
           editable={false}
         />
-        <ThemedText style={styles.subtitle}>Stichtag</ThemedText>
+        <ThemedText style={styles.subtitle}>{t("anchorDay")}</ThemedText>
       </Pressable>
       <BottomSheetModal
         animationConfigs={{ duration: 350 }}
@@ -93,7 +95,7 @@ export default function Select({ value, onChange, options, placeholder, style }:
               <Pressable
                 style={{ flex: 1 }}
                 onPress={() => {
-                  onChange(item.value);
+                  onChange(item.value as AnchorDay);
                   handleCloseModal();
                 }}
               >

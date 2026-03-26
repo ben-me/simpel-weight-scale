@@ -10,6 +10,8 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useThemeColors } from "@/hooks/useTheme";
 import AddWeight from "@/components/AddWeight";
 
+import "../i18n";
+
 export default function RootLayout() {
   const { headerBackground } = useThemeColors();
   return (

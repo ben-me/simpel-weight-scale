@@ -8,8 +8,10 @@ import Button from "./Button";
 import { importCSV } from "@/utilities/import_csv";
 import { useThemeColors } from "@/hooks/useTheme";
 import exportCSV from "@/utilities/export";
+import { useTranslation } from "react-i18next";
 
 export default function OptionWindow() {
+  const { t } = useTranslation();
   const { menuShown, closeMenu } = useMenuStore();
   const { backgroundLight, borderColor } = useThemeColors();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -58,7 +60,7 @@ export default function OptionWindow() {
               setShowConfirmModal(true);
             }}
           >
-            Importieren
+            {t("import")}
           </ThemedText>
           <ThemedText
             style={{
@@ -68,65 +70,70 @@ export default function OptionWindow() {
             }}
             onPress={exportCSV}
           >
-            Exportieren
+            {t("export")}
           </ThemedText>
         </Animated.View>
       </Pressable>
     );
   }
 
-  if (showConfirmModal) {
-    return (
-      <CustomModal
-        onBackdropPress={() => setShowConfirmModal(false)}
-        onRequestClose={() => setShowConfirmModal(false)}
+  return (
+    <CustomModal
+      visible={showConfirmModal}
+      onBackdropPress={() => setShowConfirmModal(false)}
+      onRequestClose={() => setShowConfirmModal(false)}
+    >
+      <Animated.View
+        style={styles.modalView}
+        entering={FadeIn.duration(150)}
+        exiting={FadeOut.duration(150)}
       >
-        <Animated.View
-          style={styles.modalView}
-          entering={FadeIn.duration(150)}
-          exiting={FadeOut.duration(150)}
-        >
-          <View style={[styles.modalText, { backgroundColor: backgroundLight }]}>
-            <ThemedText
-              style={{ fontSize: 24, lineHeight: 25, fontWeight: "bold", marginBottom: 4 }}
-            >
-              Import bestätigen
-            </ThemedText>
-            <ThemedText>Daten können nur über eine CSV-Datei (Excel) importiert werden.</ThemedText>
-            <ThemedText style={{ fontSize: 18, lineHeight: 19, marginTop: 12, fontWeight: "bold" }}>
-              Beispiel:
-            </ThemedText>
+        <View style={[styles.modalText, { backgroundColor: backgroundLight }]}>
+          <ThemedText style={{ fontSize: 24, lineHeight: 25, fontWeight: "bold", marginBottom: 4 }}>
+            {t("importWindow.confirm")}
+          </ThemedText>
+          <ThemedText>{t("importWindow.explanation1")}</ThemedText>
+          <ThemedText style={{ fontSize: 18, lineHeight: 19, marginTop: 12, fontWeight: "bold" }}>
+            {t("importWindow.example")}:
+          </ThemedText>
 
-            <ThemedText>Spalte A (Datum) - "2025-12-31"</ThemedText>
-            <ThemedText>Spalte B (Gewicht) - "80.0"</ThemedText>
-            <ThemedText
-              style={{
-                fontSize: 20,
-                lineHeight: 21,
-                fontWeight: "bold",
-                marginTop: 12,
-                textDecorationLine: "underline",
-              }}
-            >
-              Wichtig:
-            </ThemedText>
-            <ThemedText>Bestehende Daten werden beim Import überschrieben.</ThemedText>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 20 }}>
-              <Button
-                style={[styles.button, styles.cancel]}
-                onPress={() => setShowConfirmModal(false)}
-              >
-                <ThemedText>Abbrechen</ThemedText>
-              </Button>
-              <Button style={[styles.button, styles.continue]} onPress={handleImport}>
-                <ThemedText>Fortfahren</ThemedText>
-              </Button>
+          <View style={{ gap: 5 }}>
+            <View style={{ flexDirection: "row" }}>
+              <ThemedText style={{ flex: 1 }}>{t("importWindow.col1.header")}</ThemedText>
+              <ThemedText style={{ flex: 1 }}>{t("importWindow.col2.header")}</ThemedText>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+              <ThemedText style={{ flex: 1 }}>{t("importWindow.col1.row1")}</ThemedText>
+              <ThemedText style={{ flex: 1 }}>{t("importWindow.col2.row1")}</ThemedText>
             </View>
           </View>
-        </Animated.View>
-      </CustomModal>
-    );
-  }
+          <ThemedText
+            style={{
+              fontSize: 20,
+              lineHeight: 21,
+              fontWeight: "bold",
+              marginTop: 12,
+              textDecorationLine: "underline",
+            }}
+          >
+            {t("importWindow.important")}:
+          </ThemedText>
+          <ThemedText>{t("importWindow.explanation3")}</ThemedText>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 20 }}>
+            <Button
+              style={[styles.button, styles.cancel]}
+              onPress={() => setShowConfirmModal(false)}
+            >
+              <ThemedText>{t("cancel")}</ThemedText>
+            </Button>
+            <Button style={[styles.button, styles.continue]} onPress={handleImport}>
+              <ThemedText>{t("continue")}</ThemedText>
+            </Button>
+          </View>
+        </View>
+      </Animated.View>
+    </CustomModal>
+  );
 }
 
 const styles = StyleSheet.create({

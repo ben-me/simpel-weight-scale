@@ -1,0 +1,31 @@
+{
+  "import": "Importieren",
+  "importWindow": {
+    "confirm": "Import bestätigen",
+    "explanation1": "Daten können nur über eine CSV-Datei (Excel) importiert werden.",
+    "example": "Beispiel",
+    "col1": {
+      "header": "Spalte A (Datum)",
+      "row1": "2025-12-31"
+    },
+    "col2": {
+      "header": "Spalte B (Gewicht)",
+      "row1": "80.0"
+    },
+    "important": "Wichtig",
+    "explanation3": "Bestehende Daten werden beim Import überschrieben."
+  },
+  "export": "Exportieren",
+  "newEntry": "Neuen Eintrag anlegen",
+  "date": "Datum",
+  "weight": "Gewicht",
+  "cancel": "Abbrechen",
+  "save": "Speichern",
+  "continue": "Fortfahren",
+  "currentAverage": "Aktueller Durchschnitt",
+  "unit": "Einheit",
+  "previousAverage": "Letzter Durchschnitt",
+  "difference": "Unterschied",
+  "anchorDay": "Stichtag",
+  "changeWeight": "Gewicht anpassen"
+}

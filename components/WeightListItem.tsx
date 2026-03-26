@@ -13,6 +13,7 @@ import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller
 import { useThemeColors } from "@/hooks/useTheme";
 import { toAppDayIndex } from "@/utilities/convert_days";
 import { AnchorDay, getAnchorDayNumber } from "@/constants/anchor_days";
+import { useTranslation } from "react-i18next";
 
 export function WeightListItem({
   date = new Date().getDate().toLocaleString(),
@@ -20,6 +21,7 @@ export function WeightListItem({
   unit = "KG",
   anchorDay = "Montag",
 }: WeightTableEntry & { anchorDay: AnchorDay }) {
+  const { t } = useTranslation();
   const { backgroundLight, borderColor } = useThemeColors();
   const [modalVisible, setModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState(String(weight));
@@ -83,7 +85,7 @@ export function WeightListItem({
                 />
                 <ThemedText style={styles.modal_input}>{unit}</ThemedText>
               </View>
-              <ThemedText style={styles.modal_subheadline}>Gewicht anpassen</ThemedText>
+              <ThemedText style={styles.modal_subheadline}>{t("changeWeight")}</ThemedText>
             </Pressable>
           </Pressable>
         </Animated.View>

@@ -16,10 +16,12 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
+import { useTranslation } from "react-i18next";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export default function AddWeight() {
+  const { t } = useTranslation();
   const { backgroundLight } = useThemeColors();
   const [weight, setWeight] = useState<string>("0");
   const [date, setDate] = useState(new Date());
@@ -33,7 +35,7 @@ export default function AddWeight() {
     await insertWeight({
       date: date.toISOString().slice(0, 10),
       weight: convertedWeight,
-      unit: 0,
+      unit: "KG",
     });
     setModalIsOpen(false);
   }
@@ -42,7 +44,7 @@ export default function AddWeight() {
     DateTimePickerAndroid.open({
       mode: "date",
       value: date,
-      onValueChange: (_, selectedDate) => setDate(selectedDate),
+      onChange: (_, selectedDate) => setDate(selectedDate!),
     });
   };
 
@@ -79,13 +81,13 @@ export default function AddWeight() {
           style={[styles.wrapper, translateY, { flex: 1 }]}
         >
           <Pressable style={[styles.content, { backgroundColor: backgroundLight }]}>
-            <ThemedText style={styles.headline}>Neuen Eintrag anlegen</ThemedText>
+            <ThemedText style={styles.headline}>{t("newEntry")}</ThemedText>
             <Pressable onPress={showPicker}>
-              <ThemedText style={styles.overline}>Datum:</ThemedText>
+              <ThemedText style={styles.overline}>{t("date")}:</ThemedText>
               <ThemedText style={styles.date}>{date.toLocaleDateString()}</ThemedText>
             </Pressable>
             <Pressable style={{ alignItems: "center", gap: 5 }}>
-              <ThemedText style={styles.overline}>Gewicht:</ThemedText>
+              <ThemedText style={styles.overline}>{t("weight")}:</ThemedText>
               <ThemedInput
                 keyboardType="number-pad"
                 value={weight ?? "-"}
@@ -96,11 +98,11 @@ export default function AddWeight() {
             </Pressable>
             <View style={styles.controls}>
               <Pressable>
-                <ThemedText style={styles.button}>Abbruch</ThemedText>
+                <ThemedText style={styles.button}>{t("cancel")}</ThemedText>
               </Pressable>
               <Pressable>
                 <ThemedText style={[styles.saveButton, styles.button]} onPress={handleSubmit}>
-                  Speichern
+                  {t("save")}
                 </ThemedText>
               </Pressable>
             </View>
