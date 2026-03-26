@@ -11,6 +11,7 @@ import Animated, {
   SharedValue,
 } from "react-native-reanimated";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   currentWeight: number | undefined;
@@ -65,6 +66,7 @@ function TrackingProgressSlice({ index, progress }: TrackingSliceProps) {
 }
 
 export function MainDisplay({ currentWeight, daysLogged = 0 }: Props) {
+  const { t } = useTranslation();
   const { text, gray } = useThemeColors();
   const progress = useSharedValue(0);
 
@@ -119,7 +121,7 @@ export function MainDisplay({ currentWeight, daysLogged = 0 }: Props) {
       ) : (
         <ThemedText style={styles.weight}>-</ThemedText>
       )}
-      <ThemedText style={styles.subtitle}>Aktueller Durchschnitt</ThemedText>
+      <ThemedText style={styles.subtitle}>{t("currentAverage")}</ThemedText>
     </View>
   );
 }

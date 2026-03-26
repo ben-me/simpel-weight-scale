@@ -1,0 +1,31 @@
+{
+  "import": "Import",
+  "importWindow": {
+    "confirm": "Confirm Import",
+    "explanation1": "Data can only be imported via CSV file.",
+    "example": "Example",
+    "col1": {
+      "header": "Column A (Date)",
+      "row1": "2025-12-31"
+    },
+    "col2": {
+      "header": "Column B (Weight)",
+      "row1": "80.0"
+    },
+    "important": "Important",
+    "explanation3": "Existing data will be overwritten."
+  },
+  "export": "Export",
+  "newEntry": "Add a new entry",
+  "date": "Date",
+  "weight": "Weight",
+  "cancel": "Cancel",
+  "save": "Save",
+  "continue": "Continue",
+  "currentAverage": "Current average weight",
+  "unit": "Unit",
+  "previousAverage": "Previous average",
+  "difference": "Difference",
+  "anchorDay": "Reporting day",
+  "changeWeight": "Change weight"
+}
