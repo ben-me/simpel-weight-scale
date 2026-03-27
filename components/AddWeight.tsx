@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
-import IconPlus from "./icons/IconPlus";
 import CustomModal from "./CustomModal";
 import ThemedText from "./ThemedText";
 import { useThemeColors } from "@/hooks/useTheme";
@@ -17,6 +16,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
 import { useTranslation } from "react-i18next";
+import { Entypo } from "@expo/vector-icons";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -69,7 +69,7 @@ export default function AddWeight() {
         style={[scale, { padding: 8, borderRadius: "100%" }]}
         onPressIn={handlePress}
       >
-        <IconPlus height="24" width="24" fill="white" />
+        <Entypo name="circle-with-plus" size={24} color="white" />
       </AnimatedPressable>
       <CustomModal
         onRequestClose={() => setModalIsOpen(false)}

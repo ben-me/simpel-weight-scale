@@ -1,8 +1,8 @@
 import { Pressable, StyleSheet } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import IconOptions from "./icons/IconOptions";
 import { useMenuStore } from "@/store/menu";
 import { useThemeColors } from "@/hooks/useTheme";
+import { Entypo } from "@expo/vector-icons";
 
 export default function OptionsMenu() {
   const { headerBackground } = useThemeColors();
@@ -26,7 +26,7 @@ export default function OptionsMenu() {
           backgroundColor.set(() => withTiming(headerBackground, { duration: 150 }))
         }
       >
-        <IconOptions />
+        <Entypo name="dots-three-vertical" size={24} color="white" />
       </Pressable>
     </Animated.View>
   );
