@@ -15,6 +15,7 @@ import Overview from "@/components/Overview";
 import { useThemeColors } from "@/hooks/useTheme";
 import { MainDisplay } from "@/components/MainDisplay";
 import { AnchorDay } from "@/constants/anchor_days";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
   const { success, error } = useMigrations(db, migrations);
@@ -93,7 +94,10 @@ export default function Index() {
   }
 
   return (
-    <View style={[{ backgroundColor }, styles.container]}>
+    <SafeAreaView
+      edges={["left", "right", "bottom"]}
+      style={[{ backgroundColor, paddingLeft: 8, paddingRight: 8 }, styles.container]}
+    >
       <MainDisplay daysLogged={daysLogged} daysTotal={7} currentWeight={current_average_weight} />
 
       <Overview
@@ -111,24 +115,16 @@ export default function Index() {
           borderRadius: 6,
         }}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBlock: 16,
-    paddingInline: 8,
     borderTopWidth: 1,
     borderStyle: "solid",
     borderColor: "gray",
-    gap: 12,
-  },
-  overviewContainer: {
-    padding: 16,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    gap: 16,
   },
 });

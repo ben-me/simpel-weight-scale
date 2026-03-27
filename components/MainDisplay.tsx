@@ -86,6 +86,7 @@ export function MainDisplay({ currentWeight, daysLogged = 0 }: Props) {
         alignItems: "center",
         minHeight: SIZE,
         position: "relative",
+        marginBlockStart: 16,
       }}
     >
       <Svg

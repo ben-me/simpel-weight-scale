@@ -11,35 +11,38 @@ import { useThemeColors } from "@/hooks/useTheme";
 import AddWeight from "@/components/AddWeight";
 
 import "../i18n";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function RootLayout() {
   const { headerBackground } = useThemeColors();
   return (
-    <GestureHandlerRootView>
-      <BottomSheetModalProvider>
-        <KeyboardProvider>
-          <StatusBar style="light" />
-          <Stack
-            screenOptions={{
-              headerStyle: {
-                backgroundColor: headerBackground,
-              },
-              headerTitle: () => {
-                return <Text style={{ color: "white", fontSize: 20 }}>Simple Scale</Text>;
-              },
-              headerRight: () => {
-                return (
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <AddWeight />
-                    <OptionsMenu />
-                  </View>
-                );
-              },
-            }}
-          />
-          <OptionWindow />
-        </KeyboardProvider>
-      </BottomSheetModalProvider>
-    </GestureHandlerRootView>
+    <SafeAreaProvider>
+      <GestureHandlerRootView>
+        <BottomSheetModalProvider>
+          <KeyboardProvider>
+            <StatusBar style="light" />
+            <Stack
+              screenOptions={{
+                headerStyle: {
+                  backgroundColor: headerBackground,
+                },
+                headerTitle: () => {
+                  return <Text style={{ color: "white", fontSize: 20 }}>Simple Scale</Text>;
+                },
+                headerRight: () => {
+                  return (
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                      <AddWeight />
+                      <OptionsMenu />
+                    </View>
+                  );
+                },
+              }}
+            />
+            <OptionWindow />
+          </KeyboardProvider>
+        </BottomSheetModalProvider>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   );
 }
