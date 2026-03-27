@@ -10,15 +10,17 @@ export const resources = {
 } as const;
 
 const i18nInit = async () => {
-  const language = (await getSetting("language"))?.value ?? "de";
+  const setting = await getSetting("language").catch(() => null);
+  const language = setting?.value ?? "en";
 
   i18n.use(initReactI18next).init({
     resources,
-    lng: "en",
-    fallbackLng: "de",
+    lng: language,
+    fallbackLng: "en",
     interpolation: {
       escapeValue: false,
     },
+    showSupportNotice: false,
   });
 };
 
