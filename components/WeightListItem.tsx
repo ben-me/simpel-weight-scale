@@ -19,7 +19,7 @@ export function WeightListItem({
   date = new Date().getDate().toLocaleString(),
   weight,
   unit = "KG",
-  anchorDay = "montag",
+  anchorDay = "monday",
 }: WeightTableEntry & { anchorDay: AnchorDay }) {
   const { t } = useTranslation();
   const { backgroundLight, borderColor } = useThemeColors();

@@ -51,16 +51,6 @@ export async function getSetting(key: string) {
   });
 }
 
-export async function getSettings() {
-  return await db.query.settings.findMany();
-}
-
-export async function clearWeightTable() {
-  await opsqliteDB.transaction(async () => {
-    await db.delete(weightTable);
-  });
-}
-
 export async function insertSetting(setting: SettingTableEntry) {
   await opsqliteDB.transaction(async () => {
     await db
