@@ -1,13 +1,13 @@
 export type AnchorDay = (typeof ANCHOR_DAYS)[number];
 
 export const ANCHOR_DAYS = [
-  "Montag",
-  "Dienstag",
-  "Mittwoch",
-  "Donnerstag",
-  "Freitag",
-  "Samstag",
-  "Sonntag",
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+  "sunday",
 ] as const;
 
 export function getAnchorDayNumber(anchor_day: AnchorDay) {

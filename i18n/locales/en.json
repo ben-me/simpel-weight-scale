@@ -27,5 +27,14 @@
   "previousAverage": "Previous average",
   "difference": "Difference",
   "anchorDay": "Reporting day",
-  "changeWeight": "Change weight"
+  "changeWeight": "Change weight",
+  "anchorDays": {
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
+  }
 }

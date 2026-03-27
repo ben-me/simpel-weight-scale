@@ -20,7 +20,7 @@ export default function Index() {
   const { success, error } = useMigrations(db, migrations);
   const { backgroundColor, backgroundLight } = useThemeColors();
   const [data, setData] = useState<WeightTableEntry[]>([]);
-  const [anchorDay, setAnchorDay] = useState<AnchorDay>("Montag");
+  const [anchorDay, setAnchorDay] = useState<AnchorDay>("montag");
   const { current_average_weight, previous_average_weight } = calculateAverageWeight(
     anchorDay,
     data,
@@ -43,7 +43,7 @@ export default function Index() {
         if (dbAnchorDay) {
           setAnchorDay(dbAnchorDay.value as AnchorDay);
         } else {
-          await insertSetting({ value: "Montag", key: "anchor_day" });
+          await insertSetting({ value: "montag", key: "anchor_day" });
         }
       } catch (error) {
         console.error("Init failed", error);

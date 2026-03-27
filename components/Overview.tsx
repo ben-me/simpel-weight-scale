@@ -45,8 +45,8 @@ export default function Overview({ anchorDay, setAnchorDay, previousAverage, dif
   return (
     <View style={styles.container}>
       <Select
-        options={ANCHOR_DAYS.map((day) => ({ label: day, value: day }))}
-        value={anchorDay ?? "Montag"}
+        options={ANCHOR_DAYS.map((day) => ({ label: t(`anchorDays.${day}`), value: day }))}
+        value={anchorDay ?? "monday"}
         onChange={handleAnchorDayChange}
         style={styles.info}
       />

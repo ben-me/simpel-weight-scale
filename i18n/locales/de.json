@@ -27,5 +27,14 @@
   "previousAverage": "Letzter Durchschnitt",
   "difference": "Unterschied",
   "anchorDay": "Stichtag",
-  "changeWeight": "Gewicht anpassen"
+  "changeWeight": "Gewicht anpassen",
+  "anchorDays": {
+    "monday": "Montag",
+    "tuesday": "Dienstag",
+    "wednesday": "Mittwoch",
+    "thursday": "Donnerstag",
+    "friday": "Freitag",
+    "saturday": "Samstag",
+    "sunday": "Sonntag"
+  }
 }
