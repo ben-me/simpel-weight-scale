@@ -13,7 +13,6 @@ export default function ThemedText({ children, style, ...rest }: TextProps) {
 
 const styles = StyleSheet.create({
   default: {
-    fontSize: 16,
-    lineHeight: 17,
+    fontSize: 18,
   },
 });
