@@ -36,5 +36,12 @@
     "friday": "Freitag",
     "saturday": "Samstag",
     "sunday": "Sonntag"
+  },
+  "language": "Sprache",
+  "german": "Deutsch",
+  "english": "Englisch",
+  "setup": {
+    "headline": "Willkommen bei Simple Scale!",
+    "languageUnitInfo": "Bevor es los geht, legen Sie bitte Ihre bevorzugte Maßeinheit und Sprache fest."
   }
 }
