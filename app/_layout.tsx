@@ -1,4 +1,4 @@
-import { Stack } from "expo-router";
+import { router, SplashScreen, Stack, useSegments } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Text, View } from "react-native";
 
@@ -12,9 +12,32 @@ import AddWeight from "@/components/AddWeight";
 
 import "../i18n";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { useSetup } from "@/hooks/useSetup";
+import { useEffect } from "react";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const setupStatus = useSetup();
+  const segments = useSegments();
   const { headerBackground } = useThemeColors();
+
+  useEffect(() => {
+    if (setupStatus === "loading") {
+      return;
+    }
+
+    SplashScreen.hide();
+
+    const inSetup = segments[0] === "setup";
+
+    if (setupStatus === "new" && !inSetup) {
+      router.replace("/setup");
+    } else if (setupStatus === "done" && inSetup) {
+      router.replace("/");
+    }
+  }, [setupStatus, segments]);
+
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView>
@@ -38,7 +61,10 @@ export default function RootLayout() {
                   );
                 },
               }}
-            />
+            >
+              <Stack.Screen name="index" />
+              <Stack.Screen name="setup" options={{ headerShown: false }} />
+            </Stack>
             <OptionWindow />
           </KeyboardProvider>
         </BottomSheetModalProvider>
