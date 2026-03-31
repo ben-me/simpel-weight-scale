@@ -1,5 +1,28 @@
 import { Pressable, PressableProps } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
 
 export default function Button({ children, ...rest }: PressableProps) {
-  return <Pressable {...rest}>{children}</Pressable>;
+  const scale = useSharedValue(1);
+
+  const style = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  function animate() {
+    scale.set(withSequence(withTiming(0.9, { duration: 120 }), withSpring(1)));
+  }
+
+  return (
+    <Animated.View style={style}>
+      <Pressable {...rest} onPressIn={animate}>
+        {children}
+      </Pressable>
+    </Animated.View>
+  );
 }
