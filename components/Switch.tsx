@@ -12,14 +12,14 @@ type Props = {
 };
 
 export default function Switch({ optionLeft, optionRight, onSelect, selected }: Props) {
-  const { backgroundLight, borderColor } = useThemeColors();
+  const { backgroundLight, tertiary, primary, secondary } = useThemeColors();
   const translate = useSharedValue(0);
   const highlightWidth = useSharedValue(0);
   const rightOptionSelected = selected === optionRight.value;
 
   useEffect(() => {
     translate.set(withSpring(rightOptionSelected ? highlightWidth.get() : 0, { duration: 250 }));
-  }, [rightOptionSelected]);
+  }, [rightOptionSelected, translate, highlightWidth]);
 
   const translateX = useAnimatedStyle(() => {
     return {
@@ -43,7 +43,9 @@ export default function Switch({ optionLeft, optionRight, onSelect, selected }: 
         }}
         style={styles.option}
       >
-        <ThemedText>{optionLeft.label}</ThemedText>
+        <ThemedText style={!rightOptionSelected && { color: "white" }}>
+          {optionLeft.label}
+        </ThemedText>
       </Pressable>
       <Pressable
         onPress={() => {
@@ -52,7 +54,9 @@ export default function Switch({ optionLeft, optionRight, onSelect, selected }: 
         }}
         style={styles.option}
       >
-        <ThemedText>{optionRight.label}</ThemedText>
+        <ThemedText style={rightOptionSelected && { color: "white" }}>
+          {optionRight.label}
+        </ThemedText>
       </Pressable>
       <Animated.View
         onLayout={(event) => {
@@ -64,9 +68,10 @@ export default function Switch({ optionLeft, optionRight, onSelect, selected }: 
           translateX,
           {
             width: "50%",
-            backgroundColor: borderColor,
+            backgroundColor: primary,
             position: "absolute",
             inset: 0,
+            borderRadius: 5,
           },
         ]}
       />
@@ -76,8 +81,9 @@ export default function Switch({ optionLeft, optionRight, onSelect, selected }: 
 
 const styles = StyleSheet.create({
   option: {
-    paddingBlock: 12,
-    paddingInline: 20,
+    paddingBlock: 16,
+    paddingInline: 24,
     zIndex: 1,
+    alignItems: "center",
   },
 });

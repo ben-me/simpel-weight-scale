@@ -14,15 +14,21 @@ export const Colors = {
     borderColor: "#EEEEEE",
     green: "#00E676",
     gray: "#E9E9E9",
+    primary: "#285A48",
+    secondary: "#408A71",
+    tertiary: "#B0E4CC",
   },
   dark: {
     text: "#fff",
-    backgroundColor: "#000",
+    backgroundColor: "#091413",
     backgroundLight: "#2E2E2E",
     headerBackground: "#1b1b1d",
     borderColor: "#747474",
     green: "#00E676",
     gray: "#222",
+    primary: "#285A48",
+    secondary: "#408A71",
+    tertiary: "#B0E4CC",
   },
 };
 
