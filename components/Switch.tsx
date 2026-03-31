@@ -2,10 +2,11 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { useThemeColors } from "@/hooks/useTheme";
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 import ThemedText from "./ThemedText";
+import { useEffect } from "react";
 
 type Props = {
-  optionLeft: string;
-  optionRight: string;
+  optionLeft: { label: string; value: string };
+  optionRight: { label: string; value: string };
   onSelect: (arg: any) => void;
   selected: string;
 };
@@ -14,7 +15,11 @@ export default function Switch({ optionLeft, optionRight, onSelect, selected }: 
   const { backgroundLight, borderColor } = useThemeColors();
   const translate = useSharedValue(0);
   const highlightWidth = useSharedValue(0);
-  console.log(optionRight, selected);
+  const rightOptionSelected = selected === optionRight.value;
+
+  useEffect(() => {
+    translate.set(withSpring(rightOptionSelected ? highlightWidth.get() : 0, { duration: 250 }));
+  }, [rightOptionSelected]);
 
   const translateX = useAnimatedStyle(() => {
     return {
@@ -33,25 +38,27 @@ export default function Switch({ optionLeft, optionRight, onSelect, selected }: 
     >
       <Pressable
         onPress={() => {
-          onSelect(optionLeft);
+          onSelect(optionLeft.value);
           translate.set(0);
         }}
         style={styles.option}
       >
-        <ThemedText>{optionLeft}</ThemedText>
+        <ThemedText>{optionLeft.label}</ThemedText>
       </Pressable>
       <Pressable
         onPress={() => {
-          onSelect(optionRight);
+          onSelect(optionRight.value);
           translate.set(highlightWidth.get());
         }}
         style={styles.option}
       >
-        <ThemedText>{optionRight}</ThemedText>
+        <ThemedText>{optionRight.label}</ThemedText>
       </Pressable>
       <Animated.View
         onLayout={(event) => {
-          highlightWidth.set(event.nativeEvent.layout.width);
+          const width = event.nativeEvent.layout.width;
+          highlightWidth.set(width);
+          translate.set(rightOptionSelected ? width : 0);
         }}
         style={[
           translateX,

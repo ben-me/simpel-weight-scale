@@ -8,12 +8,12 @@ import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Setup() {
-  const selectedLanguage = useRef("english");
   const { t, i18n } = useTranslation();
+  const selectedLanguage = useRef(i18n.language);
   const { backgroundColor } = useThemeColors();
 
-  function handleLanguageChange(newSelected: "german" | "english") {
-    i18n.changeLanguage(newSelected.toLowerCase() === "german" ? "de" : "en");
+  function handleLanguageChange(newSelected: "en" | "de") {
+    i18n.changeLanguage(newSelected);
     selectedLanguage.current = newSelected;
   }
 
@@ -38,8 +38,8 @@ export default function Setup() {
         <Switch
           selected={selectedLanguage.current}
           onSelect={handleLanguageChange}
-          optionLeft={t("german")}
-          optionRight={t("english")}
+          optionLeft={{ label: t("german"), value: "de" }}
+          optionRight={{ label: t("english"), value: "en" }}
         />
       </StaggeredView>
       <StaggeredView index={4}></StaggeredView>
