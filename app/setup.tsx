@@ -1,40 +1,65 @@
+import Button from "@/components/Button";
 import StaggeredView from "@/components/StaggeredView";
 import Switch from "@/components/Switch";
 import ThemedText from "@/components/ThemedText";
+import { insertSetting } from "@/db/operations";
 import { useThemeColors } from "@/hooks/useTheme";
+import { useSetupStore } from "@/store/setup";
+import { useRouter } from "expo-router";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Setup() {
+  const router = useRouter();
+  const { completeSetup } = useSetupStore();
   const { t, i18n } = useTranslation();
   const selectedLanguage = useRef(i18n.language);
-  const { backgroundColor } = useThemeColors();
+  const selectedUnit = useRef("KG");
+  const { backgroundColor, secondary } = useThemeColors();
 
-  function handleLanguageChange(newSelected: "en" | "de") {
-    i18n.changeLanguage(newSelected);
-    selectedLanguage.current = newSelected;
+  function handleLanguageChange(value: "en" | "de") {
+    i18n.changeLanguage(value);
+    selectedLanguage.current = value;
+  }
+
+  function handleUnitChange(value: "kg" | "lbs") {
+    selectedUnit.current = value;
+  }
+
+  async function handleSubmit() {
+    try {
+      await insertSetting({ key: "unit", value: selectedUnit.current });
+      await insertSetting({ key: "language", value: selectedUnit.current });
+      await insertSetting({ key: "setup_complete", value: "1" });
+      completeSetup();
+      router.back();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
-    <SafeAreaView style={[{ backgroundColor, paddingLeft: 8, paddingRight: 8 }, styles.container]}>
-      <StaggeredView index={0}>
-        <ThemedText style={{ fontSize: 32, fontWeight: "600", textAlign: "center" }}>
-          {t("setup.headline")}
-        </ThemedText>
-      </StaggeredView>
-      <StaggeredView index={1}>
-        <ThemedText style={{ textAlign: "center", paddingInline: 40 }}>
-          {t("setup.languageUnitInfo")}
-        </ThemedText>
-      </StaggeredView>
-      <StaggeredView index={2}>
+    <SafeAreaView style={[{ backgroundColor }, styles.container]}>
+      <View style={{ gap: 12 }}>
+        <StaggeredView index={0}>
+          <ThemedText
+            style={{ paddingInline: 35, fontSize: 32, fontWeight: "600", textAlign: "center" }}
+          >
+            {t("setup.headline")}
+          </ThemedText>
+        </StaggeredView>
+        <StaggeredView index={1}>
+          <ThemedText style={{ textAlign: "center", paddingInline: 40 }}>
+            {t("setup.languageUnitInfo")}
+          </ThemedText>
+        </StaggeredView>
+      </View>
+      <StaggeredView style={{ gap: 8 }} index={2}>
         <ThemedText style={{ fontSize: 24, fontWeight: "600", textAlign: "center" }}>
           {t("language")}:
         </ThemedText>
-      </StaggeredView>
-      <StaggeredView index={3}>
         <Switch
           selected={selectedLanguage.current}
           onSelect={handleLanguageChange}
@@ -42,7 +67,22 @@ export default function Setup() {
           optionRight={{ label: t("english"), value: "en" }}
         />
       </StaggeredView>
-      <StaggeredView index={4}></StaggeredView>
+      <StaggeredView style={{ gap: 8 }} index={3}>
+        <ThemedText style={{ fontSize: 24, fontWeight: "600", textAlign: "center" }}>
+          {t("unit")}:
+        </ThemedText>
+        <Switch
+          selected={selectedUnit.current}
+          onSelect={handleUnitChange}
+          optionLeft={{ label: "KG", value: "kg" }}
+          optionRight={{ label: "LBS", value: "lbs" }}
+        />
+      </StaggeredView>
+      <StaggeredView index={4}>
+        <Button style={[styles.submit, { backgroundColor: secondary }]} onPress={handleSubmit}>
+          <ThemedText style={{ fontWeight: 600, color: "white" }}>{t("continue")}</ThemedText>
+        </Button>
+      </StaggeredView>
     </SafeAreaView>
   );
 }
@@ -52,6 +92,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    gap: 16,
+    paddingLeft: 8,
+    paddingRight: 8,
+    gap: 32,
+  },
+  submit: {
+    marginTop: 80,
+    paddingInline: 28,
+    paddingBlock: 12,
+    borderRadius: 8,
   },
 });

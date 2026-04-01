@@ -46,9 +46,13 @@ export async function insertMultipleWeights(list: WeightTableEntry[]) {
 }
 
 export async function getSetting(key: string) {
-  return await db.query.settings.findFirst({
-    where: eq(settings.key, key),
-  });
+  try {
+    return await db.query.settings.findFirst({
+      where: eq(settings.key, key),
+    });
+  } catch {
+    return null;
+  }
 }
 
 export async function insertSetting(setting: SettingTableEntry) {

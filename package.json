@@ -12,7 +12,8 @@
     "db:generate": "drizzle-kit generate",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "clean": "adb uninstall com.simple.scale_dev && expo run:android"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.1.1",

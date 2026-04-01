@@ -1,24 +1,19 @@
-import { useMigrations } from "drizzle-orm/op-sqlite/migrator";
 import { useEffect, useState } from "react";
 import { AppState, FlatList, StyleSheet, View } from "react-native";
 
-import ThemedText from "@/components/ThemedText";
 import { WeightListItem } from "@/components/WeightListItem";
-import { db, opsqliteDB } from "@/db";
+import { opsqliteDB } from "@/db";
 import { getSetting, getWeights, insertSetting } from "@/db/operations";
 import { WeightTableEntry } from "@/db/schema";
 import { calculateAverageWeight, getLoggedDays } from "@/utilities/caculate-average-weight";
 
-import migrations from "../drizzle/migrations";
 import { checkAndInsertToday } from "@/utilities/check_and_insert_today";
 import Overview from "@/components/Overview";
 import { useThemeColors } from "@/hooks/useTheme";
 import { MainDisplay } from "@/components/MainDisplay";
 import { AnchorDay } from "@/constants/anchor_days";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
-  const { success, error } = useMigrations(db, migrations);
   const { backgroundColor, backgroundLight } = useThemeColors();
   const [data, setData] = useState<WeightTableEntry[]>([]);
   const [anchorDay, setAnchorDay] = useState<AnchorDay>("monday");
@@ -31,7 +26,6 @@ export default function Index() {
   const { daysLogged } = getLoggedDays(anchorDay, data);
 
   useEffect(() => {
-    if (!success) return;
     const fetchData = async () => {
       try {
         const [weightEntries, dbAnchorDay] = await Promise.all([
@@ -62,7 +56,7 @@ export default function Index() {
     });
 
     return () => reactive_data();
-  }, [success]);
+  }, []);
 
   useEffect(() => {
     const subscribeToAppState = AppState.addEventListener("change", (state) => {
@@ -77,27 +71,8 @@ export default function Index() {
     weightDifference = Number((current_average_weight - previous_average_weight).toFixed(2));
   }
 
-  if (error) {
-    console.error(error);
-    return (
-      <View>
-        <ThemedText>Migration error: {error.message}</ThemedText>
-      </View>
-    );
-  }
-  if (!success) {
-    return (
-      <View>
-        <ThemedText>Migration is in progress...</ThemedText>
-      </View>
-    );
-  }
-
   return (
-    <SafeAreaView
-      edges={["left", "right", "bottom"]}
-      style={[{ backgroundColor, paddingLeft: 8, paddingRight: 8 }, styles.container]}
-    >
+    <View style={[{ backgroundColor, paddingLeft: 8, paddingRight: 8 }, styles.container]}>
       <MainDisplay daysLogged={daysLogged} daysTotal={7} currentWeight={current_average_weight} />
 
       <Overview
@@ -115,7 +90,7 @@ export default function Index() {
           borderRadius: 6,
         }}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
