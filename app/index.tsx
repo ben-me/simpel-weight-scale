@@ -14,7 +14,7 @@ import { MainDisplay } from "@/components/MainDisplay";
 import { AnchorDay } from "@/constants/anchor_days";
 
 export default function Index() {
-  const { backgroundColor, backgroundLight } = useThemeColors();
+  const { backgroundColor, backgroundLight, borderColor } = useThemeColors();
   const [data, setData] = useState<WeightTableEntry[]>([]);
   const [anchorDay, setAnchorDay] = useState<AnchorDay>("monday");
   const { current_average_weight, previous_average_weight } = calculateAverageWeight(
@@ -72,7 +72,12 @@ export default function Index() {
   }
 
   return (
-    <View style={[{ backgroundColor, paddingLeft: 8, paddingRight: 8 }, styles.container]}>
+    <View
+      style={[
+        { backgroundColor, paddingLeft: 8, paddingRight: 8, borderTopColor: borderColor },
+        styles.container,
+      ]}
+    >
       <MainDisplay daysLogged={daysLogged} daysTotal={7} currentWeight={current_average_weight} />
 
       <Overview
@@ -99,7 +104,6 @@ const styles = StyleSheet.create({
     flex: 1,
     borderTopWidth: 1,
     borderStyle: "solid",
-    borderColor: "gray",
     gap: 16,
   },
 });

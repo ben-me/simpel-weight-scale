@@ -17,7 +17,7 @@ export default function Setup() {
   const { t, i18n } = useTranslation();
   const selectedLanguage = useRef(i18n.language);
   const selectedUnit = useRef("KG");
-  const { backgroundColor, secondary } = useThemeColors();
+  const { backgroundColor, secondary, primary } = useThemeColors();
 
   function handleLanguageChange(value: "en" | "de") {
     i18n.changeLanguage(value);
@@ -79,7 +79,7 @@ export default function Setup() {
         />
       </StaggeredView>
       <StaggeredView index={4}>
-        <Button style={[styles.submit, { backgroundColor: secondary }]} onPress={handleSubmit}>
+        <Button style={[styles.submit, { backgroundColor: primary }]} onPress={handleSubmit}>
           <ThemedText style={{ fontWeight: 600, color: "white" }}>{t("continue")}</ThemedText>
         </Button>
       </StaggeredView>

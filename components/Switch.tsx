@@ -12,7 +12,7 @@ type Props = {
 };
 
 export default function Switch({ optionLeft, optionRight, onSelect, selected }: Props) {
-  const { backgroundLight, tertiary, primary, secondary } = useThemeColors();
+  const { backgroundLight, secondary } = useThemeColors();
   const translate = useSharedValue(0);
   const highlightWidth = useSharedValue(0);
   const rightOptionSelected = selected === optionRight.value;
@@ -68,7 +68,7 @@ export default function Switch({ optionLeft, optionRight, onSelect, selected }: 
           translateX,
           {
             width: "50%",
-            backgroundColor: primary,
+            backgroundColor: secondary,
             position: "absolute",
             inset: 0,
             borderRadius: 5,

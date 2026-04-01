@@ -1,6 +1,6 @@
 import { SplashScreen, Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 import OptionsMenu from "@/components/OptionsMenu";
 import OptionWindow from "@/components/OptionWindow";
@@ -17,6 +17,7 @@ import { useSetupStore } from "@/store/setup";
 import { db } from "@/db";
 import { useMigrations } from "drizzle-orm/op-sqlite/migrator";
 import migrations from "@/drizzle/migrations";
+import ThemedText from "@/components/ThemedText";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -57,7 +58,9 @@ export default function RootLayout() {
                     backgroundColor: headerBackground,
                   },
                   headerTitle: () => {
-                    return <Text style={{ color: "white", fontSize: 20 }}>Simple Scale</Text>;
+                    return (
+                      <ThemedText style={{ color: "white", fontSize: 20 }}>Simple Scale</ThemedText>
+                    );
                   },
                   headerRight: () => {
                     return (

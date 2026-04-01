@@ -10,7 +10,7 @@ export const Colors = {
     text: "#11181C",
     backgroundColor: "#f3f4f5",
     backgroundLight: "#fff",
-    headerBackground: "2E2E2E",
+    headerBackground: "#2E2E2E",
     borderColor: "#EEEEEE",
     green: "#00E676",
     gray: "#E9E9E9",
