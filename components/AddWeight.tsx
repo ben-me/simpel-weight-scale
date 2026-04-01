@@ -17,12 +17,13 @@ import Animated, {
 import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
 import { useTranslation } from "react-i18next";
 import { Entypo } from "@expo/vector-icons";
+import Button from "./Button";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export default function AddWeight() {
   const { t } = useTranslation();
-  const { backgroundLight } = useThemeColors();
+  const { backgroundLight, primary } = useThemeColors();
   const [weight, setWeight] = useState<string>("0");
   const [date, setDate] = useState(new Date());
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -63,6 +64,12 @@ export default function AddWeight() {
     setModalIsOpen(true);
   }
 
+  function handleCancel() {
+    setWeight("0");
+    setDate(new Date());
+    setModalIsOpen(false);
+  }
+
   return (
     <>
       <AnimatedPressable
@@ -86,7 +93,7 @@ export default function AddWeight() {
               <ThemedText style={styles.overline}>{t("date")}:</ThemedText>
               <ThemedText style={styles.date}>{date.toLocaleDateString()}</ThemedText>
             </Pressable>
-            <Pressable style={{ alignItems: "center", gap: 5 }}>
+            <Pressable style={{ alignItems: "center" }}>
               <ThemedText style={styles.overline}>{t("weight")}:</ThemedText>
               <ThemedInput
                 keyboardType="number-pad"
@@ -97,14 +104,12 @@ export default function AddWeight() {
               />
             </Pressable>
             <View style={styles.controls}>
-              <Pressable>
-                <ThemedText style={styles.button}>{t("cancel")}</ThemedText>
-              </Pressable>
-              <Pressable>
-                <ThemedText style={[styles.saveButton, styles.button]} onPress={handleSubmit}>
-                  {t("save")}
-                </ThemedText>
-              </Pressable>
+              <Button style={styles.button} onPress={handleCancel}>
+                <ThemedText>{t("cancel")}</ThemedText>
+              </Button>
+              <Button style={[styles.button, { backgroundColor: primary }]} onPress={handleSubmit}>
+                <ThemedText style={{ color: "white" }}>{t("save")}</ThemedText>
+              </Button>
             </View>
           </Pressable>
         </Animated.View>
@@ -122,7 +127,7 @@ const styles = StyleSheet.create({
   content: {
     zIndex: 2,
     padding: 20,
-    gap: 20,
+    gap: 16,
     width: "80%",
     borderRadius: 5,
     alignItems: "center",
@@ -134,22 +139,20 @@ const styles = StyleSheet.create({
   },
   overline: {
     textAlign: "center",
-    fontSize: 24,
-    lineHeight: 25,
+    fontSize: 18,
   },
   date: {
     textAlign: "center",
     fontSize: 32,
     lineHeight: 33,
     fontWeight: "bold",
-    marginBlockStart: 8,
+    marginBlockStart: 4,
   },
   weight: {
     lineHeight: 33,
     fontSize: 32,
-    maxHeight: 33,
     fontWeight: "bold",
-    marginBlock: 8,
+    marginBlock: 4,
     width: 100,
   },
   controls: {
@@ -157,14 +160,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     gap: 5,
+    marginBlockStart: 12,
   },
   button: {
     borderRadius: 5,
-    paddingBlock: 12,
-    paddingInline: 12,
-  },
-  saveButton: {
-    backgroundColor: "dodgerblue",
-    color: "white",
+    paddingBlock: 8,
+    paddingInline: 16,
+    fontSize: 18,
   },
 });
