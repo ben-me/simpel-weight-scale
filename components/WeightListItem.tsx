@@ -38,9 +38,10 @@ export function WeightListItem({
     }
 
     const keyboardListener = Keyboard.addListener("keyboardDidHide", () => {
+      setInputValue("0");
       setTimeout(() => setModalVisible(false), 240);
     });
-    setInputValue(String(weight));
+
     const keyboardFocus = setTimeout(() => inputRef.current?.focus(), 100);
 
     return () => {
@@ -49,7 +50,7 @@ export function WeightListItem({
     };
   }, [modalVisible, weight]);
 
-  async function handleInputChange() {
+  async function handleSubmit() {
     const convertedWeight = convertWeight(inputValue);
     if (!convertWeight) return;
     await insertWeight({ date, weight: convertedWeight, unit });
@@ -67,7 +68,6 @@ export function WeightListItem({
         backdropColor="transparent"
         onRequestClose={() => setModalVisible(false)}
         animationType="fade"
-        allowSwipeDismissal={true}
       >
         <Animated.View exiting={FadeOut.duration(150)} style={[translateY, { flex: 1 }]}>
           <Pressable style={styles.modal} onPress={() => setModalVisible(false)}>
@@ -76,14 +76,14 @@ export function WeightListItem({
               <View style={styles.modal_input_wrapper}>
                 <ThemedInput
                   ref={inputRef}
-                  onSubmitEditing={handleInputChange}
+                  onSubmitEditing={handleSubmit}
                   keyboardType="number-pad"
                   style={styles.modal_input}
                   value={inputValue}
                   maxLength={6}
                   onChangeText={setInputValue}
                 />
-                <ThemedText style={styles.modal_input}>{unit}</ThemedText>
+                <ThemedText style={styles.modal_unit}>{unit}</ThemedText>
               </View>
               <ThemedText style={styles.modal_subheadline}>{t("changeWeight")}</ThemedText>
             </Pressable>
@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
     lineHeight: 55,
     paddingVertical: 0,
   },
+  modal_unit: { fontSize: 52 },
   modal_subheadline: {
     opacity: 0.7,
   },
