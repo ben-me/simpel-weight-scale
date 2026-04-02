@@ -5,10 +5,11 @@ export async function checkAndInsertToday() {
   const todayExists = await getSingleWeight(today);
   if (!todayExists) {
     const unit = await getSetting("unit");
+
     await insertWeight({
       date: new Date().toISOString().slice(0, 10),
       weight: 0,
-      unit: unit?.value ?? "kg",
+      unit: unit?.value!,
     });
   }
 }

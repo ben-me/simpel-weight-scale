@@ -46,6 +46,12 @@ export default function Index() {
     };
     fetchData();
 
+    const subscribeToAppState = AppState.addEventListener("change", (state) => {
+      if (state === "active") {
+        checkAndInsertToday();
+      }
+    });
+
     const reactive_data = opsqliteDB.reactiveExecute({
       query: "SELECT * FROM weight ORDER BY date DESC",
       fireOn: [{ table: "weight" }],
@@ -55,16 +61,10 @@ export default function Index() {
       },
     });
 
-    return () => reactive_data();
-  }, []);
-
-  useEffect(() => {
-    const subscribeToAppState = AppState.addEventListener("change", (state) => {
-      if (state === "active") {
-        checkAndInsertToday();
-      }
-    });
-    return () => subscribeToAppState.remove();
+    return () => {
+      reactive_data();
+      subscribeToAppState.remove();
+    };
   }, []);
 
   if (previous_average_weight && current_average_weight) {

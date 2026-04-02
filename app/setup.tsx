@@ -5,26 +5,24 @@ import ThemedText from "@/components/ThemedText";
 import { insertSetting } from "@/db/operations";
 import { useThemeColors } from "@/hooks/useTheme";
 import { useSetupStore } from "@/store/setup";
-import { useRouter } from "expo-router";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Setup() {
-  const router = useRouter();
   const { completeSetup } = useSetupStore();
   const { t, i18n } = useTranslation();
   const selectedLanguage = useRef(i18n.language);
   const selectedUnit = useRef("KG");
-  const { backgroundColor, secondary, primary } = useThemeColors();
+  const { backgroundColor, primary } = useThemeColors();
 
   function handleLanguageChange(value: "en" | "de") {
     i18n.changeLanguage(value);
     selectedLanguage.current = value;
   }
 
-  function handleUnitChange(value: "kg" | "lbs") {
+  function handleUnitChange(value: "KG" | "lbs") {
     selectedUnit.current = value;
   }
 
@@ -34,9 +32,8 @@ export default function Setup() {
       await insertSetting({ key: "language", value: selectedUnit.current });
       await insertSetting({ key: "setup_complete", value: "1" });
       completeSetup();
-      router.back();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -74,7 +71,7 @@ export default function Setup() {
         <Switch
           selected={selectedUnit.current}
           onSelect={handleUnitChange}
-          optionLeft={{ label: "KG", value: "kg" }}
+          optionLeft={{ label: "KG", value: "KG" }}
           optionRight={{ label: "LBS", value: "lbs" }}
         />
       </StaggeredView>

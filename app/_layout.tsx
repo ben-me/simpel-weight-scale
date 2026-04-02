@@ -1,4 +1,4 @@
-import { SplashScreen, Stack, useRouter } from "expo-router";
+import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { View } from "react-native";
 
@@ -19,28 +19,19 @@ import { useMigrations } from "drizzle-orm/op-sqlite/migrator";
 import migrations from "@/drizzle/migrations";
 import ThemedText from "@/components/ThemedText";
 
-SplashScreen.preventAutoHideAsync();
-
 export default function RootLayout() {
-  const router = useRouter();
   const { success, error } = useMigrations(db, migrations);
   const { setupStatus, checkSetup } = useSetupStore();
   const { headerBackground } = useThemeColors();
 
   useEffect(() => {
     if (!success) return;
-    checkSetup();
-  }, [success, checkSetup]);
-
-  useEffect(() => {
-    if (!success || setupStatus === "loading") return;
-
-    if (setupStatus === "new") {
-      router.navigate("/setup");
+    async function check() {
+      await checkSetup();
+      SplashScreen.hide();
     }
-
-    SplashScreen.hideAsync();
-  }, [success, setupStatus, router]);
+    check();
+  }, [success, checkSetup]);
 
   if (!success) return;
   if (error) console.log(error);
@@ -72,11 +63,15 @@ export default function RootLayout() {
                   },
                 }}
               >
-                <Stack.Screen name="index" />
-                <Stack.Screen
-                  name="setup"
-                  options={{ headerShown: false, animation: "slide_from_left" }}
-                />
+                <Stack.Protected guard={setupStatus !== "done"}>
+                  <Stack.Screen
+                    name="setup"
+                    options={{ headerShown: false, animation: "slide_from_left" }}
+                  />
+                </Stack.Protected>
+                <Stack.Protected guard={setupStatus === "done"}>
+                  <Stack.Screen name="index" />
+                </Stack.Protected>
               </Stack>
               <OptionWindow />
             </SafeAreaView>
