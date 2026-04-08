@@ -72,6 +72,7 @@ export function WeightListItem({
         <Animated.View exiting={FadeOut.duration(150)} style={[translateY, { flex: 1 }]}>
           <Pressable style={styles.modal} onPress={() => setModalVisible(false)}>
             <Pressable style={[styles.modal_view, { backgroundColor: backgroundLight }]}>
+              <ThemedText style={styles.modal_subheadline}>{t("changeWeight")}</ThemedText>
               <ThemedText style={styles.modal_headline}>{prettyDate}</ThemedText>
               <View style={styles.modal_input_wrapper}>
                 <ThemedInput
@@ -85,7 +86,6 @@ export function WeightListItem({
                 />
                 <ThemedText style={styles.modal_unit}>{unit}</ThemedText>
               </View>
-              <ThemedText style={styles.modal_subheadline}>{t("changeWeight")}</ThemedText>
             </Pressable>
           </Pressable>
         </Animated.View>
@@ -121,10 +121,10 @@ const styles = StyleSheet.create({
     padding: 24,
     alignItems: "center",
     borderRadius: 6,
-    gap: 24,
   },
   modal_headline: {
     fontSize: 20,
+    marginBottom: 12,
   },
   modal_input_wrapper: {
     flexDirection: "row",
@@ -140,5 +140,6 @@ const styles = StyleSheet.create({
   modal_unit: { fontSize: 52 },
   modal_subheadline: {
     opacity: 0.7,
+    marginBottom: 6,
   },
 });
