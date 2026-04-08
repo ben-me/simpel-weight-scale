@@ -46,6 +46,7 @@ export default function AddWeight() {
       mode: "date",
       value: date,
       onChange: (_, selectedDate) => setDate(selectedDate!),
+      maximumDate: new Date(),
     });
   };
 
