@@ -13,6 +13,7 @@ export const Colors = {
     headerBackground: "#2E2E2E",
     borderColor: "#EEEEEE",
     green: "#00E676",
+    red: "#d32f2f",
     gray: "#E9E9E9",
     primary: "#285A48",
     secondary: "#408A71",
@@ -29,6 +30,7 @@ export const Colors = {
     primary: "#285A48",
     secondary: "#408A71",
     tertiary: "#B0E4CC",
+    red: "#d32f2f",
   },
 };
 
