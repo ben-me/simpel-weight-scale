@@ -7,9 +7,24 @@ function isAnchorDay(anchor_day: number, entry: WeightTableEntry) {
   return toAppDayIndex(new Date(entry.date).getDay()) === anchor_day;
 }
 
-function findAnchorDays(anchor_day: number, sorted_entries: WeightTableEntry[]) {
-  const anchors = sorted_entries.filter((e) => isAnchorDay(anchor_day, e));
-  return [anchors[0], anchors[1], anchors[2]];
+function findRelevantAnchorDays(anchor_day: number, sorted_entries: WeightTableEntry[]) {
+  const results: WeightTableEntry[] = [];
+  let last_anchor = new Date().getTime();
+
+  for (const entry of sorted_entries) {
+    if (!isAnchorDay(anchor_day, entry)) continue;
+
+    const entry_time = new Date(entry.date).getTime();
+    const difference_in_days = Math.floor((last_anchor - entry_time) / (24 * 3600 * 1000));
+
+    if (difference_in_days >= 0 && difference_in_days <= 14) {
+      results.push(entry);
+      last_anchor = entry_time;
+    } else {
+      break;
+    }
+  }
+  return results;
 }
 
 function dataBetweenAnchorDays(
@@ -34,16 +49,16 @@ function averageWeight(entries: WeightTableEntry[]) {
 export function calculateAverageWeight(anchor_day: AnchorDay, entries: WeightTableEntry[]) {
   const sorted_entries = [...entries].sort((a, b) => b.date.localeCompare(a.date));
   const anchor_day_number = getAnchorDayNumber(anchor_day);
-  const [anchor1, anchor2, anchor3] = findAnchorDays(anchor_day_number, sorted_entries);
+  const [anchor1, anchor2, anchor3] = findRelevantAnchorDays(anchor_day_number, sorted_entries);
 
-  if (!anchor1) {
+  if (!anchor1 || !anchor2) {
     return { current_average_weight: undefined, previous_average_weight: undefined };
   }
 
   const current_data = dataBetweenAnchorDays(sorted_entries, anchor1, anchor2);
   const current_average_weight = averageWeight(current_data);
 
-  if (!anchor2) {
+  if (!anchor3) {
     return { current_average_weight, previous_average_weight: undefined };
   }
 
@@ -55,7 +70,7 @@ export function calculateAverageWeight(anchor_day: AnchorDay, entries: WeightTab
 
 export function getLoggedDays(anchor_day: AnchorDay, entries: WeightTableEntry[]) {
   const anchor_day_number = getAnchorDayNumber(anchor_day);
-  const [anchor1, anchor2] = findAnchorDays(anchor_day_number, entries);
+  const [anchor1, anchor2] = findRelevantAnchorDays(anchor_day_number, entries);
   const isTodayAnchorDay = toAppDayIndex(new Date().getDay()) === anchor_day_number;
 
   let relevant_entries: WeightTableEntry[];

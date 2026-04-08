@@ -5,7 +5,7 @@ import { WeightListItem } from "@/components/WeightListItem";
 import { opsqliteDB } from "@/db";
 import { getSetting, getWeights, insertSetting } from "@/db/operations";
 import { WeightTableEntry } from "@/db/schema";
-import { calculateAverageWeight, getLoggedDays } from "@/utilities/caculate-average-weight";
+import { calculateAverageWeight, getLoggedDays } from "@/utilities/calculate-average-weight";
 
 import { checkAndInsertToday } from "@/utilities/check_and_insert_today";
 import Overview from "@/components/Overview";
