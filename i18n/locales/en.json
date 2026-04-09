@@ -43,5 +43,6 @@
   "setup": {
     "headline": "Welcome to Simple Scale!",
     "languageUnitInfo": "Before you can start, please set your preferred language and unit below."
-  }
+  },
+  "settings": "Settings"
 }
