@@ -38,7 +38,6 @@ export function WeightListItem({
     }
 
     const keyboardListener = Keyboard.addListener("keyboardDidHide", () => {
-      setInputValue("0");
       setTimeout(() => setModalVisible(false), 240);
     });
 

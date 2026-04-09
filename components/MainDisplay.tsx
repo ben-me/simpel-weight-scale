@@ -4,20 +4,15 @@ import { AnimatedRollingNumber } from "react-native-animated-rolling-numbers";
 import { useThemeColors } from "@/hooks/useTheme";
 import { Circle, Svg } from "react-native-svg";
 import Animated, {
-  useSharedValue,
-  withTiming,
   Easing,
   useAnimatedProps,
-  SharedValue,
+  useSharedValue,
+  withDelay,
+  withTiming,
 } from "react-native-reanimated";
-import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-
-type Props = {
-  currentWeight: number | undefined;
-  daysLogged: number;
-  daysTotal: number;
-};
+import { useEffect } from "react";
+import { AnchorDay, getAnchorDayNumber } from "@/constants/anchor_days";
 
 const SIZE = 320;
 const STROKE = 10;
@@ -36,17 +31,30 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 type TrackingSliceProps = {
   index: number;
-  progress: SharedValue<number>;
+  shouldShow: boolean;
+  day?: { day: number; logged: boolean };
 };
 
-function TrackingProgressSlice({ index, progress }: TrackingSliceProps) {
-  const { green } = useThemeColors();
-  const animatedProps = useAnimatedProps(() => {
-    const fill = Math.min(1, Math.max(0, progress.get() - index));
-    return {
-      strokeDashoffset: DASH * (1 - fill),
-    };
-  });
+function TrackingProgressSlice({ index, day, shouldShow }: TrackingSliceProps) {
+  const { green, red } = useThemeColors();
+  const progress = useSharedValue(0);
+
+  useEffect(() => {
+    if (!shouldShow) {
+      const reverseDelay = (SEGMENTS - 1 - index) * 250;
+      progress.set(
+        withDelay(reverseDelay, withTiming(0, { duration: 250, easing: Easing.out(Easing.cubic) })),
+      );
+      return;
+    }
+    progress.set(
+      withDelay(index * 250, withTiming(1, { duration: 250, easing: Easing.out(Easing.cubic) })),
+    );
+  }, [index, progress, shouldShow]);
+
+  const animatedProps = useAnimatedProps(() => ({
+    strokeDashoffset: DASH * (1 - progress.get()),
+  }));
 
   const rotation = ROTATION_OFFSET + DEGREES_PER_SEGMENT * index;
 
@@ -56,7 +64,7 @@ function TrackingProgressSlice({ index, progress }: TrackingSliceProps) {
       cx={CENTER}
       cy={CENTER}
       fill="none"
-      stroke={green}
+      stroke={day?.logged ? green : red}
       strokeWidth={STROKE}
       strokeDasharray={`${DASH} ${CIRCUMFERENCE}`}
       animatedProps={animatedProps}
@@ -65,19 +73,19 @@ function TrackingProgressSlice({ index, progress }: TrackingSliceProps) {
   );
 }
 
-export function MainDisplay({ currentWeight, daysLogged = 0 }: Props) {
+type Props = {
+  currentWeight: number | undefined;
+  daysLogged?: { day: number; logged: boolean }[];
+  anchorDay: AnchorDay;
+};
+
+export function MainDisplay({ currentWeight, daysLogged, anchorDay }: Props) {
   const { t } = useTranslation();
   const { text, gray } = useThemeColors();
-  const progress = useSharedValue(0);
-
-  useEffect(() => {
-    progress.set(() =>
-      withTiming(daysLogged, {
-        duration: 600,
-        easing: Easing.out(Easing.cubic),
-      }),
-    );
-  }, [daysLogged, progress]);
+  const anchorIndex = getAnchorDayNumber(anchorDay);
+  const orderedWeek = Array.from({ length: 7 }, (_, i) => (anchorIndex + 1 + i) % 7);
+  const todayIndex = daysLogged?.at(-1)?.day ?? new Date().getDay();
+  const todayPosition = orderedWeek.indexOf(todayIndex);
 
   return (
     <View
@@ -113,9 +121,14 @@ export function MainDisplay({ currentWeight, daysLogged = 0 }: Props) {
           alignItems: "center",
         }}
       >
-        {Array.from({ length: SEGMENTS }).map((_, i) => {
-          return <TrackingProgressSlice key={i} index={i} progress={progress} />;
-        })}
+        {orderedWeek.map((dayIndex, position) => (
+          <TrackingProgressSlice
+            key={position}
+            index={position}
+            shouldShow={position <= todayPosition}
+            day={daysLogged?.find((d) => d.day === dayIndex)}
+          />
+        ))}
       </Svg>
       {currentWeight ? (
         <AnimatedRollingNumber value={currentWeight} textStyle={[styles.weight, { color: text }]} />

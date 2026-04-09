@@ -17,13 +17,12 @@ export default function Index() {
   const { backgroundColor, backgroundLight, borderColor } = useThemeColors();
   const [data, setData] = useState<WeightTableEntry[]>([]);
   const [anchorDay, setAnchorDay] = useState<AnchorDay>("monday");
+  const loggedDays = getLoggedDays(anchorDay, data);
   const { current_average_weight, previous_average_weight } = calculateAverageWeight(
     anchorDay,
     data,
   );
   let weightDifference: number | undefined;
-
-  const { daysLogged } = getLoggedDays(anchorDay, data);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -78,7 +77,11 @@ export default function Index() {
         styles.container,
       ]}
     >
-      <MainDisplay daysLogged={daysLogged} daysTotal={7} currentWeight={current_average_weight} />
+      <MainDisplay
+        anchorDay={anchorDay}
+        daysLogged={loggedDays}
+        currentWeight={current_average_weight}
+      />
 
       <Overview
         anchorDay={anchorDay}

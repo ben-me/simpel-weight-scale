@@ -33,7 +33,8 @@ function dataBetweenAnchorDays(
   end: WeightTableEntry | undefined,
 ) {
   const from_index = sorted_entries.indexOf(start);
-  const to_index = end ? sorted_entries.indexOf(end) : sorted_entries.length;
+  const to_index =
+    end && sorted_entries.indexOf(end) !== 0 ? sorted_entries.indexOf(end) : sorted_entries.length;
   return sorted_entries.slice(from_index, to_index);
 }
 
@@ -47,22 +48,21 @@ function averageWeight(entries: WeightTableEntry[]) {
 }
 
 export function calculateAverageWeight(anchor_day: AnchorDay, entries: WeightTableEntry[]) {
-  const sorted_entries = [...entries].sort((a, b) => b.date.localeCompare(a.date));
   const anchor_day_number = getAnchorDayNumber(anchor_day);
-  const [anchor1, anchor2, anchor3] = findRelevantAnchorDays(anchor_day_number, sorted_entries);
+  const [anchor1, anchor2, anchor3] = findRelevantAnchorDays(anchor_day_number, entries);
 
-  if (!anchor1 || !anchor2) {
+  if (!anchor1 && !anchor2) {
     return { current_average_weight: undefined, previous_average_weight: undefined };
   }
 
-  const current_data = dataBetweenAnchorDays(sorted_entries, anchor1, anchor2);
+  const current_data = dataBetweenAnchorDays(entries, anchor1, anchor2);
   const current_average_weight = averageWeight(current_data);
 
   if (!anchor3) {
     return { current_average_weight, previous_average_weight: undefined };
   }
 
-  const previous_data = dataBetweenAnchorDays(sorted_entries, anchor2, anchor3);
+  const previous_data = dataBetweenAnchorDays(entries, anchor2, anchor3);
   const previous_average_weight = averageWeight(previous_data);
 
   return { current_average_weight, previous_average_weight };
@@ -80,5 +80,10 @@ export function getLoggedDays(anchor_day: AnchorDay, entries: WeightTableEntry[]
     relevant_entries = dataBetweenAnchorDays(entries, entries[0], anchor1);
   }
 
-  return { daysLogged: relevant_entries.filter((e) => e.weight !== 0).length };
+  return relevant_entries
+    .map((e) => ({
+      day: toAppDayIndex(new Date(e.date).getDay()),
+      logged: e.weight !== 0,
+    }))
+    .sort((a, b) => a.day - b.day);
 }
