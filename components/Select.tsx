@@ -13,6 +13,7 @@ import ThemedText from "./ThemedText";
 import { useThemeColors } from "@/hooks/useTheme";
 import { AnchorDay } from "@/constants/anchor_days";
 import { useTranslation } from "react-i18next";
+import Entypo from "@expo/vector-icons/Entypo";
 type SelectOption = {
   label: string;
   value: string | AnchorDay;
@@ -74,6 +75,7 @@ export default function Select({ value, onChange, options, placeholder, style }:
           value={selected?.label ?? "-"}
           placeholder={placeholder}
           editable={false}
+          rightIcon={<Entypo name="chevron-down" size={28} color={text} />}
         />
         <ThemedText style={styles.subtitle}>{t("anchorDay")}</ThemedText>
       </Pressable>

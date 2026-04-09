@@ -16,7 +16,6 @@ export default function ThemedInput({ rightIcon, ref, style, ...rest }: Props) {
         ref={ref}
         {...rest}
         style={[{ color: text, borderColor: text }, styles.default, style]}
-        selectTextOnFocus={true}
       />
       {rightIcon && <View>{rightIcon}</View>}
     </View>
