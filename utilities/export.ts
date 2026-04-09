@@ -10,5 +10,9 @@ export default async function exportCSV() {
   file.create({ overwrite: true });
   file.write(body.join("\n"));
 
-  await shareAsync(file.uri, { mimeType: "text/csv" });
+  try {
+    await shareAsync(file.uri, { mimeType: "text/csv" });
+  } catch (error) {
+    console.error(error);
+  }
 }
