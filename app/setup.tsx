@@ -29,7 +29,7 @@ export default function Setup() {
   async function handleSubmit() {
     try {
       await insertSetting({ key: "unit", value: selectedUnit.current });
-      await insertSetting({ key: "language", value: selectedUnit.current });
+      await insertSetting({ key: "language", value: selectedLanguage.current });
       await insertSetting({ key: "setup_complete", value: "1" });
       completeSetup();
     } catch (error) {
