@@ -11,7 +11,7 @@ export default function Button({ children, ...rest }: PressableProps) {
   const scale = useSharedValue(1);
 
   const style = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
+    transform: [{ scale: scale.get() }],
   }));
 
   function animate() {
