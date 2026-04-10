@@ -71,12 +71,7 @@ export default function Index() {
   }
 
   return (
-    <View
-      style={[
-        { backgroundColor, paddingLeft: 8, paddingRight: 8, borderTopColor: borderColor },
-        styles.container,
-      ]}
-    >
+    <View style={[{ backgroundColor, borderTopColor: borderColor }, styles.container]}>
       <MainDisplay
         anchorDay={anchorDay}
         daysLogged={loggedDays}
@@ -106,6 +101,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     borderTopWidth: 1,
+    paddingLeft: 8,
+    paddingRight: 8,
     borderStyle: "solid",
     gap: 16,
   },
