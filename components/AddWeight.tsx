@@ -25,7 +25,8 @@ export default function AddWeight() {
   const { t } = useTranslation();
   const { backgroundLight, primary } = useThemeColors();
   const [weight, setWeight] = useState<string>("0");
-  const [date, setDate] = useState(new Date());
+  const today = new Date();
+  const [date, setDate] = useState(today);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const { height } = useReanimatedKeyboardAnimation();
   const iconScale = useSharedValue(1);
@@ -45,8 +46,8 @@ export default function AddWeight() {
     DateTimePickerAndroid.open({
       mode: "date",
       value: date,
-      onChange: (_, selectedDate) => setDate(selectedDate!),
-      maximumDate: new Date(),
+      onChange: (_, selectedDate) => setDate(selectedDate ?? today),
+      maximumDate: today,
     });
   };
 
@@ -67,7 +68,7 @@ export default function AddWeight() {
 
   function handleCancel() {
     setWeight("0");
-    setDate(new Date());
+    setDate(today);
     setModalIsOpen(false);
   }
 
