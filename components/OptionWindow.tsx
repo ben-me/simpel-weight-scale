@@ -1,5 +1,13 @@
-import { BackHandler, Pressable, StyleSheet, View } from "react-native";
-import Animated, { FadeIn, FadeOut, Keyframe } from "react-native-reanimated";
+import { BackHandler, Pressable, PressableProps, StyleSheet, View } from "react-native";
+import Animated, {
+  FadeIn,
+  FadeOut,
+  Keyframe,
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withTiming,
+} from "react-native-reanimated";
 import ThemedText from "./ThemedText";
 import { useMenuStore } from "@/store/menu";
 import { useEffect, useState } from "react";
@@ -9,9 +17,39 @@ import { importCSV } from "@/utilities/import_csv";
 import { useThemeColors } from "@/hooks/useTheme";
 import exportCSV from "@/utilities/export";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "expo-router";
+
+function OptionEntry({ children, ...rest }: PressableProps) {
+  const { backgroundLight, backgroundColor } = useThemeColors();
+  const settingEntryBackground = useSharedValue(backgroundLight);
+
+  const animatedBackground = useAnimatedStyle(() => ({
+    backgroundColor: settingEntryBackground.get(),
+  }));
+
+  return (
+    <Animated.View style={animatedBackground}>
+      <Pressable
+        style={[styles.settingsButton]}
+        {...rest}
+        onPressIn={() => {
+          settingEntryBackground.set(
+            withSequence(
+              withTiming(backgroundColor, { duration: 150 }),
+              withTiming(backgroundLight, { duration: 150 }),
+            ),
+          );
+        }}
+      >
+        {children}
+      </Pressable>
+    </Animated.View>
+  );
+}
 
 export default function OptionWindow() {
   const { t } = useTranslation();
+  const router = useRouter();
   const { menuShown, closeMenu } = useMenuStore();
   const { backgroundLight, borderColor } = useThemeColors();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -42,36 +80,34 @@ export default function OptionWindow() {
         onPress={closeMenu}
       >
         <Animated.View
-          entering={customFadeIn.duration(100)}
-          exiting={customFadeOut.duration(100)}
+          entering={customFadeIn.duration(200)}
+          exiting={customFadeOut.duration(200)}
           style={[styles.settingsMenu, { backgroundColor: backgroundLight, borderColor }]}
         >
-          <ThemedText
-            style={{
-              padding: 16,
-              borderBottomWidth: 1,
-              borderBottomColor: borderColor,
-              borderStyle: "solid",
-              fontSize: 19,
-              lineHeight: 20,
-            }}
+          <OptionEntry
             onPress={() => {
               closeMenu();
               setShowConfirmModal(true);
             }}
           >
-            {t("import")}
-          </ThemedText>
-          <ThemedText
-            style={{
-              padding: 16,
-              fontSize: 19,
-              lineHeight: 20,
+            <ThemedText style={{ fontSize: 19, lineHeight: 22 }}>{t("import")}</ThemedText>
+          </OptionEntry>
+          <OptionEntry
+            onPress={() => {
+              exportCSV();
+              closeMenu();
             }}
-            onPress={exportCSV}
           >
-            {t("export")}
-          </ThemedText>
+            <ThemedText style={{ fontSize: 19, lineHeight: 22 }}>{t("export")}</ThemedText>
+          </OptionEntry>
+          <OptionEntry
+            onPress={() => {
+              router.navigate("/settings");
+              closeMenu();
+            }}
+          >
+            <ThemedText style={{ fontSize: 19, lineHeight: 22 }}>{t("settings")}</ThemedText>
+          </OptionEntry>
         </Animated.View>
       </Pressable>
     );
@@ -151,6 +187,9 @@ const styles = StyleSheet.create({
     zIndex: 2,
     borderRadius: 5,
     borderWidth: 1,
+  },
+  settingsButton: {
+    padding: 16,
   },
   modalText: {
     padding: 18,
