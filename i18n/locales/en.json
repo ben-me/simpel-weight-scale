@@ -44,5 +44,10 @@
     "headline": "Welcome to Simple Scale!",
     "languageUnitInfo": "Before you can start, please set your preferred language and unit below."
   },
-  "settings": "Settings"
+  "settings": "Settings",
+  "settingsModal": {
+    "heading": "Change {{ setting }}"
+  },
+  "kilo": "Kilogram",
+  "pound": "Pound"
 }
