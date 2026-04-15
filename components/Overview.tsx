@@ -2,8 +2,7 @@ import { StyleSheet, View } from "react-native";
 import ThemedText from "./ThemedText";
 import Select from "./Select";
 import { ANCHOR_DAYS, AnchorDay } from "@/constants/anchor_days";
-import { getSetting, insertSetting } from "@/db/operations";
-import { useEffect, useState } from "react";
+import { insertSetting } from "@/db/operations";
 import { useThemeColors } from "@/hooks/useTheme";
 import AnimatedRollingNumber from "react-native-animated-rolling-numbers";
 import OverviewField from "./OverviewField";
@@ -14,23 +13,18 @@ type Props = {
   setAnchorDay: React.Dispatch<React.SetStateAction<AnchorDay>>;
   previousAverage: number | undefined;
   difference: number | undefined;
+  unit: "KG" | "lbs";
 };
 
-export default function Overview({ anchorDay, setAnchorDay, previousAverage, difference }: Props) {
+export default function Overview({
+  anchorDay,
+  setAnchorDay,
+  previousAverage,
+  difference,
+  unit,
+}: Props) {
   const { t } = useTranslation();
   const { backgroundLight, text } = useThemeColors();
-  const [unit, setUnit] = useState("KG");
-
-  useEffect(() => {
-    async function fetchUnit() {
-      const dbUnit = await getSetting("unit");
-      if (!dbUnit || dbUnit?.value === unit) {
-        return;
-      }
-      setUnit(dbUnit.value);
-    }
-    fetchUnit();
-  }, [unit]);
 
   async function handleAnchorDayChange(day: AnchorDay) {
     if (day === anchorDay) return;

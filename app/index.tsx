@@ -16,6 +16,7 @@ import { AnchorDay } from "@/constants/anchor_days";
 export default function Index() {
   const { backgroundColor, backgroundLight, borderColor } = useThemeColors();
   const [data, setData] = useState<WeightTableEntry[]>([]);
+  const [unit, setUnit] = useState<"KG" | "lbs">("KG");
   const [anchorDay, setAnchorDay] = useState<AnchorDay>("monday");
   const loggedDays = getLoggedDays(anchorDay, data);
   const { current_average_weight, previous_average_weight } = calculateAverageWeight(
@@ -60,8 +61,18 @@ export default function Index() {
       },
     });
 
+    const reactive_unit = opsqliteDB.reactiveExecute({
+      query: "SELECT * FROM settings WHERE key = 'unit'",
+      fireOn: [{ table: "settings" }],
+      arguments: [],
+      callback: (settingResponse) => {
+        setUnit(settingResponse.rows[0].value);
+      },
+    });
+
     return () => {
       reactive_data();
+      reactive_unit();
       subscribeToAppState.remove();
     };
   }, []);
@@ -83,10 +94,11 @@ export default function Index() {
         setAnchorDay={setAnchorDay}
         previousAverage={previous_average_weight}
         difference={weightDifference}
+        unit={unit}
       />
       <FlatList
         data={data}
-        renderItem={({ item }) => <WeightListItem anchorDay={anchorDay} {...item} />}
+        renderItem={({ item }) => <WeightListItem anchorDay={anchorDay} {...item} unit={unit} />}
         keyExtractor={(entry) => entry.date}
         style={{
           backgroundColor: backgroundLight,
