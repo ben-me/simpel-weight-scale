@@ -69,15 +69,21 @@ export function calculateAverageWeight(anchor_day: AnchorDay, entries: WeightTab
 }
 
 export function getLoggedDays(anchor_day: AnchorDay, entries: WeightTableEntry[]) {
+  if (!entries.length) return;
+  const today = new Date(entries[0].date);
   const anchor_day_number = getAnchorDayNumber(anchor_day);
   const [anchor1, anchor2] = findRelevantAnchorDays(anchor_day_number, entries);
-  const isTodayAnchorDay = toAppDayIndex(new Date().getDay()) === anchor_day_number;
+  const isTodayAnchorDay = toAppDayIndex(today.getDay()) === anchor_day_number;
 
   let relevant_entries: WeightTableEntry[];
   if (isTodayAnchorDay && anchor2) {
     relevant_entries = dataBetweenAnchorDays(entries, anchor1, anchor2);
   } else {
-    relevant_entries = dataBetweenAnchorDays(entries, entries[0], anchor1);
+    const days_since_last_anchor = (toAppDayIndex(today.getDay()) - anchor_day_number + 7) % 7;
+    const last_anchor = new Date(Number(today) - days_since_last_anchor * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .slice(0, 10);
+    relevant_entries = entries.filter((entry) => entry.date >= last_anchor);
   }
 
   return relevant_entries
