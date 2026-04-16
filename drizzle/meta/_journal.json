@@ -36,6 +36,13 @@
       "when": 1774450202597,
       "tag": "0004_green_midnight",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1776352561198,
+      "tag": "0005_tired_the_hand",
+      "breakpoints": true
     }
   ]
 }
