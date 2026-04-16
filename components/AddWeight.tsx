@@ -25,7 +25,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 export default function AddWeight() {
   const { t } = useTranslation();
   const { unit } = useUnit();
-  const { backgroundLight, primary } = useThemeColors();
+  const { backgroundLight, primary, text } = useThemeColors();
   const [weight, setWeight] = useState<string>("0");
   const today = new Date();
   const [date, setDate] = useState(today);
@@ -95,7 +95,10 @@ export default function AddWeight() {
             <ThemedText style={styles.headline}>{t("newEntry")}</ThemedText>
             <Pressable style={styles.entryRow} onPress={showPicker}>
               <ThemedText style={styles.overline}>{t("date")}:</ThemedText>
-              <ThemedText style={styles.date}>{date.toLocaleDateString()}</ThemedText>
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+                <ThemedText style={styles.date}>{date.toLocaleDateString()}</ThemedText>
+                <Entypo name="chevron-down" size={22} color={text} />
+              </View>
             </Pressable>
             <Pressable style={styles.entryRow}>
               <ThemedText style={styles.overline}>{t("weight")}:</ThemedText>
@@ -154,10 +157,10 @@ const styles = StyleSheet.create({
     marginBlockStart: 4,
   },
   weight: {
-    fontSize: 32,
-    lineHeight: 32,
+    fontSize: 24,
+    lineHeight: 26,
+    maxHeight: 26,
     marginBlock: 4,
-    maxHeight: 32,
     width: 80,
   },
   controls: {
