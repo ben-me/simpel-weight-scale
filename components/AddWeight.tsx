@@ -93,11 +93,11 @@ export default function AddWeight() {
         >
           <Pressable style={[styles.content, { backgroundColor: backgroundLight }]}>
             <ThemedText style={styles.headline}>{t("newEntry")}</ThemedText>
-            <Pressable onPress={showPicker}>
+            <Pressable style={styles.entryRow} onPress={showPicker}>
               <ThemedText style={styles.overline}>{t("date")}:</ThemedText>
               <ThemedText style={styles.date}>{date.toLocaleDateString()}</ThemedText>
             </Pressable>
-            <Pressable style={{ alignItems: "center" }}>
+            <Pressable style={styles.entryRow}>
               <ThemedText style={styles.overline}>{t("weight")}:</ThemedText>
               <ThemedInput
                 keyboardType="number-pad"
@@ -145,19 +145,20 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 18,
   },
+  entryRow: {
+    alignItems: "center",
+  },
   date: {
     textAlign: "center",
-    fontSize: 32,
-    lineHeight: 33,
-    fontWeight: "bold",
+    fontSize: 24,
     marginBlockStart: 4,
   },
   weight: {
-    lineHeight: 33,
     fontSize: 32,
-    fontWeight: "bold",
+    lineHeight: 32,
     marginBlock: 4,
-    width: 100,
+    maxHeight: 32,
+    width: 80,
   },
   controls: {
     flexDirection: "row",
@@ -168,8 +169,8 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 5,
-    paddingBlock: 8,
-    paddingInline: 16,
+    paddingBlock: 10,
+    paddingInline: 18,
     fontSize: 18,
   },
 });
