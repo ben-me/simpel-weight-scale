@@ -5,12 +5,14 @@ import ThemedText from "@/components/ThemedText";
 import { insertSetting } from "@/db/operations";
 import { useThemeColors } from "@/hooks/useTheme";
 import { useSetupStore } from "@/store/setup";
+import { useUnit } from "@/store/unit";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Setup() {
+  const { initUnit } = useUnit();
   const { completeSetup } = useSetupStore();
   const { t, i18n } = useTranslation();
   const selectedLanguage = useRef(i18n.language);
@@ -29,8 +31,8 @@ export default function Setup() {
   async function handleSubmit() {
     try {
       await insertSetting({ key: "unit", value: selectedUnit.current });
-      await insertSetting({ key: "language", value: selectedLanguage.current });
       await insertSetting({ key: "setup_complete", value: "1" });
+      await initUnit();
       completeSetup();
     } catch (error) {
       console.error(error);
