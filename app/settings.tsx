@@ -32,11 +32,11 @@ export default function Settings() {
         { value: "en", label: t("english") },
       ];
 
-  function handleCancel() {
-    if (activeModal === "Language") {
+  function handleCancel(setting: "Unit" | "Language") {
+    if (setting === "Language") {
       setLanguage(i18n.language);
     }
-    if (activeModal === "Unit") {
+    if (setting === "Unit") {
       setSelectedUnit(unit);
     }
     setActiveModal(null);
@@ -65,8 +65,8 @@ export default function Settings() {
       </Pressable>
       <CustomModal
         visible={!!activeModal}
-        onBackdropPress={handleCancel}
-        onRequestClose={handleCancel}
+        onBackdropPress={() => handleCancel(activeModal!)}
+        onRequestClose={() => handleCancel(activeModal!)}
       >
         <Animated.View style={styles.modal}>
           <Pressable style={[styles.modalContent, { backgroundColor: backgroundLight }]}>
@@ -113,7 +113,7 @@ export default function Settings() {
               ))}
             </RadioGroupPrimitive.Root>
             <View style={styles.buttonControls}>
-              <Button onPress={handleCancel} style={styles.button}>
+              <Button onPress={() => handleCancel(activeModal!)} style={styles.button}>
                 <ThemedText>{t("cancel")}</ThemedText>
               </Button>
               <Button
