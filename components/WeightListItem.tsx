@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { StyleSheet, Pressable, Modal, View, TextInput, Keyboard } from "react-native";
 
-import { insertWeight } from "@/db/operations";
+import { insertWeight, KG_TO_LBS } from "@/db/operations";
 import { WeightTableEntry } from "@/db/schema";
 import convertWeight from "@/utilities/convert-weight";
 
@@ -14,21 +14,26 @@ import { useThemeColors } from "@/hooks/useTheme";
 import { toAppDayIndex } from "@/utilities/convert_days";
 import { AnchorDay, getAnchorDayNumber } from "@/constants/anchor_days";
 import { useTranslation } from "react-i18next";
+import { useUnit } from "@/store/unit";
 
 export function WeightListItem({
   date = new Date().getDate().toLocaleString(),
   weight,
-  unit = "KG",
+  unit: entryUnit,
   anchorDay = "monday",
 }: WeightTableEntry & { anchorDay: AnchorDay }) {
   const { t } = useTranslation();
   const { backgroundLight, borderColor } = useThemeColors();
   const [modalVisible, setModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState(String(weight));
+  const { unit } = useUnit();
   const inputRef = useRef<TextInput>(null);
   const { height } = useReanimatedKeyboardAnimation();
   const prettyDate = prettifyDate(date);
   const [year, month, day] = date.split("-");
+  const conversionRate = entryUnit === unit ? 1 : entryUnit === "lbs" ? 1 / KG_TO_LBS : KG_TO_LBS;
+  const displayedWeight = weight ? Math.round(weight * conversionRate * 10) / 10 : "-";
+
   const isAnchorEntry =
     toAppDayIndex(new Date(+year, +month - 1, +day).getDay()) === getAnchorDayNumber(anchorDay);
 
@@ -94,7 +99,7 @@ export function WeightListItem({
         onPress={() => setModalVisible(true)}
       >
         <ThemedText>{prettyDate}:</ThemedText>
-        <ThemedText style={{ marginInlineStart: "auto" }}>{weight ? weight : "-"}</ThemedText>
+        <ThemedText style={{ marginInlineStart: "auto" }}>{displayedWeight}</ThemedText>
         <ThemedText>{unit}</ThemedText>
       </Pressable>
     </View>

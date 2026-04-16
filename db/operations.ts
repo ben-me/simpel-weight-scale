@@ -3,6 +3,8 @@ import { desc, eq, sql } from "drizzle-orm";
 import { db, opsqliteDB } from ".";
 import { WeightTableEntry, settings, weightTable, SettingTableEntry } from "./schema";
 
+export const KG_TO_LBS = 2.20462;
+
 export async function getWeights() {
   return await db.query.weightTable.findMany({
     orderBy: desc(weightTable.date),
