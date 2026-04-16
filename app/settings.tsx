@@ -1,30 +1,27 @@
 import CustomModal from "@/components/CustomModal";
 import ThemedText from "@/components/ThemedText";
-import { getSetting, insertSetting } from "@/db/operations";
 import { useThemeColors } from "@/hooks/useTheme";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, View } from "react-native";
 import * as RadioGroupPrimitive from "@rn-primitives/radio-group";
 import Animated from "react-native-reanimated";
 import Button from "@/components/Button";
-import { useRouter } from "expo-router";
+import { useUnit } from "@/store/unit";
 
 type ModalType = "Unit" | "Language";
 
 export default function Settings() {
-  const router = useRouter();
   const { t, i18n } = useTranslation();
   const { backgroundColor, backgroundLight, borderColor, primary, tertiary } = useThemeColors();
-  const [unit, setUnit] = useState<string | undefined>();
-  const [language, setLanguage] = useState<string | undefined>();
+  const { unit, updateUnit } = useUnit();
+  const [selectedUnit, setSelectedUnit] = useState(unit);
+  const [language, setLanguage] = useState(i18n.language);
   const [activeModal, setActiveModal] = useState<ModalType | null>(null);
 
   const isUnitModal = activeModal === "Unit";
   const modalHeadline = isUnitModal ? t("unit") : t("language");
 
-  const dbUnitRef = useRef<string | undefined>(undefined);
-  const dbLanguageRef = useRef<string | undefined>(undefined);
   const options = isUnitModal
     ? [
         { value: "KG", label: t("kilo") },
@@ -35,40 +32,23 @@ export default function Settings() {
         { value: "en", label: t("english") },
       ];
 
-  useEffect(() => {
-    const fetch = async () => {
-      try {
-        const [unit, language] = await Promise.all([getSetting("unit"), getSetting("language")]);
-        setUnit(unit?.value);
-        dbUnitRef.current = unit!.value;
-        setLanguage(language?.value);
-        dbLanguageRef.current = language!.value;
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetch();
-  }, []);
-
   function handleCancel() {
-    setActiveModal(null);
     if (activeModal === "Language") {
-      setLanguage(dbLanguageRef.current);
-    } else {
-      setUnit(dbUnitRef.current);
+      setLanguage(i18n.language);
     }
+    if (activeModal === "Unit") {
+      setSelectedUnit(unit);
+    }
+    setActiveModal(null);
   }
 
   async function handleSave(setting: "Unit" | "Language") {
-    setActiveModal(null);
-    try {
-      await insertSetting({ key: setting.toLowerCase(), value: isUnitModal ? unit! : language! });
-      if (activeModal === "Language") {
-        i18n.changeLanguage(language);
-      }
-    } catch (error) {
-      console.error(error);
+    if (setting === "Language") {
+      i18n.changeLanguage(language);
+    } else if (setting === "Unit") {
+      await updateUnit(selectedUnit);
     }
+    setActiveModal(null);
   }
 
   return (
@@ -84,7 +64,7 @@ export default function Settings() {
         <ThemedText style={styles.settingValue}>{unit}</ThemedText>
       </Pressable>
       <CustomModal
-        visible={activeModal !== null}
+        visible={!!activeModal}
         onBackdropPress={handleCancel}
         onRequestClose={handleCancel}
       >
@@ -94,12 +74,18 @@ export default function Settings() {
               {t("settingsModal.heading", { setting: modalHeadline })}
             </ThemedText>
             <RadioGroupPrimitive.Root
-              onValueChange={(value) => (isUnitModal ? setUnit(value) : setLanguage(value))}
-              value={isUnitModal ? unit : language}
+              onValueChange={(value) =>
+                isUnitModal ? setSelectedUnit(value as "KG" | "lbs") : setLanguage(value)
+              }
+              value={isUnitModal ? selectedUnit : language}
             >
               {options.map((option) => (
                 <Pressable
-                  onPress={() => (isUnitModal ? setUnit(option.value) : setLanguage(option.value))}
+                  onPress={() =>
+                    isUnitModal
+                      ? setSelectedUnit(option.value as "KG" | "lbs")
+                      : setLanguage(option.value)
+                  }
                   key={option.value}
                   style={styles.option}
                 >
