@@ -89,7 +89,13 @@ export default function RootLayout() {
                   options={{
                     headerLeft: () => {
                       return (
-                        <Button style={{ marginEnd: 12 }} onPress={() => router.dismiss()}>
+                        <Button
+                          style={{
+                            paddingBlock: 8,
+                            paddingInlineEnd: 8,
+                          }}
+                          onPress={() => router.dismiss()}
+                        >
                           <Entypo name="chevron-thin-left" size={24} color="white" />
                         </Button>
                       );
