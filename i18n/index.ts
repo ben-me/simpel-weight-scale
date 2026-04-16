@@ -12,8 +12,7 @@ export const resources = {
 
 const i18nInit = async () => {
   const deviceLanguageCode = getLocales()[0].languageCode;
-  const setting = await getSetting("language").catch(() => null);
-  const language = setting?.value ? setting.value : deviceLanguageCode ? deviceLanguageCode : "en";
+  const language = deviceLanguageCode ? deviceLanguageCode : "en";
 
   i18n.use(initReactI18next).init({
     resources,
