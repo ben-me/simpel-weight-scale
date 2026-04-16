@@ -7,22 +7,17 @@ import { useThemeColors } from "@/hooks/useTheme";
 import AnimatedRollingNumber from "react-native-animated-rolling-numbers";
 import OverviewField from "./OverviewField";
 import { useTranslation } from "react-i18next";
+import { useUnit } from "@/store/unit";
 
 type Props = {
   anchorDay: AnchorDay | undefined;
   setAnchorDay: React.Dispatch<React.SetStateAction<AnchorDay>>;
   previousAverage: number | undefined;
   difference: number | undefined;
-  unit: "KG" | "lbs";
 };
 
-export default function Overview({
-  anchorDay,
-  setAnchorDay,
-  previousAverage,
-  difference,
-  unit,
-}: Props) {
+export default function Overview({ anchorDay, setAnchorDay, previousAverage, difference }: Props) {
+  const { unit } = useUnit();
   const { t } = useTranslation();
   const { backgroundLight, text } = useThemeColors();
 
@@ -54,13 +49,7 @@ export default function Overview({
         subtitleText={t("previousAverage")}
         style={[styles.info, { backgroundColor: backgroundLight }]}
       />
-      <View
-        style={[
-          styles.info,
-          styles.infoDifference,
-          { alignItems: "flex-end", backgroundColor: backgroundLight },
-        ]}
-      >
+      <View style={[styles.info, { alignItems: "flex-end", backgroundColor: backgroundLight }]}>
         <AnimatedRollingNumber
           showPlusSign={true}
           value={difference ? difference : 0}
@@ -95,8 +84,4 @@ const styles = StyleSheet.create({
     opacity: 0.7,
     fontSize: 14,
   },
-  infoDay: {},
-  infoUnit: {},
-  infoPreviousAverage: {},
-  infoDifference: {},
 });
