@@ -25,7 +25,6 @@ export function WeightListItem({
   const { t } = useTranslation();
   const { backgroundLight, borderColor } = useThemeColors();
   const [modalVisible, setModalVisible] = useState(false);
-  const [inputValue, setInputValue] = useState(String(weight));
   const { unit } = useUnit();
   const inputRef = useRef<TextInput>(null);
   const { height } = useReanimatedKeyboardAnimation();
@@ -33,6 +32,7 @@ export function WeightListItem({
   const [year, month, day] = date.split("-");
   const conversionRate = entryUnit === unit ? 1 : entryUnit === "lbs" ? 1 / KG_TO_LBS : KG_TO_LBS;
   const displayedWeight = weight ? Math.round(weight * conversionRate * 10) / 10 : "-";
+  const [inputValue, setInputValue] = useState(String(displayedWeight));
 
   const isAnchorEntry =
     toAppDayIndex(new Date(+year, +month - 1, +day).getDay()) === getAnchorDayNumber(anchorDay);
@@ -46,7 +46,7 @@ export function WeightListItem({
       setTimeout(() => setModalVisible(false), 240);
     });
 
-    const keyboardFocus = setTimeout(() => inputRef.current?.focus(), 100);
+    const keyboardFocus = setTimeout(() => inputRef.current?.focus(), 150);
 
     return () => {
       clearTimeout(keyboardFocus);
