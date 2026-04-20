@@ -31,7 +31,7 @@ export function WeightListItem({
   const prettyDate = prettifyDate(date);
   const [year, month, day] = date.split("-");
   const conversionRate = entryUnit === unit ? 1 : entryUnit === "lbs" ? 1 / KG_TO_LBS : KG_TO_LBS;
-  const displayedWeight = weight ? Math.round(weight * conversionRate * 10) / 10 : "-";
+  const displayedWeight = weight ? Math.round(weight * conversionRate * 100) / 100 : "-";
   const [inputValue, setInputValue] = useState(String(displayedWeight));
 
   const isAnchorEntry =
