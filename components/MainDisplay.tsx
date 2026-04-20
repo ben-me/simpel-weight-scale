@@ -13,6 +13,8 @@ import Animated, {
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { AnchorDay, getAnchorDayNumber } from "@/constants/anchor_days";
+import { useUnit } from "@/store/unit";
+import { KG_TO_LBS } from "@/db/operations";
 
 const SIZE = 320;
 const STROKE = 10;
@@ -82,6 +84,7 @@ type Props = {
 export function MainDisplay({ currentWeight, daysLogged, anchorDay }: Props) {
   const { t } = useTranslation();
   const { text, gray } = useThemeColors();
+  const { unit } = useUnit();
   const anchorIndex = getAnchorDayNumber(anchorDay);
   const orderedWeek = Array.from({ length: 7 }, (_, i) => (anchorIndex + 1 + i) % 7);
   const todayIndex = daysLogged?.at(-1)?.day ?? new Date().getDay();
@@ -131,7 +134,10 @@ export function MainDisplay({ currentWeight, daysLogged, anchorDay }: Props) {
         ))}
       </Svg>
       {currentWeight ? (
-        <AnimatedRollingNumber value={currentWeight} textStyle={[styles.weight, { color: text }]} />
+        <AnimatedRollingNumber
+          value={unit === "lbs" ? Number((currentWeight * KG_TO_LBS).toFixed(2)) : currentWeight}
+          textStyle={[styles.weight, { color: text }]}
+        />
       ) : (
         <ThemedText style={styles.weight}>-</ThemedText>
       )}
@@ -143,8 +149,8 @@ export function MainDisplay({ currentWeight, daysLogged, anchorDay }: Props) {
 const styles = StyleSheet.create({
   wrapper: {},
   weight: {
-    fontSize: 90,
-    lineHeight: 91,
+    fontSize: 75,
+    lineHeight: 80,
   },
   subtitle: {
     textAlign: "center",

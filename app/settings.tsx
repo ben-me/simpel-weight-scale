@@ -24,7 +24,7 @@ export default function Settings() {
 
   const options = isUnitModal
     ? [
-        { value: "KG", label: t("kilo") },
+        { value: "kg", label: t("kilo") },
         { value: "lbs", label: t("pound") },
       ]
     : [
@@ -75,7 +75,7 @@ export default function Settings() {
             </ThemedText>
             <RadioGroupPrimitive.Root
               onValueChange={(value) =>
-                isUnitModal ? setSelectedUnit(value as "KG" | "lbs") : setLanguage(value)
+                isUnitModal ? setSelectedUnit(value as "kg" | "lbs") : setLanguage(value)
               }
               value={isUnitModal ? selectedUnit : language}
             >
@@ -83,7 +83,7 @@ export default function Settings() {
                 <Pressable
                   onPress={() =>
                     isUnitModal
-                      ? setSelectedUnit(option.value as "KG" | "lbs")
+                      ? setSelectedUnit(option.value as "kg" | "lbs")
                       : setLanguage(option.value)
                   }
                   key={option.value}

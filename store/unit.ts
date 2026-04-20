@@ -2,17 +2,17 @@ import { getSetting, insertSetting } from "@/db/operations";
 import { create } from "zustand";
 
 interface UnitStore {
-  unit: "KG" | "lbs";
+  unit: "kg" | "lbs";
   initUnit: () => Promise<void>;
   updateUnit: (unit: UnitStore["unit"]) => Promise<void>;
 }
 
 export const useUnit = create<UnitStore>((set, get) => ({
-  unit: "KG",
+  unit: "kg",
 
   initUnit: async () => {
     const dbUnit = await getSetting("unit");
-    set({ unit: dbUnit?.value as "KG" | "lbs" });
+    set({ unit: dbUnit?.value as "kg" | "lbs" });
   },
 
   updateUnit: async (newUnit) => {

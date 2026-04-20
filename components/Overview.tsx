@@ -40,7 +40,7 @@ export default function Overview({ anchorDay, setAnchorDay, previousAverage, dif
         style={styles.info}
       />
       <OverviewField
-        highlightedText={unit}
+        highlightedText={unit.toUpperCase()}
         subtitleText={t("unit")}
         style={[styles.info, { backgroundColor: backgroundLight, alignItems: "flex-end" }]}
       />

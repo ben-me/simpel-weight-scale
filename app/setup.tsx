@@ -16,7 +16,7 @@ export default function Setup() {
   const { completeSetup } = useSetupStore();
   const { t, i18n } = useTranslation();
   const selectedLanguage = useRef(i18n.language);
-  const selectedUnit = useRef("KG");
+  const selectedUnit = useRef("kg");
   const { backgroundColor, primary } = useThemeColors();
 
   function handleLanguageChange(value: "en" | "de") {
@@ -24,7 +24,7 @@ export default function Setup() {
     selectedLanguage.current = value;
   }
 
-  function handleUnitChange(value: "KG" | "lbs") {
+  function handleUnitChange(value: "kg" | "lbs") {
     selectedUnit.current = value;
   }
 
@@ -73,7 +73,7 @@ export default function Setup() {
         <Switch
           selected={selectedUnit.current}
           onSelect={handleUnitChange}
-          optionLeft={{ label: "KG", value: "KG" }}
+          optionLeft={{ label: "KG", value: "kg" }}
           optionRight={{ label: "LBS", value: "lbs" }}
         />
       </StaggeredView>
