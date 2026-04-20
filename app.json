@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/adaptive-icon.png",
-    "scheme": "simpelweightscale",
+    "scheme": "simplescale",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -16,7 +16,7 @@
         "light": "./assets/images/ios-light.png",
         "tinted": "./assets/images/ios-tinted.png"
       },
-      "bundleIdentifier": "com.simple.scale"
+      "bundleIdentifier": "de.codepilots.simple-scale"
     },
     "android": {
       "adaptiveIcon": {
@@ -24,7 +24,7 @@
         "monochromeImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.simple.scale"
+      "package": "de.codepilots.simple_scale"
     },
     "web": {
       "output": "static",

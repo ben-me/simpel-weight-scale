@@ -13,7 +13,7 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "clean": "adb uninstall com.simple.scale_dev && expo run:android"
+    "clean": "adb uninstall de.codepilots.simple_scale && expo run:android"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.1.1",
