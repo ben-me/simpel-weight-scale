@@ -12,6 +12,10 @@
       "header": "Spalte B (Gewicht)",
       "row1": "80.0"
     },
+    "col3": {
+      "header": "Splate C (Einheit)",
+      "row1": "kg / lbs"
+    },
     "important": "Wichtig",
     "explanation3": "Bestehende Daten werden beim Import überschrieben."
   },

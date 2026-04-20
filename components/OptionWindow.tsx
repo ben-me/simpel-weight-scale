@@ -137,10 +137,12 @@ export default function OptionWindow() {
             <View style={{ flexDirection: "row" }}>
               <ThemedText style={{ flex: 1 }}>{t("importWindow.col1.header")}</ThemedText>
               <ThemedText style={{ flex: 1 }}>{t("importWindow.col2.header")}</ThemedText>
+              <ThemedText style={{ flex: 1 }}>{t("importWindow.col3.header")}</ThemedText>
             </View>
             <View style={{ flexDirection: "row" }}>
               <ThemedText style={{ flex: 1 }}>{t("importWindow.col1.row1")}</ThemedText>
               <ThemedText style={{ flex: 1 }}>{t("importWindow.col2.row1")}</ThemedText>
+              <ThemedText style={{ flex: 1 }}>{t("importWindow.col3.row1")}</ThemedText>
             </View>
           </View>
           <ThemedText

@@ -12,6 +12,10 @@
       "header": "Column B (Weight)",
       "row1": "80.0"
     },
+    "col3": {
+      "header": "Column C (Unit)",
+      "row1": "lbs / kg"
+    },
     "important": "Important",
     "explanation3": "Existing data will be overwritten."
   },
