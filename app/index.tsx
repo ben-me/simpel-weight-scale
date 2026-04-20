@@ -17,7 +17,7 @@ export default function Index() {
   const { backgroundColor, backgroundLight, borderColor } = useThemeColors();
   const [data, setData] = useState<WeightTableEntry[]>([]);
   const [anchorDay, setAnchorDay] = useState<AnchorDay>("monday");
-  const loggedDays = getLoggedDays(anchorDay, data);
+  const loggedDays = getLoggedDays(data);
   const { current_average_weight, previous_average_weight } = calculateAverageWeight(
     anchorDay,
     data,

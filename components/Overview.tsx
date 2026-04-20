@@ -8,6 +8,7 @@ import AnimatedRollingNumber from "react-native-animated-rolling-numbers";
 import OverviewField from "./OverviewField";
 import { useTranslation } from "react-i18next";
 import { useUnit } from "@/store/unit";
+import normalizeWeight from "@/utilities/normalize_weight";
 
 type Props = {
   anchorDay: AnchorDay | undefined;
@@ -45,14 +46,14 @@ export default function Overview({ anchorDay, setAnchorDay, previousAverage, dif
         style={[styles.info, { backgroundColor: backgroundLight, alignItems: "flex-end" }]}
       />
       <OverviewField
-        highlightedText={previousAverage ? previousAverage : "-"}
+        highlightedText={previousAverage ? normalizeWeight(previousAverage) : "-"}
         subtitleText={t("previousAverage")}
         style={[styles.info, { backgroundColor: backgroundLight }]}
       />
       <View style={[styles.info, { alignItems: "flex-end", backgroundColor: backgroundLight }]}>
         <AnimatedRollingNumber
           showPlusSign={true}
-          value={difference ? difference : 0}
+          value={difference ? normalizeWeight(difference) : 0}
           textStyle={[styles.highlight, { color: text }]}
         />
         <ThemedText style={styles.subtitle}>{t("difference")}</ThemedText>

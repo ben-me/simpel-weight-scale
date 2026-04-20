@@ -28,15 +28,14 @@ function findRelevantAnchorDays(anchor_day: number, sorted_entries: WeightTableE
   return results;
 }
 
-function dataBetweenAnchorDays(
-  sorted_entries: WeightTableEntry[],
-  start: WeightTableEntry,
-  end: WeightTableEntry | undefined,
-) {
-  const from_index = sorted_entries.indexOf(start);
-  const to_index =
-    end && sorted_entries.indexOf(end) !== 0 ? sorted_entries.indexOf(end) : sorted_entries.length;
-  return sorted_entries.slice(from_index, to_index);
+function dataBetweenAnchorDays(sorted_entries: WeightTableEntry[], start: WeightTableEntry) {
+  const startTime = new Date(start.date).getTime();
+
+  return sorted_entries.filter((entry) => {
+    const entry_time = new Date(entry.date).getTime();
+    const days_between = Math.floor((startTime - entry_time) / (24 * 3600 * 1000));
+    return days_between >= 0 && days_between < 7;
+  });
 }
 
 function averageWeight(entries: WeightTableEntry[]) {
@@ -55,42 +54,28 @@ function averageWeight(entries: WeightTableEntry[]) {
 
 export function calculateAverageWeight(anchor_day: AnchorDay, entries: WeightTableEntry[]) {
   const anchor_day_number = getAnchorDayNumber(anchor_day);
-  const [anchor1, anchor2, anchor3] = findRelevantAnchorDays(anchor_day_number, entries);
+  const [anchor1, anchor2] = findRelevantAnchorDays(anchor_day_number, entries);
 
-  if (!anchor1 && !anchor2) {
+  if (!anchor1) {
     return { current_average_weight: undefined, previous_average_weight: undefined };
   }
 
-  const current_data = dataBetweenAnchorDays(entries, anchor1, anchor2);
+  const current_data = dataBetweenAnchorDays(entries, anchor1);
   const current_average_weight = averageWeight(current_data);
 
-  if (!anchor3) {
+  if (!anchor2) {
     return { current_average_weight, previous_average_weight: undefined };
   }
 
-  const previous_data = dataBetweenAnchorDays(entries, anchor2, anchor3);
+  const previous_data = dataBetweenAnchorDays(entries, anchor2);
   const previous_average_weight = averageWeight(previous_data);
 
   return { current_average_weight, previous_average_weight };
 }
 
-export function getLoggedDays(anchor_day: AnchorDay, entries: WeightTableEntry[]) {
+export function getLoggedDays(entries: WeightTableEntry[]) {
   if (!entries.length) return;
-  const today = new Date(entries[0].date);
-  const anchor_day_number = getAnchorDayNumber(anchor_day);
-  const [anchor1, anchor2] = findRelevantAnchorDays(anchor_day_number, entries);
-  const isTodayAnchorDay = toAppDayIndex(today.getDay()) === anchor_day_number;
-
-  let relevant_entries: WeightTableEntry[];
-  if (isTodayAnchorDay && anchor2) {
-    relevant_entries = dataBetweenAnchorDays(entries, anchor1, anchor2);
-  } else {
-    const days_since_last_anchor = (toAppDayIndex(today.getDay()) - anchor_day_number + 7) % 7;
-    const last_anchor = new Date(Number(today) - days_since_last_anchor * 24 * 60 * 60 * 1000)
-      .toISOString()
-      .slice(0, 10);
-    relevant_entries = entries.filter((entry) => entry.date >= last_anchor);
-  }
+  const relevant_entries = dataBetweenAnchorDays(entries, entries[0]);
 
   return relevant_entries
     .map((e) => ({
