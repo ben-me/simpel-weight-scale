@@ -2,6 +2,7 @@ import { WeightTableEntry } from "@/db/schema";
 
 import { toAppDayIndex } from "./convert_days";
 import { AnchorDay, getAnchorDayNumber } from "@/constants/anchor_days";
+import { KG_TO_LBS } from "@/db/operations";
 
 function isAnchorDay(anchor_day: number, entry: WeightTableEntry) {
   return toAppDayIndex(new Date(entry.date).getDay()) === anchor_day;
@@ -43,7 +44,12 @@ function averageWeight(entries: WeightTableEntry[]) {
   if (valid_entries.length === 0) {
     return undefined;
   }
-  const sum = valid_entries.reduce((sum, entry) => sum + entry.weight!, 0);
+  const sum = valid_entries.reduce((sum, entry) => {
+    if (entry.unit === "lbs") {
+      return sum + entry.weight! / KG_TO_LBS;
+    }
+    return sum + entry.weight!;
+  }, 0);
   return Number((sum / valid_entries.length).toFixed(2));
 }
 
