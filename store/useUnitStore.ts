@@ -3,21 +3,19 @@ import { create } from "zustand";
 
 interface UnitStore {
   unit: "kg" | "lbs";
-  initUnit: () => Promise<void>;
-  updateUnit: (unit: UnitStore["unit"]) => Promise<void>;
 }
 
-export const useUnitStore = create<UnitStore>((set, get) => ({
+export const useUnitStore = create<UnitStore>(() => ({
   unit: "kg",
-
-  initUnit: async () => {
-    const dbUnit = await getSetting("unit");
-    set({ unit: dbUnit?.value as "kg" | "lbs" });
-  },
-
-  updateUnit: async (newUnit) => {
-    if (get().unit === newUnit) return;
-    await insertSetting({ key: "unit", value: newUnit });
-    set({ unit: newUnit });
-  },
 }));
+
+export async function updateUnit(newUnit: UnitStore["unit"]) {
+  if (useUnitStore.getState().unit === newUnit) return;
+  await insertSetting({ key: "unit", value: newUnit });
+  useUnitStore.setState({ unit: newUnit });
+}
+
+export async function initUnit() {
+  const dbUnit = await getSetting("unit");
+  useUnitStore.setState({ unit: dbUnit?.value as "kg" | "lbs" });
+}

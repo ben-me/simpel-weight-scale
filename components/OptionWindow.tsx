@@ -51,7 +51,7 @@ export default function OptionWindow() {
   const { t } = useTranslation();
   const router = useRouter();
   const { menuShown, closeMenu } = useMenuStore();
-  const { backgroundLight, borderColor } = useThemeColors();
+  const { backgroundLight, borderColor, primary } = useThemeColors();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   useEffect(() => {
@@ -125,47 +125,57 @@ export default function OptionWindow() {
         exiting={FadeOut.duration(150)}
       >
         <View style={[styles.modalText, { backgroundColor: backgroundLight }]}>
-          <ThemedText style={{ fontSize: 24, lineHeight: 25, fontWeight: "bold", marginBottom: 4 }}>
-            {t("importWindow.confirm")}
-          </ThemedText>
-          <ThemedText>{t("importWindow.explanation1")}</ThemedText>
-          <ThemedText style={{ fontSize: 18, lineHeight: 19, marginTop: 12, fontWeight: "bold" }}>
-            {t("importWindow.example")}:
-          </ThemedText>
+          <View>
+            <ThemedText
+              style={{ fontSize: 24, lineHeight: 25, fontWeight: "bold", marginBottom: 4 }}
+            >
+              {t("importWindow.confirm")}
+            </ThemedText>
+            <ThemedText>{t("importWindow.explanation1")}</ThemedText>
+          </View>
 
-          <View style={{ gap: 5 }}>
-            <View style={{ flexDirection: "row" }}>
-              <ThemedText style={{ flex: 1 }}>{t("importWindow.col1.header")}</ThemedText>
-              <ThemedText style={{ flex: 1 }}>{t("importWindow.col2.header")}</ThemedText>
-              <ThemedText style={{ flex: 1 }}>{t("importWindow.col3.header")}</ThemedText>
-            </View>
-            <View style={{ flexDirection: "row" }}>
-              <ThemedText style={{ flex: 1 }}>{t("importWindow.col1.row1")}</ThemedText>
-              <ThemedText style={{ flex: 1 }}>{t("importWindow.col2.row1")}</ThemedText>
-              <ThemedText style={{ flex: 1 }}>{t("importWindow.col3.row1")}</ThemedText>
+          <View>
+            <ThemedText
+              style={{ fontSize: 18, lineHeight: 19, fontWeight: "bold", marginBottom: 4 }}
+            >
+              {t("importWindow.example")}:
+            </ThemedText>
+            <View style={{ gap: 6 }}>
+              <View style={{ flexDirection: "row" }}>
+                <ThemedText style={styles.tableCell}>{t("importWindow.col1.header")}</ThemedText>
+                <ThemedText style={styles.tableCell}>{t("importWindow.col2.header")}</ThemedText>
+                <ThemedText style={styles.tableCell}>{t("importWindow.col3.header")}</ThemedText>
+              </View>
+              <View style={{ flexDirection: "row" }}>
+                <ThemedText style={styles.tableCell}>{t("importWindow.col1.row1")}</ThemedText>
+                <ThemedText style={styles.tableCell}>{t("importWindow.col2.row1")}</ThemedText>
+                <ThemedText style={styles.tableCell}>{t("importWindow.col3.row1")}</ThemedText>
+              </View>
             </View>
           </View>
-          <ThemedText
-            style={{
-              fontSize: 20,
-              lineHeight: 21,
-              fontWeight: "bold",
-              marginTop: 12,
-              textDecorationLine: "underline",
-            }}
-          >
-            {t("importWindow.important")}:
-          </ThemedText>
-          <ThemedText>{t("importWindow.explanation3")}</ThemedText>
-          <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 20 }}>
+          <View>
+            <ThemedText
+              style={{
+                fontSize: 20,
+                lineHeight: 21,
+                fontWeight: "bold",
+                textDecorationLine: "underline",
+                marginBottom: 4,
+              }}
+            >
+              {t("importWindow.important")}:
+            </ThemedText>
+            <ThemedText>{t("importWindow.explanation3")}</ThemedText>
+          </View>
+          <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
             <Button
               style={[styles.button, styles.cancel]}
               onPress={() => setShowConfirmModal(false)}
             >
               <ThemedText>{t("cancel")}</ThemedText>
             </Button>
-            <Button style={[styles.button, styles.continue]} onPress={handleImport}>
-              <ThemedText>{t("continue")}</ThemedText>
+            <Button style={[styles.button, { backgroundColor: primary }]} onPress={handleImport}>
+              <ThemedText style={{ color: "white" }}>{t("continue")}</ThemedText>
             </Button>
           </View>
         </View>
@@ -194,10 +204,13 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   modalText: {
-    padding: 18,
+    padding: 24,
     marginInline: 40,
     borderRadius: 6,
-    gap: 8,
+    gap: 32,
+  },
+  tableCell: {
+    flex: 1,
   },
   button: {
     paddingVertical: 12,

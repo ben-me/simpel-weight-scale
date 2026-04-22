@@ -5,14 +5,13 @@ import ThemedText from "@/components/ThemedText";
 import { insertSetting } from "@/db/operations";
 import { useThemeColors } from "@/hooks/useTheme";
 import { useSetupStore } from "@/store/useSetupStore";
-import { useUnitStore } from "@/store/useUnitStore";
+import { initUnit } from "@/store/useUnitStore";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Setup() {
-  const { initUnit } = useUnitStore();
   const { completeSetup } = useSetupStore();
   const { t, i18n } = useTranslation();
   const selectedLanguage = useRef(i18n.language);

@@ -7,14 +7,14 @@ import { Pressable, StyleSheet, View } from "react-native";
 import * as RadioGroupPrimitive from "@rn-primitives/radio-group";
 import Animated from "react-native-reanimated";
 import Button from "@/components/Button";
-import { useUnitStore } from "@/store/useUnitStore";
+import { updateUnit, useUnitStore } from "@/store/useUnitStore";
 
 type ModalType = "Unit" | "Language";
 
 export default function Settings() {
   const { t, i18n } = useTranslation();
   const { backgroundColor, backgroundLight, borderColor, primary, tertiary } = useThemeColors();
-  const { unit, updateUnit } = useUnitStore();
+  const { unit } = useUnitStore();
   const [selectedUnit, setSelectedUnit] = useState(unit);
   const [language, setLanguage] = useState(i18n.language);
   const [activeModal, setActiveModal] = useState<ModalType | null>(null);
