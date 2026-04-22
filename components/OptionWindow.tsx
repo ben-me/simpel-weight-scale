@@ -9,7 +9,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import ThemedText from "./ThemedText";
-import { useMenuStore } from "@/store/menu";
+import { useMenuStore } from "@/store/useMenuStore";
 import { useEffect, useState } from "react";
 import CustomModal from "./CustomModal";
 import Button from "./Button";

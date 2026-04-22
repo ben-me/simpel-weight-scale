@@ -7,7 +7,7 @@ import { useThemeColors } from "@/hooks/useTheme";
 import AnimatedRollingNumber from "react-native-animated-rolling-numbers";
 import OverviewField from "./OverviewField";
 import { useTranslation } from "react-i18next";
-import { useUnit } from "@/store/unit";
+import { useUnitStore } from "@/store/useUnitStore";
 import normalizeWeight from "@/utilities/normalize_weight";
 
 type Props = {
@@ -18,7 +18,7 @@ type Props = {
 };
 
 export default function Overview({ anchorDay, setAnchorDay, previousAverage, difference }: Props) {
-  const { unit } = useUnit();
+  const { unit } = useUnitStore();
   const { t } = useTranslation();
   const { backgroundLight, text } = useThemeColors();
 

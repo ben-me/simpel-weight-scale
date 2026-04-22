@@ -18,13 +18,13 @@ import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller
 import { useTranslation } from "react-i18next";
 import { Entypo } from "@expo/vector-icons";
 import Button from "./Button";
-import { useUnit } from "@/store/unit";
+import { useUnitStore } from "@/store/useUnitStore";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export default function AddWeight() {
   const { t } = useTranslation();
-  const { unit } = useUnit();
+  const { unit } = useUnitStore();
   const { backgroundLight, primary, text } = useThemeColors();
   const [weight, setWeight] = useState<string>("0");
   const today = new Date();

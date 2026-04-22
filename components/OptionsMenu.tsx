@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { useMenuStore } from "@/store/menu";
+import { useMenuStore } from "@/store/useMenuStore";
 import { useThemeColors } from "@/hooks/useTheme";
 import { Entypo } from "@expo/vector-icons";
 

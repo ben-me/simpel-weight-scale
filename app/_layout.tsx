@@ -14,7 +14,7 @@ import Entypo from "@expo/vector-icons/Entypo";
 import "../i18n";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useEffect } from "react";
-import { useSetupStore } from "@/store/setup";
+import { useSetupStore } from "@/store/useSetupStore";
 import { db } from "@/db";
 import { useMigrations } from "drizzle-orm/op-sqlite/migrator";
 import migrations from "@/drizzle/migrations";

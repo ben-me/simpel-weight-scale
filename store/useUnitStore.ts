@@ -7,7 +7,7 @@ interface UnitStore {
   updateUnit: (unit: UnitStore["unit"]) => Promise<void>;
 }
 
-export const useUnit = create<UnitStore>((set, get) => ({
+export const useUnitStore = create<UnitStore>((set, get) => ({
   unit: "kg",
 
   initUnit: async () => {

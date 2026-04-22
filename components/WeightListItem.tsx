@@ -14,7 +14,7 @@ import { useThemeColors } from "@/hooks/useTheme";
 import { toAppDayIndex } from "@/utilities/convert_days";
 import { AnchorDay, getAnchorDayNumber } from "@/constants/anchor_days";
 import { useTranslation } from "react-i18next";
-import { useUnit } from "@/store/unit";
+import { useUnitStore } from "@/store/useUnitStore";
 
 export function WeightListItem({
   date = new Date().getDate().toLocaleString(),
@@ -25,7 +25,7 @@ export function WeightListItem({
   const { t } = useTranslation();
   const { backgroundLight, borderColor } = useThemeColors();
   const [modalVisible, setModalVisible] = useState(false);
-  const { unit } = useUnit();
+  const { unit } = useUnitStore();
   const inputRef = useRef<TextInput>(null);
   const { height } = useReanimatedKeyboardAnimation();
   const prettyDate = prettifyDate(date);

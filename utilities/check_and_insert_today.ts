@@ -1,8 +1,8 @@
 import { getSingleWeight, insertWeight } from "@/db/operations";
-import { useUnit } from "@/store/unit";
+import { useUnitStore } from "@/store/useUnitStore";
 
 export async function checkAndInsertToday() {
-  const unit = useUnit.getState().unit;
+  const unit = useUnitStore.getState().unit;
   const today = new Date().toISOString().slice(0, 10);
   const todayExists = await getSingleWeight(today);
   if (!todayExists) {
