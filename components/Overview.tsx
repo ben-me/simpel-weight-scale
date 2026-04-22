@@ -46,14 +46,14 @@ export default function Overview({ anchorDay, setAnchorDay, previousAverage, dif
         style={[styles.info, { backgroundColor: backgroundLight, alignItems: "flex-end" }]}
       />
       <OverviewField
-        highlightedText={previousAverage ? normalizeWeight(previousAverage) : "-"}
+        highlightedText={previousAverage ? normalizeWeight(previousAverage, unit) : "-"}
         subtitleText={t("previousAverage")}
         style={[styles.info, { backgroundColor: backgroundLight }]}
       />
       <View style={[styles.info, { alignItems: "flex-end", backgroundColor: backgroundLight }]}>
         <AnimatedRollingNumber
           showPlusSign={true}
-          value={difference ? normalizeWeight(difference) : 0}
+          value={difference ? normalizeWeight(difference, unit) : 0}
           textStyle={[styles.highlight, { color: text }]}
         />
         <ThemedText style={styles.subtitle}>{t("difference")}</ThemedText>
