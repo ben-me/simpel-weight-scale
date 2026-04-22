@@ -27,7 +27,7 @@ export default function Index() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [weightEntries, dbAnchorDay] = await Promise.all([
+        const [weightEntries, dbAnchorDay, _] = await Promise.all([
           getWeights(),
           getSetting("anchor_day"),
           checkAndInsertToday(),

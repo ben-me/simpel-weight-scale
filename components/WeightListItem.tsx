@@ -52,7 +52,7 @@ export function WeightListItem({
       clearTimeout(keyboardFocus);
       keyboardListener.remove();
     };
-  }, [modalVisible, weight]);
+  }, [modalVisible]);
 
   async function handleSubmit() {
     const convertedWeight = convertWeight(inputValue);

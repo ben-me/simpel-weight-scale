@@ -16,11 +16,8 @@ export default function StaggeredView({ children, index, style }: Props) {
   const anim = useSharedValue(0);
 
   useEffect(() => {
-    const reveal = () => {
-      anim.set(withDelay(index * 1200, withTiming(1, { duration: 600 })));
-    };
-    reveal();
-  }, [anim, index]);
+    anim.set(withDelay(index * 1200, withTiming(1, { duration: 400 })));
+  }, [index, anim]);
 
   const startingStyle = useAnimatedStyle(() => ({
     opacity: anim.get(),
