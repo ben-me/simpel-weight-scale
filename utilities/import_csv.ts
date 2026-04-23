@@ -23,7 +23,7 @@ export async function importCSV() {
   const parse = textContent.map((entry, i) => {
     const [date, weight, unit] = entry.split(",");
 
-    const result = Entry.safeParse({ date, weight: Number(weight), unit });
+    const result = Entry.safeParse({ date: date.trim(), weight: Number(weight), unit });
     if (!result.success) {
       console.error(`Line ${i + 1}: failed`, { date, weight }, result.error.issues);
     } else {
