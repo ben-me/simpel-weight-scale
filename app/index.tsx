@@ -86,8 +86,9 @@ export default function Index() {
       />
       <FlatList
         data={data}
-        renderItem={({ item }) => <WeightListItem anchorDay={anchorDay} {...item} />}
-        keyExtractor={(entry) => entry.date}
+        renderItem={({ item }) => (
+          <WeightListItem key={item.date} anchorDay={anchorDay} {...item} />
+        )}
         style={{
           backgroundColor: backgroundLight,
           borderRadius: 6,
