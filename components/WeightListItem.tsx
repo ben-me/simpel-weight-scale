@@ -30,9 +30,8 @@ export function WeightListItem({
   const { height } = useReanimatedKeyboardAnimation();
   const prettyDate = prettifyDate(date);
   const [year, month, day] = date.split("-");
-  const conversionRate = entryUnit === unit ? 1 : entryUnit === "lbs" ? 1 / KG_TO_LBS : KG_TO_LBS;
-  const displayedWeight = weight ? Math.round(weight * conversionRate * 100) / 100 : "-";
-  const [inputValue, setInputValue] = useState(String(displayedWeight));
+  const displayedWeight = weight ? getDisplayWeight(weight) : "0";
+  const inputValueRef = useRef(displayedWeight);
 
   const isAnchorEntry =
     toAppDayIndex(new Date(+year, +month - 1, +day).getDay()) === getAnchorDayNumber(anchorDay);
@@ -55,10 +54,22 @@ export function WeightListItem({
   }, [modalVisible]);
 
   async function handleSubmit() {
-    const convertedWeight = convertWeight(inputValue);
+    const convertedWeight = convertWeight(inputValueRef.current);
     if (!convertWeight) return;
     await insertWeight({ date, weight: convertedWeight, unit });
     setModalVisible(false);
+  }
+
+  function getDisplayWeight(weight: number) {
+    if (entryUnit === unit) {
+      return String(weight);
+    }
+
+    if (entryUnit === "lbs") {
+      return (weight * (1 / KG_TO_LBS)).toFixed(2);
+    }
+
+    return (weight * KG_TO_LBS).toFixed(2);
   }
 
   const translateY = useAnimatedStyle(() => ({
@@ -82,11 +93,11 @@ export function WeightListItem({
                 <ThemedInput
                   ref={inputRef}
                   onSubmitEditing={handleSubmit}
-                  keyboardType="number-pad"
+                  inputMode="decimal"
                   style={styles.modal_input}
-                  value={inputValue}
+                  defaultValue={displayedWeight}
                   maxLength={6}
-                  onChangeText={setInputValue}
+                  onChangeText={(v) => (inputValueRef.current = v)}
                 />
                 <ThemedText style={styles.modal_unit}>{unit}</ThemedText>
               </View>
@@ -122,6 +133,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modal_view: {
+    minWidth: "65%",
     padding: 24,
     alignItems: "center",
     borderRadius: 6,
