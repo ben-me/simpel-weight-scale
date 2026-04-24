@@ -6,7 +6,7 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { useEffect, useRef, useState } from "react";
-import { BackHandler, Pressable, StyleProp, StyleSheet, ViewStyle } from "react-native";
+import { BackHandler, Pressable, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 
 import ThemedInput from "./ThemedInput";
 import ThemedText from "./ThemedText";
@@ -93,7 +93,7 @@ export default function Select({ value, onChange, options, placeholder, style }:
           <BottomSheetFlatList
             data={options}
             keyExtractor={(item: SelectOption) => item.label}
-            renderItem={({ item }: { item: SelectOption }) => (
+            renderItem={({ item, index }: { item: SelectOption; index: number }) => (
               <Pressable
                 style={{ flex: 1 }}
                 onPress={() => {
@@ -102,6 +102,7 @@ export default function Select({ value, onChange, options, placeholder, style }:
                 }}
               >
                 <ThemedText style={styles.option}>{item.label}</ThemedText>
+                {index !== options.length - 1 && <View style={styles.seperator} />}
               </Pressable>
             )}
           />
@@ -128,11 +129,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
     width: "100%",
     paddingVertical: 24,
-    borderTopWidth: 1,
-    borderTopColor: "silver",
   },
   subtitle: {
     opacity: 0.7,
     fontSize: 14,
+  },
+  seperator: {
+    width: 30,
+    height: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: "silver",
+    alignSelf: "center",
   },
 });
