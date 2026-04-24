@@ -23,7 +23,7 @@ export function WeightListItem({
   anchorDay = "monday",
 }: WeightTableEntry & { anchorDay: AnchorDay }) {
   const { t } = useTranslation();
-  const { backgroundLight, borderColor } = useThemeColors();
+  const { backgroundLight, backgroundColor, secondary } = useThemeColors();
   const [modalVisible, setModalVisible] = useState(false);
   const { unit } = useUnitStore();
   const inputRef = useRef<TextInput>(null);
@@ -106,12 +106,18 @@ export function WeightListItem({
         </Animated.View>
       </Modal>
       <Pressable
-        style={[styles.entry, isAnchorEntry && styles.highlight, { borderColor }]}
+        style={[
+          styles.entry,
+          isAnchorEntry && { backgroundColor: secondary },
+          { borderBottomColor: backgroundColor },
+        ]}
         onPress={() => setModalVisible(true)}
       >
-        <ThemedText>{prettyDate}:</ThemedText>
-        <ThemedText style={{ marginInlineStart: "auto" }}>{displayedWeight}</ThemedText>
-        <ThemedText>{unit}</ThemedText>
+        <ThemedText style={isAnchorEntry && { color: "white" }}>{prettyDate}:</ThemedText>
+        <ThemedText style={[isAnchorEntry && { color: "white" }, { marginInlineStart: "auto" }]}>
+          {displayedWeight}
+        </ThemedText>
+        <ThemedText style={isAnchorEntry && { color: "white" }}>{unit}</ThemedText>
       </Pressable>
     </View>
   );
@@ -123,9 +129,6 @@ const styles = StyleSheet.create({
     padding: 16,
     borderBottomWidth: 1,
     gap: 6,
-  },
-  highlight: {
-    backgroundColor: "hsla(185 100% 90% / 0.4)",
   },
   modal: {
     flex: 1,
