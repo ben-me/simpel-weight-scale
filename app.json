@@ -3,7 +3,7 @@
     "name": "Simple Scale",
     "description": "Simple weight tracker that allows you to enter daily weight and calculates an average weekly on a day you specify. Without ads or trackers.",
     "slug": "simple-scale",
-    "version": "1.0.1",
+    "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/images/adaptive-icon.png",
     "scheme": "simplescale",
@@ -24,6 +24,7 @@
         "monochromeImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "versionCode": 5,
       "package": "de.codepilots.simple_scale"
     },
     "web": {
