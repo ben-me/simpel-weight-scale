@@ -14,7 +14,7 @@ export const Colors = {
   },
   dark: {
     text: "#fff",
-    backgroundColor: "#091413",
+    backgroundColor: "#000",
     backgroundLight: "#2E2E2E",
     headerBackground: "#1b1b1d",
     borderColor: "#747474",
