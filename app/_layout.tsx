@@ -21,23 +21,27 @@ import migrations from "@/drizzle/migrations";
 import ThemedText from "@/components/ThemedText";
 import Button from "@/components/Button";
 import { useTranslation } from "react-i18next";
+import { useDataStore } from "@/store/useDataStore";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const { t } = useTranslation();
   const { success, error } = useMigrations(db, migrations);
   const { setupStatus, checkSetup } = useSetupStore();
   const { headerBackground } = useThemeColors();
+  const { init } = useDataStore();
   const router = useRouter();
 
   useEffect(() => {
     if (!success) return;
-    async function check() {
+    async function setup() {
       await checkSetup();
+      await init();
+      SplashScreen.hideAsync();
     }
-    check();
-
-    SplashScreen.hide();
-  }, [success, checkSetup, setupStatus]);
+    setup();
+  }, [success, checkSetup, setupStatus, init]);
 
   if (!success) return;
   if (error) console.log(error);
@@ -84,31 +88,68 @@ export default function RootLayout() {
                     }}
                   />
                 </Stack.Protected>
-                <Stack.Screen
-                  name="settings"
-                  options={{
-                    headerLeft: () => {
-                      return (
-                        <Button
-                          style={{
-                            paddingBlock: 8,
-                            paddingInlineEnd: 8,
-                          }}
-                          onPress={() => router.dismiss()}
-                        >
-                          <Entypo name="chevron-thin-left" size={24} color="white" />
-                        </Button>
-                      );
-                    },
-                    headerTitle: () => {
-                      return (
-                        <ThemedText style={{ color: "white", fontSize: 20 }}>
-                          {t("settings")}
-                        </ThemedText>
-                      );
-                    },
-                  }}
-                />
+                <Stack.Protected guard={setupStatus === "done"}>
+                  <Stack.Screen
+                    name="settings"
+                    options={{
+                      headerLeft: () => {
+                        return (
+                          <Button
+                            style={{
+                              paddingBlock: 8,
+                              paddingInlineEnd: 8,
+                            }}
+                            onPress={() => router.dismiss()}
+                          >
+                            <Entypo name="chevron-thin-left" size={24} color="white" />
+                          </Button>
+                        );
+                      },
+                      headerTitle: () => {
+                        return (
+                          <ThemedText style={{ color: "white", fontSize: 20 }}>
+                            {t("settings")}
+                          </ThemedText>
+                        );
+                      },
+                    }}
+                  />
+                </Stack.Protected>
+                <Stack.Protected guard={setupStatus === "done"}>
+                  <Stack.Screen
+                    name="entryList"
+                    options={{
+                      headerLeft: () => {
+                        return (
+                          <Button
+                            style={{
+                              paddingBlock: 8,
+                              paddingInlineEnd: 8,
+                            }}
+                            onPress={() => router.dismiss()}
+                          >
+                            <Entypo name="chevron-thin-left" size={24} color="white" />
+                          </Button>
+                        );
+                      },
+                      headerTitle: () => {
+                        return (
+                          <ThemedText style={{ color: "white", fontSize: 20 }}>
+                            {t("loggedWeights")}
+                          </ThemedText>
+                        );
+                      },
+                      headerRight: () => {
+                        return (
+                          <View style={{ flexDirection: "row", alignItems: "center" }}>
+                            <AddWeight />
+                            <OptionsMenu />
+                          </View>
+                        );
+                      },
+                    }}
+                  />
+                </Stack.Protected>
               </Stack>
               <OptionWindow />
             </SafeAreaView>

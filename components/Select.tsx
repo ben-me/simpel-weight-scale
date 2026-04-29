@@ -125,7 +125,6 @@ const styles = StyleSheet.create({
   },
   option: {
     fontSize: 24,
-    lineHeight: 25,
     textAlign: "center",
     width: "100%",
     paddingVertical: 24,

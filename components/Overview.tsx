@@ -7,18 +7,18 @@ import { useThemeColors } from "@/hooks/useTheme";
 import AnimatedRollingNumber from "react-native-animated-rolling-numbers";
 import OverviewField from "./OverviewField";
 import { useTranslation } from "react-i18next";
-import { useUnitStore } from "@/store/useUnitStore";
 import normalizeWeight from "@/utilities/normalize_weight";
+import { useDataStore } from "@/store/useDataStore";
 
 type Props = {
   anchorDay: AnchorDay | undefined;
-  setAnchorDay: React.Dispatch<React.SetStateAction<AnchorDay>>;
+  setAnchorDay: (day: AnchorDay) => Promise<void>;
   previousAverage: number | undefined;
   difference: number | undefined;
 };
 
 export default function Overview({ anchorDay, setAnchorDay, previousAverage, difference }: Props) {
-  const { unit } = useUnitStore();
+  const { unit } = useDataStore();
   const { t } = useTranslation();
   const { backgroundLight, text } = useThemeColors();
 
@@ -66,16 +66,17 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 10,
+    gap: 12,
   },
   info: {
-    minWidth: "48%",
     flexGrow: 1,
-    paddingBlock: 20,
-    paddingInline: 16,
-    justifyContent: "flex-end",
+    maxWidth: "49%",
+    minWidth: "48%",
+    paddingBlock: 18,
+    paddingInline: 12,
+    justifyContent: "center",
     borderRadius: 6,
-    gap: 6,
+    gap: 4,
   },
   highlight: {
     lineHeight: 27,
@@ -83,6 +84,6 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     opacity: 0.7,
-    fontSize: 14,
+    fontSize: 13,
   },
 });

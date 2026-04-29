@@ -15,7 +15,7 @@ import { useEffect } from "react";
 import { AnchorDay, getAnchorDayNumber } from "@/constants/anchor_days";
 import { toAppDayIndex } from "@/utilities/convert_days";
 import normalizeWeight from "@/utilities/normalize_weight";
-import { useUnitStore } from "@/store/useUnitStore";
+import { useDataStore } from "@/store/useDataStore";
 
 const SIZE = 320;
 const STROKE = 10;
@@ -85,7 +85,7 @@ type Props = {
 export function MainDisplay({ currentWeight, daysLogged, anchorDay }: Props) {
   const { t } = useTranslation();
   const { text, gray } = useThemeColors();
-  const { unit } = useUnitStore();
+  const { unit } = useDataStore();
   const anchorIndex = getAnchorDayNumber(anchorDay);
   const orderedWeek = Array.from({ length: 7 }, (_, i) => (anchorIndex + 1 + i) % 7);
   const todayIndex = toAppDayIndex(new Date().getDay());

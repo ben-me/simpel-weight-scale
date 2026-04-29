@@ -19,11 +19,10 @@ export default function OverviewField({ highlightedText, subtitleText, onPress, 
 
 const styles = StyleSheet.create({
   highlight: {
-    lineHeight: 27,
     fontSize: 25,
   },
   subtitle: {
     opacity: 0.7,
-    fontSize: 14,
+    fontSize: 13,
   },
 });

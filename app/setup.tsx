@@ -4,8 +4,8 @@ import Switch from "@/components/Switch";
 import ThemedText from "@/components/ThemedText";
 import { insertSetting } from "@/db/operations";
 import { useThemeColors } from "@/hooks/useTheme";
+import { useDataStore } from "@/store/useDataStore";
 import { useSetupStore } from "@/store/useSetupStore";
-import { initUnit } from "@/store/useUnitStore";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
@@ -13,9 +13,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Setup() {
   const { completeSetup } = useSetupStore();
+  const { updateUnit } = useDataStore();
   const { t, i18n } = useTranslation();
   const selectedLanguage = useRef(i18n.language);
-  const selectedUnit = useRef("kg");
+  const selectedUnit = useRef<"kg" | "lbs">("kg");
   const { backgroundColor, primary } = useThemeColors();
 
   function handleLanguageChange(value: "en" | "de") {
@@ -29,9 +30,8 @@ export default function Setup() {
 
   async function handleSubmit() {
     try {
-      await insertSetting({ key: "unit", value: selectedUnit.current });
+      await updateUnit(selectedUnit.current);
       await insertSetting({ key: "setup_complete", value: "1" });
-      await initUnit();
       completeSetup();
     } catch (error) {
       console.error(error);

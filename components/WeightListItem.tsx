@@ -14,7 +14,7 @@ import { useThemeColors } from "@/hooks/useTheme";
 import { toAppDayIndex } from "@/utilities/convert_days";
 import { AnchorDay, getAnchorDayNumber } from "@/constants/anchor_days";
 import { useTranslation } from "react-i18next";
-import { useUnitStore } from "@/store/useUnitStore";
+import { useDataStore } from "@/store/useDataStore";
 
 export function WeightListItem({
   date = new Date().getDate().toLocaleString(),
@@ -25,7 +25,7 @@ export function WeightListItem({
   const { t } = useTranslation();
   const { backgroundLight, backgroundColor, secondary } = useThemeColors();
   const [modalVisible, setModalVisible] = useState(false);
-  const { unit } = useUnitStore();
+  const { unit } = useDataStore();
   const inputRef = useRef<TextInput>(null);
   const { height } = useReanimatedKeyboardAnimation();
   const prettyDate = prettifyDate(date);
@@ -108,7 +108,7 @@ export function WeightListItem({
       <Pressable
         style={[
           styles.entry,
-          isAnchorEntry && { backgroundColor: secondary },
+          isAnchorEntry ? { backgroundColor: secondary } : { backgroundColor: backgroundLight },
           { borderBottomColor: backgroundColor },
         ]}
         onPress={() => setModalVisible(true)}
@@ -126,8 +126,8 @@ export function WeightListItem({
 const styles = StyleSheet.create({
   entry: {
     flexDirection: "row",
-    padding: 16,
-    borderBottomWidth: 1,
+    padding: 12,
+    borderTopWidth: 1,
     gap: 6,
   },
   modal: {

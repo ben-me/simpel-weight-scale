@@ -53,5 +53,7 @@
     "heading": "{{ setting }} ändern"
   },
   "kilo": "Kilogramm",
-  "pound": "Pfund"
+  "pound": "Pfund",
+  "loggedWeights": "Eingetragene Gewichte:",
+  "seeFullList": "Alle anzeigen"
 }

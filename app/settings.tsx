@@ -7,14 +7,14 @@ import { Pressable, StyleSheet, View } from "react-native";
 import * as RadioGroupPrimitive from "@rn-primitives/radio-group";
 import Animated from "react-native-reanimated";
 import Button from "@/components/Button";
-import { updateUnit, useUnitStore } from "@/store/useUnitStore";
+import { useDataStore } from "@/store/useDataStore";
 
 type ModalType = "Unit" | "Language";
 
 export default function Settings() {
   const { t, i18n } = useTranslation();
   const { backgroundColor, backgroundLight, borderColor, primary, tertiary } = useThemeColors();
-  const { unit } = useUnitStore();
+  const { unit, updateUnit } = useDataStore();
   const [selectedUnit, setSelectedUnit] = useState(unit);
   const [language, setLanguage] = useState(i18n.language);
   const [activeModal, setActiveModal] = useState<ModalType | null>(null);
@@ -24,13 +24,13 @@ export default function Settings() {
 
   const options = isUnitModal
     ? [
-        { value: "kg", label: t("kilo") },
-        { value: "lbs", label: t("pound") },
-      ]
+      { value: "kg", label: t("kilo") },
+      { value: "lbs", label: t("pound") },
+    ]
     : [
-        { value: "de", label: t("german") },
-        { value: "en", label: t("english") },
-      ];
+      { value: "de", label: t("german") },
+      { value: "en", label: t("english") },
+    ];
 
   function handleCancel(setting: "Unit" | "Language") {
     if (setting === "Language") {
