@@ -23,7 +23,7 @@ export function WeightListItem({
   anchorDay = "monday",
 }: WeightTableEntry & { anchorDay: AnchorDay }) {
   const { t } = useTranslation();
-  const { backgroundLight, backgroundColor, secondary } = useThemeColors();
+  const { backgroundLight, backgroundColor, secondary, borderColor } = useThemeColors();
   const [modalVisible, setModalVisible] = useState(false);
   const { unit } = useDataStore();
   const inputRef = useRef<TextInput>(null);
@@ -109,7 +109,7 @@ export function WeightListItem({
         style={[
           styles.entry,
           isAnchorEntry ? { backgroundColor: secondary } : { backgroundColor: backgroundLight },
-          { borderBottomColor: backgroundColor },
+          { borderBottomColor: backgroundColor, borderColor: borderColor },
         ]}
         onPress={() => setModalVisible(true)}
       >
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   entry: {
     flexDirection: "row",
     padding: 12,
-    borderTopWidth: 1,
+    borderBottomWidth: 1,
     gap: 6,
   },
   modal: {
