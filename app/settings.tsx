@@ -24,13 +24,13 @@ export default function Settings() {
 
   const options = isUnitModal
     ? [
-      { value: "kg", label: t("kilo") },
-      { value: "lbs", label: t("pound") },
-    ]
+        { value: "kg", label: t("kilo") },
+        { value: "lbs", label: t("pound") },
+      ]
     : [
-      { value: "de", label: t("german") },
-      { value: "en", label: t("english") },
-    ];
+        { value: "de", label: t("german") },
+        { value: "en", label: t("english") },
+      ];
 
   function handleCancel(setting: "Unit" | "Language") {
     if (setting === "Language") {

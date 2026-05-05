@@ -59,7 +59,14 @@ export default function Index() {
         difference={weightDifference}
       />
       <View>
-        <View style={{ flexDirection: "row", justifyContent: "space-between", paddingTop: 8, paddingBottom: 4 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingTop: 8,
+            paddingBottom: 4,
+          }}
+        >
           <ThemedText>{t("loggedWeights")}</ThemedText>
 
           <Link href={"/entryList"} asChild>

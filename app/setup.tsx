@@ -4,7 +4,6 @@ import Switch from "@/components/Switch";
 import ThemedText from "@/components/ThemedText";
 import { insertSetting } from "@/db/operations";
 import { useThemeColors } from "@/hooks/useTheme";
-import { useDataStore } from "@/store/useDataStore";
 import { useSetupStore } from "@/store/useSetupStore";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
@@ -13,7 +12,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Setup() {
   const { completeSetup } = useSetupStore();
-  const { updateUnit } = useDataStore();
   const { t, i18n } = useTranslation();
   const selectedLanguage = useRef(i18n.language);
   const selectedUnit = useRef<"kg" | "lbs">("kg");
@@ -30,9 +28,9 @@ export default function Setup() {
 
   async function handleSubmit() {
     try {
-      await updateUnit(selectedUnit.current);
-      await insertSetting({ key: "setup_complete", value: "1" });
-      completeSetup();
+      await insertSetting({ key: "unit", value: selectedUnit.current });
+      await insertSetting({ key: "anchor_day", value: "monday" });
+      await completeSetup();
     } catch (error) {
       console.error(error);
     }

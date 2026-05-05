@@ -8,6 +8,7 @@ type DataStore = {
   unit: "kg" | "lbs";
   weights: WeightTableEntry[];
   anchorDay: AnchorDay;
+  initialized: boolean;
   init: () => Promise<() => void>;
   setAnchorDay: (newDay: AnchorDay) => Promise<void>;
   updateUnit: (newUnit: DataStore["unit"]) => Promise<void>;
@@ -17,6 +18,7 @@ export const useDataStore = create<DataStore>((set) => ({
   unit: "kg",
   weights: [],
   anchorDay: "monday",
+  initialized: false,
   init: async () => {
     try {
       const weights = await getWeights();
@@ -26,6 +28,7 @@ export const useDataStore = create<DataStore>((set) => ({
         weights,
         anchorDay: anchorSetting?.value as AnchorDay,
         unit: unitSetting?.value as "kg" | "lbs",
+        initialized: true,
       });
     } catch (e) {
       console.error(e);

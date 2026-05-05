@@ -30,18 +30,24 @@ export default function RootLayout() {
   const { success, error } = useMigrations(db, migrations);
   const { setupStatus, checkSetup } = useSetupStore();
   const { headerBackground } = useThemeColors();
-  const { init } = useDataStore();
+  const { init, initialized } = useDataStore();
   const router = useRouter();
 
   useEffect(() => {
     if (!success) return;
     async function setup() {
-      await checkSetup();
-      await init();
+      const setup = await checkSetup();
+      if (setup !== "done") {
+        SplashScreen.hideAsync();
+        return;
+      }
+      if (!initialized) {
+        await init();
+      }
       SplashScreen.hideAsync();
     }
     setup();
-  }, [success, checkSetup, setupStatus, init]);
+  }, [success, checkSetup, setupStatus, init, initialized]);
 
   if (!success) return;
   if (error) console.log(error);

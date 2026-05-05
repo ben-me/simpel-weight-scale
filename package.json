@@ -12,8 +12,11 @@
     "db:generate": "drizzle-kit generate",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "lint": "expo lint",
-    "clean": "adb uninstall de.codepilots.simple_scale && expo run:android"
+    "lint:fix": "oxlint . --fix && oxfmt .",
+    "clean": "adb uninstall de.codepilots.dev_scale && expo run:android",
+    "build": "expo prebuild --clean && cp ./my-upload-key.keystore ./android/app/ && cat ./gradle_properties.txt >> ./android/gradle.properties",
+    "con": "adb connect 192.168.184.153",
+    "prepare": "husky"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.1.1",
@@ -60,8 +63,13 @@
     "eslint-config-expo": "~10.0.0",
     "eslint-plugin-perfectionist": "^5.7.0",
     "eslint-plugin-unused-imports": "^4.4.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
     "oxfmt": "^0.35.0",
     "oxlint": "^1.57.0",
     "typescript": "~5.9.2"
+  },
+  "lint-staged": {
+    "*": "pnpm lint:fix"
   }
 }

@@ -1,10 +1,10 @@
-import { getSetting } from "@/db/operations";
+import { getSetting, insertSetting } from "@/db/operations";
 import { create } from "zustand";
 
 interface SetupStore {
   setupStatus: "loading" | "new" | "done";
-  checkSetup: () => Promise<void>;
-  completeSetup: () => void;
+  checkSetup: () => Promise<"done" | "new">;
+  completeSetup: () => Promise<void>;
 }
 
 export const useSetupStore = create<SetupStore>((set) => ({
@@ -13,7 +13,11 @@ export const useSetupStore = create<SetupStore>((set) => ({
   checkSetup: async () => {
     const result = await getSetting("setup_complete");
     set({ setupStatus: result?.value === "1" ? "done" : "new" });
+    return result?.value === "1" ? "done" : "new";
   },
 
-  completeSetup: () => set({ setupStatus: "done" }),
+  completeSetup: async () => {
+    await insertSetting({ key: "setup_complete", value: "1" });
+    set({ setupStatus: "done" });
+  },
 }));
