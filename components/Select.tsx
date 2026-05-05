@@ -14,6 +14,7 @@ import { useThemeColors } from "@/hooks/useTheme";
 import { AnchorDay } from "@/constants/anchor_days";
 import { useTranslation } from "react-i18next";
 import Entypo from "@expo/vector-icons/Entypo";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 type SelectOption = {
   label: string;
   value: string | AnchorDay;
@@ -29,6 +30,7 @@ type Props = {
 
 export default function Select({ value, onChange, options, placeholder, style }: Props) {
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const { text, backgroundLight } = useThemeColors();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const selected = options.find((option) => option.value === value);
@@ -85,6 +87,7 @@ export default function Select({ value, onChange, options, placeholder, style }:
         backgroundStyle={{ backgroundColor: backgroundLight }}
         backdropComponent={renderBackdrop}
         ref={bottomSheetModalRef}
+        bottomInset={insets.bottom}
         onChange={(index) => {
           setBottomSheetIndex(index);
         }}
